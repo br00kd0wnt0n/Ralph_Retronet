@@ -1,0 +1,1222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RALPH Intranet - System 1.0</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=VT323&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            image-rendering: pixelated;
+            image-rendering: -moz-crisp-edges;
+            image-rendering: crisp-edges;
+        }
+        
+        body {
+            font-family: 'VT323', monospace;
+            background: #EB008B;
+            background-image: 
+                repeating-linear-gradient(
+                    0deg,
+                    rgba(255,255,255,.2) 0px,
+                    transparent 1px,
+                    transparent 2px,
+                    rgba(255,255,255,.2) 3px
+                );
+            color: #000;
+            overflow: hidden;
+            cursor: auto;
+        }
+        
+        .desktop {
+            width: 100vw;
+            height: 100vh;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .desktop-ascii {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            font-size: 14px;
+            line-height: 1;
+            color: rgba(255, 255, 255, 0.3);
+            white-space: pre;
+            font-family: 'VT323', monospace;
+            pointer-events: none;
+            text-shadow: 2px 2px 0 rgba(0, 0, 0, 0.2);
+            z-index: 1;
+        }
+        
+        .taskbar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 40px;
+            background: #c0c0c0;
+            border-top: 2px solid #ffffff;
+            display: flex;
+            align-items: center;
+            padding: 0 4px;
+            z-index: 1000;
+            box-shadow: inset -1px -1px #000000, inset 1px 1px #dfdfdf;
+        }
+        
+        .start-button {
+            background: #c0c0c0;
+            border: 2px solid;
+            border-color: #ffffff #808080 #808080 #ffffff;
+            padding: 4px 12px;
+            font-family: 'VT323', monospace;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            margin-right: 8px;
+        }
+        
+        .start-button:active {
+            border-color: #808080 #ffffff #ffffff #808080;
+        }
+        
+        .ralph-logo {
+            width: 16px;
+            height: 16px;
+            background: #EB008B;
+            display: inline-block;
+        }
+        
+        .clock {
+            margin-left: auto;
+            background: #c0c0c0;
+            border: 2px solid;
+            border-color: #808080 #ffffff #ffffff #808080;
+            padding: 4px 8px;
+            font-size: 18px;
+        }
+        
+        .desktop-icons {
+            position: absolute;
+            right: 20px;
+            top: 20px;
+            display: grid;
+            grid-template-columns: repeat(2, 100px);
+            grid-auto-rows: 100px;
+            gap: 20px;
+            height: calc(100vh - 80px);
+            overflow-y: auto;
+        }
+        
+        .icon {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            cursor: pointer;
+            text-align: center;
+            padding: 8px;
+            border: 2px solid transparent;
+        }
+        
+        .icon:hover {
+            background: rgba(235, 0, 139, 0.2);
+            border: 2px dotted #EB008B;
+        }
+        
+        .icon-image {
+            width: 48px;
+            height: 48px;
+            margin-bottom: 4px;
+            position: relative;
+            background: #c0c0c0;
+            border: 2px solid;
+            border-color: #ffffff #808080 #808080 #ffffff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+        }
+        
+        .icon-label {
+            font-size: 14px;
+            color: #fff;
+            text-shadow: 1px 1px 0 #000;
+            word-break: break-word;
+            line-height: 1.2;
+        }
+        
+        .window {
+            position: absolute;
+            background: #c0c0c0;
+            border: 2px solid;
+            border-color: #ffffff #000000 #000000 #ffffff;
+            box-shadow: 2px 2px 0 rgba(0,0,0,0.5);
+            display: none;
+            min-width: 400px;
+            min-height: 300px;
+        }
+        
+        .window.active {
+            display: block;
+        }
+        
+        .window-header {
+            background: linear-gradient(90deg, #000080, #EB008B);
+            color: white;
+            padding: 3px;
+            display: flex;
+            align-items: center;
+            font-size: 16px;
+            cursor: move;
+        }
+        
+        .window-title {
+            flex: 1;
+            padding: 0 8px;
+            font-weight: bold;
+        }
+        
+        .window-controls {
+            display: flex;
+            gap: 2px;
+        }
+        
+        .window-button {
+            width: 20px;
+            height: 20px;
+            background: #c0c0c0;
+            border: 2px solid;
+            border-color: #ffffff #000000 #000000 #ffffff;
+            font-family: 'VT323', monospace;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+        }
+        
+        .window-button:active {
+            border-color: #000000 #ffffff #ffffff #000000;
+        }
+        
+        .window-content {
+            padding: 12px;
+            background: #ffffff;
+            margin: 4px;
+            border: 2px solid;
+            border-color: #808080 #ffffff #ffffff #808080;
+            height: calc(100% - 40px);
+            overflow-y: auto;
+            font-size: 18px;
+        }
+        
+        .module-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 12px;
+        }
+        
+        .module-item {
+            background: #f0f0f0;
+            border: 2px solid;
+            border-color: #808080 #ffffff #ffffff #808080;
+            padding: 8px;
+            margin-bottom: 8px;
+        }
+        
+        .module-item h3 {
+            color: #EB008B;
+            font-size: 20px;
+            margin-bottom: 8px;
+            border-bottom: 2px dotted #EB008B;
+            padding-bottom: 4px;
+        }
+        
+        .progress-bar {
+            background: #808080;
+            border: 2px solid;
+            border-color: #000000 #ffffff #ffffff #000000;
+            height: 20px;
+            position: relative;
+            margin: 8px 0;
+        }
+        
+        .progress-fill {
+            background: repeating-linear-gradient(
+                90deg,
+                #EB008B,
+                #EB008B 10px,
+                #ff1493 10px,
+                #ff1493 20px
+            );
+            height: 100%;
+            transition: width 0.3s;
+        }
+        
+        .pixel-button {
+            background: #c0c0c0;
+            border: 2px solid;
+            border-color: #ffffff #808080 #808080 #ffffff;
+            padding: 8px 16px;
+            font-family: 'VT323', monospace;
+            font-size: 18px;
+            cursor: pointer;
+            margin: 4px;
+        }
+        
+        .pixel-button:hover {
+            background: #EB008B;
+            color: white;
+        }
+        
+        .pixel-button:active {
+            border-color: #808080 #ffffff #ffffff #808080;
+        }
+        
+        .blink {
+            animation: blink 1s infinite;
+        }
+        
+        @keyframes blink {
+            0%, 50% { opacity: 1; }
+            51%, 100% { opacity: 0; }
+        }
+        
+        .ascii-art {
+            font-size: 12px;
+            line-height: 1;
+            color: #EB008B;
+            white-space: pre;
+            margin: 8px 0;
+        }
+        
+        input[type="text"], textarea {
+            background: #ffffff;
+            border: 2px solid;
+            border-color: #808080 #ffffff #ffffff #808080;
+            padding: 4px;
+            font-family: 'VT323', monospace;
+            font-size: 18px;
+            width: 100%;
+            margin: 4px 0;
+        }
+        
+        .scanlines::before {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(
+                transparent 50%,
+                rgba(0, 0, 0, 0.1) 50%
+            );
+            background-size: 100% 4px;
+            pointer-events: none;
+            z-index: 9999;
+        }
+        
+        .crt-flicker {
+            animation: flicker 0.15s infinite;
+        }
+        
+        @keyframes flicker {
+            0% { opacity: 0.97; }
+            50% { opacity: 1; }
+            100% { opacity: 0.98; }
+        }
+        
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #ffff00;
+            border: 2px solid #000;
+            padding: 12px;
+            box-shadow: 4px 4px 0 rgba(0,0,0,0.5);
+            font-size: 18px;
+            z-index: 9998;
+            display: none;
+        }
+        
+        .notification.show {
+            display: block;
+            animation: shake 0.5s;
+        }
+        
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
+        }
+        .boot-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: #000000;
+            color: #00ff00;
+            font-family: 'VT323', monospace;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 10000;
+            transition: opacity 0.5s;
+        }
+        
+        .boot-screen.hide {
+            opacity: 0;
+            pointer-events: none;
+        }
+        
+        .boot-logo {
+            font-size: 20px;
+            line-height: 1;
+            color: #EB008B;
+            white-space: pre;
+            margin-bottom: 40px;
+            text-shadow: 0 0 10px #EB008B;
+        }
+        
+        .boot-text {
+            color: #00ff00;
+            font-size: 18px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .loading-bar-container {
+            width: 400px;
+            height: 30px;
+            border: 2px solid #00ff00;
+            background: #000000;
+            position: relative;
+            box-shadow: 0 0 20px rgba(0, 255, 0, 0.5);
+        }
+        
+        .loading-bar {
+            height: 100%;
+            background: repeating-linear-gradient(
+                90deg,
+                #EB008B,
+                #EB008B 10px,
+                #ff1493 10px,
+                #ff1493 20px
+            );
+            width: 0%;
+            transition: width 0.3s;
+        }
+        
+        .loading-percentage {
+            position: absolute;
+            right: -50px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #00ff00;
+            font-size: 18px;
+        }
+        
+        .boot-messages {
+            margin-top: 30px;
+            height: 100px;
+            overflow: hidden;
+            font-size: 14px;
+            color: #00ff00;
+            text-align: left;
+            width: 500px;
+        }
+        
+        .boot-message {
+            margin: 2px 0;
+            opacity: 0;
+            animation: fadeIn 0.3s forwards;
+        }
+        
+        @keyframes fadeIn {
+            to { opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+    <div class="boot-screen" id="bootScreen">
+        <div class="boot-logo">
+ ██████╗  █████╗ ██╗     ██████╗ ██╗  ██╗
+ ██╔══██╗██╔══██╗██║     ██╔══██╗██║  ██║
+ ██████╔╝███████║██║     ██████╔╝███████║
+ ██╔══██╗██╔══██║██║     ██╔═══╝ ██╔══██║
+ ██║  ██║██║  ██║███████╗██║     ██║  ██║
+ ╚═╝  ╚═╝╚═╝  ╚═╝╚══════╝╚═╝     ╚═╝  ╚═╝
+        </div>
+        <div class="boot-text">INITIALIZING SUPER-INTRANET SYSTEM v1.0</div>
+        <div class="loading-bar-container">
+            <div class="loading-bar" id="loadingBar"></div>
+            <div class="loading-percentage" id="loadingPercentage">0%</div>
+        </div>
+        <div class="boot-messages" id="bootMessages"></div>
+    </div>
+    
+    <div class="desktop scanlines crt-flicker" style="display: none;" id="desktop">
+        <div class="desktop-ascii">
+ ██████╗  █████╗ ██╗     ██████╗ ██╗  ██╗    ██╗███████╗
+ ██╔══██╗██╔══██╗██║     ██╔══██╗██║  ██║    ╚█║██╔════╝
+ ██████╔╝███████║██║     ██████╔╝███████║     ║║███████╗
+ ██╔══██╗██╔══██║██║     ██╔═══╝ ██╔══██║     ║║╚════██║
+ ██║  ██║██║  ██║███████╗██║     ██║  ██║     ║║███████║
+ ╚═╝  ╚═╝╚═╝  ╚═╝╚══════╝╚═╝     ╚═╝  ╚═╝     ╚╝╚══════╝
+
+███████╗██╗   ██╗██████╗ ███████╗██████╗       
+██╔════╝██║   ██║██╔══██╗██╔════╝██╔══██╗      
+███████╗██║   ██║██████╔╝█████╗  ██████╔╝█████╗
+╚════██║██║   ██║██╔═══╝ ██╔══╝  ██╔══██╗╚════╝
+███████║╚██████╔╝██║     ███████╗██║  ██║      
+╚══════╝ ╚═════╝ ╚═╝     ╚══════╝╚═╝  ╚═╝      
+
+██╗███╗   ██╗████████╗██████╗  █████╗ ███╗   ██╗███████╗████████╗
+██║████╗  ██║╚══██╔══╝██╔══██╗██╔══██╗████╗  ██║██╔════╝╚══██╔══╝
+██║██╔██╗ ██║   ██║   ██████╔╝███████║██╔██╗ ██║█████╗     ██║   
+██║██║╚██╗██║   ██║   ██╔══██╗██╔══██║██║╚██╗██║██╔══╝     ██║   
+██║██║ ╚████║   ██║   ██║  ██║██║  ██║██║ ╚████║███████╗   ██║   
+╚═╝╚═╝  ╚═══╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═══╝╚══════╝   ╚═╝   
+
+═══════════════════════════════════════════════════════════════
+                  [ SYSTEM v1.0 ONLINE ]
+        </div>
+        <div class="desktop-icons">
+            <div class="icon" onclick="openWindow('newbiz')">
+                <div class="icon-image">📊</div>
+                <div class="icon-label">New Biz Pipeline</div>
+            </div>
+            
+            <div class="icon" onclick="openWindow('premieres')">
+                <div class="icon-image">🎬</div>
+                <div class="icon-label">Premiere Dates</div>
+            </div>
+            
+            <div class="icon" onclick="openWindow('challenge')">
+                <div class="icon-image">🎨</div>
+                <div class="icon-label">Creative Challenge</div>
+            </div>
+            
+            <div class="icon" onclick="openWindow('shoutouts')">
+                <div class="icon-image">🎉</div>
+                <div class="icon-label">Shoutouts</div>
+            </div>
+            
+            <div class="icon" onclick="openWindow('articles')">
+                <div class="icon-image">📰</div>
+                <div class="icon-label">Industry Articles</div>
+            </div>
+            
+            <div class="icon" onclick="openWindow('ralphnews')">
+                <div class="icon-image">📢</div>
+                <div class="icon-label">RALPH News</div>
+            </div>
+            
+            <div class="icon" onclick="openWindow('suggestions')">
+                <div class="icon-image">💭</div>
+                <div class="icon-label">Suggestion Box</div>
+            </div>
+            
+            <div class="icon" onclick="openWindow('announcements')">
+                <div class="icon-image">📣</div>
+                <div class="icon-label">Announcements</div>
+            </div>
+            
+            <div class="icon" onclick="openWindow('links')">
+                <div class="icon-image">🔗</div>
+                <div class="icon-label">Helpful Links</div>
+            </div>
+            
+            <div class="icon" onclick="openWindow('innovation')">
+                <div class="icon-image">💡</div>
+                <div class="icon-label">Innovation Updates</div>
+            </div>
+            
+            <div class="icon" onclick="openWindow('resources')">
+                <div class="icon-image">📁</div>
+                <div class="icon-label">Resources</div>
+            </div>
+        </div>
+        
+        <!-- Windows -->
+        <div id="chatbot" class="window active" style="bottom: 60px; left: 20px; top: auto; width: 450px; height: 400px;">
+            <div class="window-header">
+                <div class="window-title">💬 RALPH Assistant v1.0</div>
+                <div class="window-controls">
+                    <button class="window-button" onclick="minimizeWindow('chatbot')">_</button>
+                    <button class="window-button" onclick="maximizeWindow('chatbot')">□</button>
+                    <button class="window-button" onclick="closeWindow('chatbot')">X</button>
+                </div>
+            </div>
+            <div class="window-content" style="display: flex; flex-direction: column; padding: 8px;">
+                <div id="chatDisplay" style="flex: 1; background: #000; color: #00ff00; padding: 10px; font-family: 'VT323', monospace; font-size: 16px; overflow-y: auto; margin-bottom: 8px; border: 2px solid; border-color: #808080 #ffffff #ffffff #808080;">
+                    <div style="color: #EB008B;">=======================================</div>
+                    <div style="color: #EB008B;">RALPH ASSISTANT v1.0 - INITIALIZED</div>
+                    <div style="color: #EB008B;">=======================================</div>
+                    <div style="margin-top: 10px;">
+                        <span style="color: #ffff00;">ASSISTANT:</span> Welcome to RALPH's Super-Intranet!
+                    </div>
+                    <div style="margin-top: 10px;">
+                        Here's what you can do:
+                    </div>
+                    <div style="margin-top: 10px; color: #00ffff;">
+                        ► Click any desktop icon to open modules<br>
+                        ► Drag windows by their title bars<br>
+                        ► Minimize, maximize, or close windows<br>
+                        ► Submit suggestions in the Suggestion Box<br>
+                        ► Accept monthly creative challenges<br>
+                        ► Check project pipelines and deadlines<br>
+                        ► Send shoutouts to team members
+                    </div>
+                    <div style="margin-top: 10px;">
+                        <span style="color: #ffff00;">TIP:</span> Press ESC to close all windows
+                    </div>
+                    <div style="margin-top: 10px;">
+                        Type 'help' for more commands or ask me anything!
+                    </div>
+                    <div style="margin-top: 10px; color: #00ff00;" class="blink">
+                        > _
+                    </div>
+                </div>
+                <div style="display: flex; gap: 4px;">
+                    <input type="text" id="chatInput" placeholder="Type your message here..." style="flex: 1; background: #000; color: #00ff00; border: 2px solid #00ff00; font-family: 'VT323', monospace; font-size: 16px; padding: 6px;">
+                    <button class="pixel-button" onclick="sendChat()" style="margin: 0; padding: 6px 12px;">SEND</button>
+                </div>
+            </div>
+        </div>
+        
+        <div id="newbiz" class="window" style="top: 50px; left: 50px;">
+            <div class="window-header">
+                <div class="window-title">📊 New Business Pipeline v2.0</div>
+                <div class="window-controls">
+                    <button class="window-button" onclick="minimizeWindow('newbiz')">_</button>
+                    <button class="window-button" onclick="maximizeWindow('newbiz')">□</button>
+                    <button class="window-button" onclick="closeWindow('newbiz')">X</button>
+                </div>
+            </div>
+            <div class="window-content">
+                <div class="ascii-art">
+    ╔══════════════════════════════╗
+    ║  RALPH PIPELINE TRACKER 1.0  ║
+    ╚══════════════════════════════╝
+                </div>
+                <div class="module-item">
+                    <h3>ACTIVE PITCHES</h3>
+                    <p>▸ Global Tech Corp - Video Campaign</p>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 75%;"></div>
+                    </div>
+                    <p>▸ Fashion Brand X - Social Strategy</p>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 45%;"></div>
+                    </div>
+                    <p>▸ Auto Company Z - Launch Film</p>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 90%;"></div>
+                    </div>
+                </div>
+                <div class="module-item">
+                    <h3>UPCOMING MEETINGS</h3>
+                    <p class="blink">► Tomorrow 2:00 PM - Tech Startup Pitch</p>
+                    <p>► Thursday - Beauty Brand Presentation</p>
+                    <p>► Next Week - Entertainment Client RFP</p>
+                </div>
+            </div>
+        </div>
+        
+        <div id="premieres" class="window" style="top: 100px; left: 100px;">
+            <div class="window-header">
+                <div class="window-title">🎬 Project Premiere Calendar</div>
+                <div class="window-controls">
+                    <button class="window-button" onclick="minimizeWindow('premieres')">_</button>
+                    <button class="window-button" onclick="maximizeWindow('premieres')">□</button>
+                    <button class="window-button" onclick="closeWindow('premieres')">X</button>
+                </div>
+            </div>
+            <div class="window-content">
+                <div class="module-item">
+                    <h3>THIS MONTH</h3>
+                    <p>📅 Dec 15 - "Urban Dreams" Documentary</p>
+                    <p>📅 Dec 20 - Holiday Campaign Launch</p>
+                    <p>📅 Dec 28 - Year-End Showcase</p>
+                </div>
+                <div class="module-item">
+                    <h3>JANUARY 2025</h3>
+                    <p>📅 Jan 10 - New Product Launch Film</p>
+                    <p>📅 Jan 15 - Brand Refresh Campaign</p>
+                    <p>📅 Jan 25 - Super Bowl Teaser</p>
+                </div>
+            </div>
+        </div>
+        
+        <div id="challenge" class="window" style="top: 150px; left: 150px;">
+            <div class="window-header">
+                <div class="window-title">🎨 Monthly Creative Challenge</div>
+                <div class="window-controls">
+                    <button class="window-button" onclick="minimizeWindow('challenge')">_</button>
+                    <button class="window-button" onclick="maximizeWindow('challenge')">□</button>
+                    <button class="window-button" onclick="closeWindow('challenge')">X</button>
+                </div>
+            </div>
+            <div class="window-content">
+                <div class="ascii-art">
+     _____ _____ _____ _____ _____ 
+    |     | __  |   __|  _  |_   _|
+    |   --|    -|   __|     | | |  
+    |_____|__|__|_____|__|__| |_|  
+                </div>
+                <div class="module-item">
+                    <h3>DECEMBER CHALLENGE</h3>
+                    <p><strong>Theme:</strong> "Retro Future"</p>
+                    <p>Create a 30-second concept using only 8-bit graphics and chiptune music!</p>
+                    <p><strong>Prize:</strong> 🏆 Golden Pixel Award + Extra PTO Day</p>
+                    <button class="pixel-button" onclick="showNotification('Challenge Accepted!')">ACCEPT CHALLENGE</button>
+                </div>
+                <div class="module-item">
+                    <h3>LAST MONTH'S WINNER</h3>
+                    <p>🥇 Sarah M. - "Neon Dreams" Concept</p>
+                    <button class="pixel-button">VIEW SUBMISSION</button>
+                </div>
+            </div>
+        </div>
+        
+        <div id="shoutouts" class="window" style="top: 50px; left: 200px;">
+            <div class="window-header">
+                <div class="window-title">🎉 Shoutouts & Celebrations</div>
+                <div class="window-controls">
+                    <button class="window-button" onclick="minimizeWindow('shoutouts')">_</button>
+                    <button class="window-button" onclick="maximizeWindow('shoutouts')">□</button>
+                    <button class="window-button" onclick="closeWindow('shoutouts')">X</button>
+                </div>
+            </div>
+            <div class="window-content">
+                <div class="module-item">
+                    <h3>BIRTHDAYS THIS MONTH 🎂</h3>
+                    <p class="blink">► Today - Mike R. from Production!</p>
+                    <p>► Dec 18 - Jennifer L. from Creative</p>
+                    <p>► Dec 22 - Alex T. from Strategy</p>
+                </div>
+                <div class="module-item">
+                    <h3>WORK ANNIVERSARIES 🎊</h3>
+                    <p>⭐ 5 Years - David K.</p>
+                    <p>⭐ 3 Years - Lisa M.</p>
+                    <p>⭐ 1 Year - Team Expansion Crew!</p>
+                </div>
+                <div class="module-item">
+                    <h3>SHOUTOUTS 📢</h3>
+                    <p>"Huge thanks to the edit team for crushing it on the Tech Corp project!" - Management</p>
+                    <p>"Props to IT for the smooth system upgrade!" - Everyone</p>
+                    <button class="pixel-button" onclick="showNotification('Shoutout sent!')">SEND SHOUTOUT</button>
+                </div>
+            </div>
+        </div>
+        
+        <div id="articles" class="window" style="top: 100px; left: 250px;">
+            <div class="window-header">
+                <div class="window-title">📰 Industry Articles</div>
+                <div class="window-controls">
+                    <button class="window-button" onclick="minimizeWindow('articles')">_</button>
+                    <button class="window-button" onclick="maximizeWindow('articles')">□</button>
+                    <button class="window-button" onclick="closeWindow('articles')">X</button>
+                </div>
+            </div>
+            <div class="window-content">
+                <div class="module-item">
+                    <h3>TRENDING NOW</h3>
+                    <p>📖 "The Rise of AI in Creative Production"</p>
+                    <p>📖 "2025 Design Trends to Watch"</p>
+                    <p>📖 "Sustainable Filmmaking Practices"</p>
+                    <button class="pixel-button">READ MORE</button>
+                </div>
+                <div class="module-item">
+                    <h3>MUST READS</h3>
+                    <p>📚 AdWeek: "Agencies of the Future"</p>
+                    <p>📚 Campaign: "Digital First Strategies"</p>
+                    <p>📚 Creative Review: "Best Campaigns 2024"</p>
+                </div>
+            </div>
+        </div>
+        
+        <div id="ralphnews" class="window" style="top: 150px; left: 300px;">
+            <div class="window-header">
+                <div class="window-title">📢 RALPH News Network</div>
+                <div class="window-controls">
+                    <button class="window-button" onclick="minimizeWindow('ralphnews')">_</button>
+                    <button class="window-button" onclick="maximizeWindow('ralphnews')">□</button>
+                    <button class="window-button" onclick="closeWindow('ralphnews')">X</button>
+                </div>
+            </div>
+            <div class="window-content">
+                <div class="ascii-art">
+    ░█▀▄░█▀█░█░░░█▀█░█░█
+    ░█▀▄░█▀█░█░░░█▀▀░█▀█
+    ░▀░▀░▀░▀░▀▀▀░▀░░░▀░▀
+                </div>
+                <div class="module-item">
+                    <h3>BREAKING NEWS</h3>
+                    <p class="blink">🔴 LIVE: New Office Space Opening Q1 2025!</p>
+                    <p>• Award Win: Best Campaign at Industry Awards</p>
+                    <p>• Client Win: Major Automotive Account</p>
+                </div>
+                <div class="module-item">
+                    <h3>COMPANY UPDATES</h3>
+                    <p>✓ New Equipment in Studio B</p>
+                    <p>✓ Holiday Party December 20th</p>
+                    <p>✓ Q4 Numbers Looking Strong!</p>
+                </div>
+            </div>
+        </div>
+        
+        <div id="suggestions" class="window" style="top: 50px; left: 350px;">
+            <div class="window-header">
+                <div class="window-title">💭 Digital Suggestion Box</div>
+                <div class="window-controls">
+                    <button class="window-button" onclick="minimizeWindow('suggestions')">_</button>
+                    <button class="window-button" onclick="maximizeWindow('suggestions')">□</button>
+                    <button class="window-button" onclick="closeWindow('suggestions')">X</button>
+                </div>
+            </div>
+            <div class="window-content">
+                <div class="module-item">
+                    <h3>SUBMIT YOUR IDEA</h3>
+                    <input type="text" placeholder="Your Name...">
+                    <textarea rows="4" placeholder="Your brilliant idea here..."></textarea>
+                    <button class="pixel-button" onclick="showNotification('Suggestion submitted!')">SUBMIT</button>
+                </div>
+                <div class="module-item">
+                    <h3>RECENT SUGGESTIONS</h3>
+                    <p>💡 "Coffee machine upgrade" - Status: APPROVED ✓</p>
+                    <p>💡 "Flexible Friday hours" - Status: IN REVIEW</p>
+                    <p>💡 "Pet-friendly office days" - Status: CONSIDERING</p>
+                </div>
+            </div>
+        </div>
+        
+        <div id="announcements" class="window" style="top: 100px; left: 400px;">
+            <div class="window-header">
+                <div class="window-title">📣 System Announcements</div>
+                <div class="window-controls">
+                    <button class="window-button" onclick="minimizeWindow('announcements')">_</button>
+                    <button class="window-button" onclick="maximizeWindow('announcements')">□</button>
+                    <button class="window-button" onclick="closeWindow('announcements')">X</button>
+                </div>
+            </div>
+            <div class="window-content">
+                <div class="module-item">
+                    <h3 class="blink">⚠️ IMPORTANT ⚠️</h3>
+                    <p>System maintenance scheduled for Saturday 2:00 AM</p>
+                    <p>Please save all work before Friday EOD</p>
+                </div>
+                <div class="module-item">
+                    <h3>GENERAL ANNOUNCEMENTS</h3>
+                    <p>📌 Parking lot B closed for repairs this week</p>
+                    <p>📌 New health benefits info session Thursday</p>
+                    <p>📌 Kitchen renovation complete - enjoy!</p>
+                </div>
+            </div>
+        </div>
+        
+        <div id="links" class="window" style="top: 150px; left: 450px;">
+            <div class="window-header">
+                <div class="window-title">🔗 Quick Links Directory</div>
+                <div class="window-controls">
+                    <button class="window-button" onclick="minimizeWindow('links')">_</button>
+                    <button class="window-button" onclick="maximizeWindow('links')">□</button>
+                    <button class="window-button" onclick="closeWindow('links')">X</button>
+                </div>
+            </div>
+            <div class="window-content">
+                <div class="module-item">
+                    <h3>INTERNAL TOOLS</h3>
+                    <button class="pixel-button">TIMESHEET SYSTEM</button>
+                    <button class="pixel-button">PROJECT TRACKER</button>
+                    <button class="pixel-button">EXPENSE REPORTS</button>
+                    <button class="pixel-button">IT HELPDESK</button>
+                </div>
+                <div class="module-item">
+                    <h3>EXTERNAL RESOURCES</h3>
+                    <button class="pixel-button">CLIENT PORTAL</button>
+                    <button class="pixel-button">VENDOR DATABASE</button>
+                    <button class="pixel-button">STOCK FOOTAGE</button>
+                </div>
+            </div>
+        </div>
+        
+        <div id="innovation" class="window" style="top: 50px; left: 500px;">
+            <div class="window-header">
+                <div class="window-title">💡 Innovation Lab Updates</div>
+                <div class="window-controls">
+                    <button class="window-button" onclick="minimizeWindow('innovation')">_</button>
+                    <button class="window-button" onclick="maximizeWindow('innovation')">□</button>
+                    <button class="window-button" onclick="closeWindow('innovation')">X</button>
+                </div>
+            </div>
+            <div class="window-content">
+                <div class="module-item">
+                    <h3>CURRENT EXPERIMENTS</h3>
+                    <p>🔬 VR Production Pipeline - Phase 2</p>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 60%;"></div>
+                    </div>
+                    <p>🔬 AI-Assisted Editing Tools</p>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 40%;"></div>
+                    </div>
+                    <p>🔬 Real-time Rendering System</p>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 80%;"></div>
+                    </div>
+                </div>
+                <div class="module-item">
+                    <h3>INNOVATION FRIDAYS</h3>
+                    <p>Next Session: "Future of Motion Graphics"</p>
+                    <p>Speaker: Guest from Pixar</p>
+                    <button class="pixel-button" onclick="showNotification('RSVP Confirmed!')">RSVP</button>
+                </div>
+            </div>
+        </div>
+        
+        <div id="resources" class="window" style="top: 100px; left: 550px;">
+            <div class="window-header">
+                <div class="window-title">📁 Resource Center</div>
+                <div class="window-controls">
+                    <button class="window-button" onclick="minimizeWindow('resources')">_</button>
+                    <button class="window-button" onclick="maximizeWindow('resources')">□</button>
+                    <button class="window-button" onclick="closeWindow('resources')">X</button>
+                </div>
+            </div>
+            <div class="window-content">
+                <div class="module-item">
+                    <h3>DOCUMENTS</h3>
+                    <p>📄 Brand Guidelines v3.2</p>
+                    <p>📄 Employee Handbook 2024</p>
+                    <p>📄 Creative Best Practices</p>
+                    <p>📄 Client Onboarding Guide</p>
+                    <button class="pixel-button">DOWNLOAD ALL</button>
+                </div>
+                <div class="module-item">
+                    <h3>TEMPLATES</h3>
+                    <p>📋 Presentation Template</p>
+                    <p>📋 Project Brief Template</p>
+                    <p>📋 Invoice Template</p>
+                    <button class="pixel-button">ACCESS TEMPLATES</button>
+                </div>
+                <div class="module-item">
+                    <h3>TRAINING MATERIALS</h3>
+                    <p>🎓 New Software Tutorials</p>
+                    <p>🎓 Client Communication 101</p>
+                    <p>🎓 Project Management Basics</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="taskbar">
+            <button class="start-button">
+                <span class="ralph-logo"></span>
+                START
+            </button>
+            <div class="clock" id="clock">12:00 PM</div>
+        </div>
+        
+        <div class="notification" id="notification">
+            <span id="notificationText">System Alert!</span>
+        </div>
+    </div>
+    
+    <script>
+        // Window management
+        let activeWindow = null;
+        let zIndex = 100;
+        
+        function openWindow(windowId) {
+            const window = document.getElementById(windowId);
+            window.classList.add('active');
+            window.style.zIndex = ++zIndex;
+            
+            // Play sound effect (simulated)
+            beep();
+            
+            // Make draggable
+            makeDraggable(window);
+        }
+        
+        function closeWindow(windowId) {
+            const window = document.getElementById(windowId);
+            window.classList.remove('active');
+            beep();
+        }
+        
+        function minimizeWindow(windowId) {
+            const window = document.getElementById(windowId);
+            window.style.display = 'none';
+            setTimeout(() => {
+                window.style.display = '';
+            }, 100);
+            beep();
+        }
+        
+        function maximizeWindow(windowId) {
+            const window = document.getElementById(windowId);
+            if (window.style.width === '90vw') {
+                window.style.width = '';
+                window.style.height = '';
+                window.style.top = '100px';
+                window.style.left = '100px';
+            } else {
+                window.style.width = '90vw';
+                window.style.height = '80vh';
+                window.style.top = '20px';
+                window.style.left = '5vw';
+            }
+            beep();
+        }
+        
+        function makeDraggable(element) {
+            let pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
+            const header = element.querySelector('.window-header');
+            
+            header.onmousedown = dragMouseDown;
+            
+            function dragMouseDown(e) {
+                e = e || window.event;
+                e.preventDefault();
+                pos3 = e.clientX;
+                pos4 = e.clientY;
+                document.onmouseup = closeDragElement;
+                document.onmousemove = elementDrag;
+                element.style.zIndex = ++zIndex;
+            }
+            
+            function elementDrag(e) {
+                e = e || window.event;
+                e.preventDefault();
+                pos1 = pos3 - e.clientX;
+                pos2 = pos4 - e.clientY;
+                pos3 = e.clientX;
+                pos4 = e.clientY;
+                element.style.top = (element.offsetTop - pos2) + "px";
+                element.style.left = (element.offsetLeft - pos1) + "px";
+            }
+            
+            function closeDragElement() {
+                document.onmouseup = null;
+                document.onmousemove = null;
+            }
+        }
+        
+        // Clock update
+        function updateClock() {
+            const now = new Date();
+            const hours = now.getHours();
+            const minutes = now.getMinutes().toString().padStart(2, '0');
+            const ampm = hours >= 12 ? 'PM' : 'AM';
+            const displayHours = hours % 12 || 12;
+            document.getElementById('clock').textContent = `${displayHours}:${minutes} ${ampm}`;
+        }
+        
+        setInterval(updateClock, 1000);
+        updateClock();
+        
+        // Sound effect
+        function beep() {
+            const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            const oscillator = audioContext.createOscillator();
+            const gainNode = audioContext.createGain();
+            
+            oscillator.connect(gainNode);
+            gainNode.connect(audioContext.destination);
+            
+            oscillator.frequency.value = 800;
+            oscillator.type = 'square';
+            gainNode.gain.value = 0.1;
+            
+            oscillator.start();
+            oscillator.stop(audioContext.currentTime + 0.05);
+        }
+        
+        // Notification system
+        function showNotification(message) {
+            const notification = document.getElementById('notification');
+            const notificationText = document.getElementById('notificationText');
+            notificationText.textContent = message;
+            notification.classList.add('show');
+            beep();
+            
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 3000);
+        }
+        
+        // Chatbot functionality
+        function sendChat() {
+            const input = document.getElementById('chatInput');
+            const display = document.getElementById('chatDisplay');
+            const message = input.value.trim();
+            
+            if (message === '') return;
+            
+            // Remove blinking cursor
+            const cursor = display.querySelector('.blink');
+            if (cursor) cursor.remove();
+            
+            // Add user message
+            const userMsg = document.createElement('div');
+            userMsg.style.marginTop = '10px';
+            userMsg.style.color = '#00ff00';
+            userMsg.innerHTML = `<span style="color: #ffffff;">USER:</span> ${message}`;
+            display.appendChild(userMsg);
+            
+            // Process bot response
+            const botMsg = document.createElement('div');
+            botMsg.style.marginTop = '10px';
+            botMsg.style.color = '#00ff00';
+            
+            // Simple responses
+            let response = '';
+            const lowerMsg = message.toLowerCase();
+            
+            if (lowerMsg.includes('help')) {
+                response = `Available commands:
+► 'status' - Check system status
+► 'time' - Get current time
+► 'clear' - Clear chat history
+► 'modules' - List all modules
+► 'tips' - Show productivity tips`;
+            } else if (lowerMsg.includes('status')) {
+                response = 'All systems operational. Network: ONLINE. Projects: 47 active.';
+            } else if (lowerMsg.includes('time')) {
+                const now = new Date();
+                response = `Current time: ${now.toLocaleTimeString()}`;
+            } else if (lowerMsg.includes('clear')) {
+                display.innerHTML = `<div style="color: #EB008B;">Chat cleared.</div>`;
+                input.value = '';
+                return;
+            } else if (lowerMsg.includes('modules')) {
+                response = 'Available modules: New Biz Pipeline, Premieres, Creative Challenge, Shoutouts, Articles, RALPH News, Suggestions, Announcements, Links, Innovation, Resources';
+            } else if (lowerMsg.includes('tips')) {
+                response = 'Pro tip: Hold SHIFT while clicking to open multiple windows at once!';
+            } else {
+                const responses = [
+                    'Processing request...',
+                    'That\'s interesting! Tell me more.',
+                    'System acknowledged.',
+                    'Roger that!',
+                    'Command received.',
+                    'Affirmative!'
+                ];
+                response = responses[Math.floor(Math.random() * responses.length)];
+            }
+            
+            botMsg.innerHTML = `<span style="color: #ffff00;">ASSISTANT:</span> ${response}`;
+            display.appendChild(botMsg);
+            
+            // Add new cursor
+            const newCursor = document.createElement('div');
+            newCursor.style.marginTop = '10px';
+            newCursor.style.color = '#00ff00';
+            newCursor.className = 'blink';
+            newCursor.textContent = '> _';
+            display.appendChild(newCursor);
+            
+            // Clear input and scroll to bottom
+            input.value = '';
+            display.scrollTop = display.scrollHeight;
+            beep();
+        }
+        
+        // Enter key to send chat
+        document.addEventListener('DOMContentLoaded', () => {
+            const chatInput = document.getElementById('chatInput');
+            if (chatInput) {
+                chatInput.addEventListener('keypress', (e) => {
+                    if (e.key === 'Enter') {
+                        sendChat();
+                    }
+                });
+            }
+        });
+        
+        // Boot sequence
+        window.addEventListener('load', () => {
+            const bootScreen = document.getElementById('bootScreen');
+            const desktop = document.getElementById('desktop');
+            const loadingBar = document.getElementById('loadingBar');
+            const loadingPercentage = document.getElementById('loadingPercentage');
+            const bootMessages = document.getElementById('bootMessages');
+            
+            const messages = [
+                'Loading system kernel...',
+                'Initializing RALPH protocols...',
+                'Checking security clearance...',
+                'Loading user preferences...',
+                'Mounting network drives...',
+                'Starting creative services...',
+                'Loading project database...',
+                'Initializing communication modules...',
+                'Checking for updates...',
+                'Loading desktop environment...',
+                'Starting RALPH SUPER-INTRANET...',
+                'System ready!'
+            ];
+            
+            let progress = 0;
+            let messageIndex = 0;
+            
+            const bootInterval = setInterval(() => {
+                progress += Math.random() * 15;
+                if (progress > 100) progress = 100;
+                
+                loadingBar.style.width = progress + '%';
+                loadingPercentage.textContent = Math.floor(progress) + '%';
+                
+                if (messageIndex < messages.length && progress > (messageIndex / messages.length) * 100) {
+                    const messageDiv = document.createElement('div');
+                    messageDiv.className = 'boot-message';
+                    messageDiv.textContent = '> ' + messages[messageIndex];
+                    bootMessages.appendChild(messageDiv);
+                    bootMessages.scrollTop = bootMessages.scrollHeight;
+                    beep();
+                    messageIndex++;
+                }
+                
+                if (progress >= 100) {
+                    clearInterval(bootInterval);
+                    setTimeout(() => {
+                        bootScreen.classList.add('hide');
+                        desktop.style.display = 'block';
+                        
+                        // Make chatbot window draggable
+                        const chatbotWindow = document.getElementById('chatbot');
+                        if (chatbotWindow) {
+                            makeDraggable(chatbotWindow);
+                        }
+                        
+                        setTimeout(() => {
+                            showNotification('RALPH INTRANET SYSTEM 1.0 - READY');
+                        }, 500);
+                    }, 1000);
+                }
+            }, 300);
+        });
+        
+        // Keyboard shortcuts
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                const windows = document.querySelectorAll('.window.active');
+                windows.forEach(w => w.classList.remove('active'));
+            }
+        });
+    </script>
+</body>
+</html>
