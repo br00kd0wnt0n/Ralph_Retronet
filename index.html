@@ -2,10 +2,27 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="description" content="RALPH's Super-Intranet - Retro 90s Company Dashboard">
+    <meta name="theme-color" content="#EB008B">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <title>RALPH Intranet - System 1.0</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=VT323&display=swap');
+        
+        :root {
+            --ralph-pink: #EB008B;
+            --ralph-pink-light: #ff1493;
+            --terminal-green: #00ff00;
+            --terminal-cyan: #00ffff;
+            --terminal-yellow: #ffff00;
+            --gray-light: #c0c0c0;
+            --gray-dark: #808080;
+            --window-bg: #c0c0c0;
+            --black: #000000;
+            --white: #ffffff;
+        }
         
         * {
             margin: 0;
@@ -14,11 +31,21 @@
             image-rendering: pixelated;
             image-rendering: -moz-crisp-edges;
             image-rendering: crisp-edges;
+            -webkit-tap-highlight-color: transparent;
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
+            user-select: none;
+        }
+        
+        html, body {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
         }
         
         body {
             font-family: 'VT323', monospace;
-            background: #EB008B;
+            background: var(--ralph-pink);
             background-image: 
                 repeating-linear-gradient(
                     0deg,
@@ -27,9 +54,10 @@
                     transparent 2px,
                     rgba(255,255,255,.2) 3px
                 );
-            color: #000;
-            overflow: hidden;
+            color: var(--black);
             cursor: auto;
+            position: fixed;
+            touch-action: manipulation;
         }
         
         .desktop {
@@ -38,6 +66,7 @@
             position: relative;
             display: flex;
             flex-direction: column;
+            overflow: hidden;
         }
         
         .desktop-ascii {
@@ -52,6 +81,8 @@
             pointer-events: none;
             text-shadow: 2px 2px 0 rgba(0, 0, 0, 0.2);
             z-index: 1;
+            overflow: hidden;
+            max-width: calc(100vw - 40px);
         }
         
         .taskbar {
@@ -60,19 +91,19 @@
             left: 0;
             right: 0;
             height: 40px;
-            background: #c0c0c0;
-            border-top: 2px solid #ffffff;
+            background: var(--gray-light);
+            border-top: 2px solid var(--white);
             display: flex;
             align-items: center;
             padding: 0 4px;
             z-index: 1000;
-            box-shadow: inset -1px -1px #000000, inset 1px 1px #dfdfdf;
+            box-shadow: inset -1px -1px var(--black), inset 1px 1px #dfdfdf;
         }
         
         .start-button {
-            background: #c0c0c0;
+            background: var(--gray-light);
             border: 2px solid;
-            border-color: #ffffff #808080 #808080 #ffffff;
+            border-color: var(--white) var(--gray-dark) var(--gray-dark) var(--white);
             padding: 4px 12px;
             font-family: 'VT323', monospace;
             font-size: 18px;
@@ -85,21 +116,21 @@
         }
         
         .start-button:active {
-            border-color: #808080 #ffffff #ffffff #808080;
+            border-color: var(--gray-dark) var(--white) var(--white) var(--gray-dark);
         }
         
         .ralph-logo {
             width: 16px;
             height: 16px;
-            background: #EB008B;
+            background: var(--ralph-pink);
             display: inline-block;
         }
         
         .clock {
             margin-left: auto;
-            background: #c0c0c0;
+            background: var(--gray-light);
             border: 2px solid;
-            border-color: #808080 #ffffff #ffffff #808080;
+            border-color: var(--gray-dark) var(--white) var(--white) var(--gray-dark);
             padding: 4px 8px;
             font-size: 18px;
         }
@@ -114,6 +145,7 @@
             gap: 20px;
             height: calc(100vh - 80px);
             overflow-y: auto;
+            overflow-x: hidden;
         }
         
         .icon {
@@ -124,11 +156,12 @@
             text-align: center;
             padding: 8px;
             border: 2px solid transparent;
+            touch-action: manipulation;
         }
         
-        .icon:hover {
+        .icon:hover, .icon:active {
             background: rgba(235, 0, 139, 0.2);
-            border: 2px dotted #EB008B;
+            border: 2px dotted var(--ralph-pink);
         }
         
         .icon-image {
@@ -136,9 +169,9 @@
             height: 48px;
             margin-bottom: 4px;
             position: relative;
-            background: #c0c0c0;
+            background: var(--gray-light);
             border: 2px solid;
-            border-color: #ffffff #808080 #808080 #ffffff;
+            border-color: var(--white) var(--gray-dark) var(--gray-dark) var(--white);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -147,21 +180,23 @@
         
         .icon-label {
             font-size: 14px;
-            color: #fff;
-            text-shadow: 1px 1px 0 #000;
+            color: var(--white);
+            text-shadow: 1px 1px 0 var(--black);
             word-break: break-word;
             line-height: 1.2;
         }
         
         .window {
             position: absolute;
-            background: #c0c0c0;
+            background: var(--window-bg);
             border: 2px solid;
-            border-color: #ffffff #000000 #000000 #ffffff;
+            border-color: var(--white) var(--black) var(--black) var(--white);
             box-shadow: 2px 2px 0 rgba(0,0,0,0.5);
             display: none;
-            min-width: 400px;
-            min-height: 300px;
+            min-width: 300px;
+            min-height: 200px;
+            max-width: 90vw;
+            max-height: 85vh;
         }
         
         .window.active {
@@ -169,19 +204,23 @@
         }
         
         .window-header {
-            background: linear-gradient(90deg, #000080, #EB008B);
+            background: linear-gradient(90deg, #000080, var(--ralph-pink));
             color: white;
             padding: 3px;
             display: flex;
             align-items: center;
             font-size: 16px;
             cursor: move;
+            touch-action: none;
         }
         
         .window-title {
             flex: 1;
             padding: 0 8px;
             font-weight: bold;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
         }
         
         .window-controls {
@@ -192,9 +231,9 @@
         .window-button {
             width: 20px;
             height: 20px;
-            background: #c0c0c0;
+            background: var(--gray-light);
             border: 2px solid;
-            border-color: #ffffff #000000 #000000 #ffffff;
+            border-color: var(--white) var(--black) var(--black) var(--white);
             font-family: 'VT323', monospace;
             cursor: pointer;
             display: flex;
@@ -204,46 +243,41 @@
         }
         
         .window-button:active {
-            border-color: #000000 #ffffff #ffffff #000000;
+            border-color: var(--black) var(--white) var(--white) var(--black);
         }
         
         .window-content {
             padding: 12px;
-            background: #ffffff;
+            background: var(--white);
             margin: 4px;
             border: 2px solid;
-            border-color: #808080 #ffffff #ffffff #808080;
+            border-color: var(--gray-dark) var(--white) var(--white) var(--gray-dark);
             height: calc(100% - 40px);
             overflow-y: auto;
+            overflow-x: hidden;
             font-size: 18px;
-        }
-        
-        .module-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 12px;
         }
         
         .module-item {
             background: #f0f0f0;
             border: 2px solid;
-            border-color: #808080 #ffffff #ffffff #808080;
+            border-color: var(--gray-dark) var(--white) var(--white) var(--gray-dark);
             padding: 8px;
             margin-bottom: 8px;
         }
         
         .module-item h3 {
-            color: #EB008B;
+            color: var(--ralph-pink);
             font-size: 20px;
             margin-bottom: 8px;
-            border-bottom: 2px dotted #EB008B;
+            border-bottom: 2px dotted var(--ralph-pink);
             padding-bottom: 4px;
         }
         
         .progress-bar {
-            background: #808080;
+            background: var(--gray-dark);
             border: 2px solid;
-            border-color: #000000 #ffffff #ffffff #000000;
+            border-color: var(--black) var(--white) var(--white) var(--black);
             height: 20px;
             position: relative;
             margin: 8px 0;
@@ -252,33 +286,34 @@
         .progress-fill {
             background: repeating-linear-gradient(
                 90deg,
-                #EB008B,
-                #EB008B 10px,
-                #ff1493 10px,
-                #ff1493 20px
+                var(--ralph-pink),
+                var(--ralph-pink) 10px,
+                var(--ralph-pink-light) 10px,
+                var(--ralph-pink-light) 20px
             );
             height: 100%;
             transition: width 0.3s;
         }
         
         .pixel-button {
-            background: #c0c0c0;
+            background: var(--gray-light);
             border: 2px solid;
-            border-color: #ffffff #808080 #808080 #ffffff;
+            border-color: var(--white) var(--gray-dark) var(--gray-dark) var(--white);
             padding: 8px 16px;
             font-family: 'VT323', monospace;
             font-size: 18px;
             cursor: pointer;
             margin: 4px;
+            touch-action: manipulation;
         }
         
-        .pixel-button:hover {
-            background: #EB008B;
+        .pixel-button:hover, .pixel-button:active {
+            background: var(--ralph-pink);
             color: white;
         }
         
         .pixel-button:active {
-            border-color: #808080 #ffffff #ffffff #808080;
+            border-color: var(--gray-dark) var(--white) var(--white) var(--gray-dark);
         }
         
         .blink {
@@ -293,15 +328,15 @@
         .ascii-art {
             font-size: 12px;
             line-height: 1;
-            color: #EB008B;
+            color: var(--ralph-pink);
             white-space: pre;
             margin: 8px 0;
         }
         
         input[type="text"], textarea {
-            background: #ffffff;
+            background: var(--white);
             border: 2px solid;
-            border-color: #808080 #ffffff #ffffff #808080;
+            border-color: var(--gray-dark) var(--white) var(--white) var(--gray-dark);
             padding: 4px;
             font-family: 'VT323', monospace;
             font-size: 18px;
@@ -339,13 +374,14 @@
             position: fixed;
             top: 20px;
             right: 20px;
-            background: #ffff00;
-            border: 2px solid #000;
+            background: var(--terminal-yellow);
+            border: 2px solid var(--black);
             padding: 12px;
             box-shadow: 4px 4px 0 rgba(0,0,0,0.5);
             font-size: 18px;
             z-index: 9998;
             display: none;
+            max-width: 300px;
         }
         
         .notification.show {
@@ -358,14 +394,15 @@
             25% { transform: translateX(-5px); }
             75% { transform: translateX(5px); }
         }
+        
         .boot-screen {
             position: fixed;
             top: 0;
             left: 0;
             width: 100vw;
             height: 100vh;
-            background: #000000;
-            color: #00ff00;
+            background: var(--black);
+            color: var(--terminal-green);
             font-family: 'VT323', monospace;
             display: flex;
             flex-direction: column;
@@ -373,6 +410,7 @@
             align-items: center;
             z-index: 10000;
             transition: opacity 0.5s;
+            padding: 20px;
         }
         
         .boot-screen.hide {
@@ -383,24 +421,27 @@
         .boot-logo {
             font-size: 20px;
             line-height: 1;
-            color: #EB008B;
+            color: var(--ralph-pink);
             white-space: pre;
             margin-bottom: 40px;
-            text-shadow: 0 0 10px #EB008B;
+            text-shadow: 0 0 10px var(--ralph-pink);
+            overflow: hidden;
+            max-width: 100%;
         }
         
         .boot-text {
-            color: #00ff00;
+            color: var(--terminal-green);
             font-size: 18px;
             margin-bottom: 20px;
             text-align: center;
         }
         
         .loading-bar-container {
-            width: 400px;
+            width: 90%;
+            max-width: 400px;
             height: 30px;
-            border: 2px solid #00ff00;
-            background: #000000;
+            border: 2px solid var(--terminal-green);
+            background: var(--black);
             position: relative;
             box-shadow: 0 0 20px rgba(0, 255, 0, 0.5);
         }
@@ -409,10 +450,10 @@
             height: 100%;
             background: repeating-linear-gradient(
                 90deg,
-                #EB008B,
-                #EB008B 10px,
-                #ff1493 10px,
-                #ff1493 20px
+                var(--ralph-pink),
+                var(--ralph-pink) 10px,
+                var(--ralph-pink-light) 10px,
+                var(--ralph-pink-light) 20px
             );
             width: 0%;
             transition: width 0.3s;
@@ -423,7 +464,7 @@
             right: -50px;
             top: 50%;
             transform: translateY(-50%);
-            color: #00ff00;
+            color: var(--terminal-green);
             font-size: 18px;
         }
         
@@ -432,9 +473,10 @@
             height: 100px;
             overflow: hidden;
             font-size: 14px;
-            color: #00ff00;
+            color: var(--terminal-green);
             text-align: left;
-            width: 500px;
+            width: 90%;
+            max-width: 500px;
         }
         
         .boot-message {
@@ -446,11 +488,203 @@
         @keyframes fadeIn {
             to { opacity: 1; }
         }
+        
+        /* Mobile Responsive Styles */
+        @media screen and (max-width: 768px) {
+            body {
+                overflow-y: auto;
+                overflow-x: hidden;
+                position: relative;
+            }
+            
+            .desktop {
+                min-height: 100vh;
+                height: auto;
+                overflow-y: auto;
+                overflow-x: hidden;
+            }
+            
+            .desktop-ascii {
+                font-size: 8px;
+                line-height: 0.9;
+                top: 10px;
+                left: 10px;
+            }
+            
+            .desktop-icons {
+                position: relative;
+                right: auto;
+                top: auto;
+                padding: 120px 20px 60px 20px;
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+                grid-auto-rows: 90px;
+                gap: 10px;
+                height: auto;
+                width: 100%;
+                overflow: visible;
+            }
+            
+            .icon {
+                padding: 4px;
+            }
+            
+            .icon-image {
+                width: 40px;
+                height: 40px;
+                font-size: 20px;
+            }
+            
+            .icon-label {
+                font-size: 12px;
+            }
+            
+            .window {
+                position: fixed !important;
+                top: 10px !important;
+                left: 10px !important;
+                right: 10px !important;
+                bottom: 50px !important;
+                width: auto !important;
+                height: auto !important;
+                max-width: none;
+                max-height: none;
+                z-index: 900;
+            }
+            
+            .window-header {
+                touch-action: none;
+                padding: 5px;
+            }
+            
+            .window-title {
+                font-size: 14px;
+            }
+            
+            .window-button {
+                width: 30px;
+                height: 30px;
+                font-size: 18px;
+            }
+            
+            .window-content {
+                font-size: 16px;
+                padding: 8px;
+            }
+            
+            .module-item h3 {
+                font-size: 18px;
+            }
+            
+            .pixel-button {
+                font-size: 16px;
+                padding: 10px 12px;
+            }
+            
+            .notification {
+                right: 10px;
+                top: 10px;
+                font-size: 14px;
+                max-width: calc(100vw - 40px);
+            }
+            
+            .boot-logo {
+                font-size: 10px;
+                line-height: 0.9;
+            }
+            
+            .boot-text {
+                font-size: 14px;
+            }
+            
+            .loading-percentage {
+                right: -40px;
+                font-size: 14px;
+            }
+            
+            .boot-messages {
+                font-size: 12px;
+            }
+            
+            input[type="text"], textarea {
+                font-size: 16px;
+                padding: 8px;
+            }
+            
+            /* Hide scanlines on mobile for performance */
+            .scanlines::before {
+                display: none;
+            }
+            
+            /* Simplify animations on mobile */
+            .crt-flicker {
+                animation: none;
+            }
+        }
+        
+        /* Small mobile devices */
+        @media screen and (max-width: 480px) {
+            .desktop-ascii {
+                font-size: 6px;
+                line-height: 0.8;
+            }
+            
+            .desktop-icons {
+                grid-template-columns: repeat(auto-fit, minmax(70px, 1fr));
+                grid-auto-rows: 80px;
+                padding: 100px 10px 60px 10px;
+            }
+            
+            .icon-image {
+                width: 35px;
+                height: 35px;
+                font-size: 18px;
+            }
+            
+            .icon-label {
+                font-size: 11px;
+            }
+            
+            .boot-logo {
+                font-size: 8px;
+            }
+        }
+        
+        /* Landscape mobile */
+        @media screen and (max-width: 768px) and (orientation: landscape) {
+            .desktop-icons {
+                padding: 80px 20px 60px 20px;
+                grid-template-columns: repeat(auto-fit, minmax(70px, 1fr));
+                grid-auto-rows: 70px;
+            }
+            
+            .desktop-ascii {
+                font-size: 6px;
+            }
+            
+            .window {
+                top: 5px !important;
+                bottom: 45px !important;
+            }
+        }
+        
+        /* Touch device optimizations */
+        @media (hover: none) and (pointer: coarse) {
+            .icon:hover {
+                background: transparent;
+                border-color: transparent;
+            }
+            
+            .pixel-button:hover {
+                background: var(--gray-light);
+                color: inherit;
+            }
+        }
     </style>
 </head>
 <body>
     <div class="boot-screen" id="bootScreen">
-        <div class="boot-logo">
+        <div class="boot-logo" id="bootLogo">
  ██████╗  █████╗ ██╗     ██████╗ ██╗  ██╗
  ██╔══██╗██╔══██╗██║     ██╔══██╗██║  ██║
  ██████╔╝███████║██║     ██████╔╝███████║
@@ -467,7 +701,7 @@
     </div>
     
     <div class="desktop scanlines crt-flicker" style="display: none;" id="desktop">
-        <div class="desktop-ascii">
+        <div class="desktop-ascii" id="desktopAscii">
  ██████╗  █████╗ ██╗     ██████╗ ██╗  ██╗    ██╗███████╗
  ██╔══██╗██╔══██╗██║     ██╔══██╗██║  ██║    ╚█║██╔════╝
  ██████╔╝███████║██║     ██████╔╝███████║     ║║███████╗
@@ -935,84 +1169,190 @@
     </div>
     
     <script>
-        // Window management
-        let activeWindow = null;
-        let zIndex = 100;
+        'use strict';
         
+        // Global state management
+        const AppState = {
+            windows: {},
+            activeWindow: null,
+            zIndex: 100,
+            isMobile: false,
+            touchDevice: false
+        };
+        
+        // Utility functions
+        const Utils = {
+            isMobileDevice: () => {
+                return window.innerWidth <= 768 || 
+                       ('ontouchstart' in window) || 
+                       (navigator.maxTouchPoints > 0);
+            },
+            
+            debounce: (func, wait) => {
+                let timeout;
+                return function executedFunction(...args) {
+                    const later = () => {
+                        clearTimeout(timeout);
+                        func(...args);
+                    };
+                    clearTimeout(timeout);
+                    timeout = setTimeout(later, wait);
+                };
+            }
+        };
+        
+        // Window management
         function openWindow(windowId) {
-            const window = document.getElementById(windowId);
-            window.classList.add('active');
-            window.style.zIndex = ++zIndex;
+            const windowEl = document.getElementById(windowId);
+            if (!windowEl) return;
             
-            // Play sound effect (simulated)
+            // Close other windows on mobile
+            if (AppState.isMobile) {
+                document.querySelectorAll('.window.active').forEach(w => {
+                    if (w.id !== windowId) {
+                        w.classList.remove('active');
+                    }
+                });
+            }
+            
+            windowEl.classList.add('active');
+            windowEl.style.zIndex = ++AppState.zIndex;
+            AppState.activeWindow = windowId;
+            
+            if (!AppState.windows[windowId]) {
+                AppState.windows[windowId] = { draggable: null };
+                makeDraggable(windowEl);
+            }
+            
             beep();
-            
-            // Make draggable
-            makeDraggable(window);
         }
         
         function closeWindow(windowId) {
-            const window = document.getElementById(windowId);
-            window.classList.remove('active');
+            const windowEl = document.getElementById(windowId);
+            if (!windowEl) return;
+            
+            windowEl.classList.remove('active');
+            if (AppState.activeWindow === windowId) {
+                AppState.activeWindow = null;
+            }
             beep();
         }
         
         function minimizeWindow(windowId) {
-            const window = document.getElementById(windowId);
-            window.style.display = 'none';
+            const windowEl = document.getElementById(windowId);
+            if (!windowEl) return;
+            
+            windowEl.style.display = 'none';
             setTimeout(() => {
-                window.style.display = '';
+                windowEl.style.display = '';
             }, 100);
             beep();
         }
         
         function maximizeWindow(windowId) {
-            const window = document.getElementById(windowId);
-            if (window.style.width === '90vw') {
-                window.style.width = '';
-                window.style.height = '';
-                window.style.top = '100px';
-                window.style.left = '100px';
+            const windowEl = document.getElementById(windowId);
+            if (!windowEl) return;
+            
+            if (AppState.isMobile) {
+                // On mobile, maximizing fills the available space
+                windowEl.style.cssText = `
+                    position: fixed !important;
+                    top: 10px !important;
+                    left: 10px !important;
+                    right: 10px !important;
+                    bottom: 50px !important;
+                    width: auto !important;
+                    height: auto !important;
+                `;
             } else {
-                window.style.width = '90vw';
-                window.style.height = '80vh';
-                window.style.top = '20px';
-                window.style.left = '5vw';
+                if (windowEl.dataset.maximized === 'true') {
+                    // Restore
+                    windowEl.style.width = windowEl.dataset.originalWidth || '';
+                    windowEl.style.height = windowEl.dataset.originalHeight || '';
+                    windowEl.style.top = windowEl.dataset.originalTop || '100px';
+                    windowEl.style.left = windowEl.dataset.originalLeft || '100px';
+                    windowEl.dataset.maximized = 'false';
+                } else {
+                    // Maximize
+                    windowEl.dataset.originalWidth = windowEl.style.width;
+                    windowEl.dataset.originalHeight = windowEl.style.height;
+                    windowEl.dataset.originalTop = windowEl.style.top;
+                    windowEl.dataset.originalLeft = windowEl.style.left;
+                    
+                    windowEl.style.width = '90vw';
+                    windowEl.style.height = '80vh';
+                    windowEl.style.top = '20px';
+                    windowEl.style.left = '5vw';
+                    windowEl.dataset.maximized = 'true';
+                }
             }
             beep();
         }
         
         function makeDraggable(element) {
+            if (AppState.isMobile) return; // Disable dragging on mobile
+            
             let pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
             const header = element.querySelector('.window-header');
+            if (!header) return;
+            
+            const dragMouseDown = (e) => {
+                e = e || window.event;
+                e.preventDefault();
+                
+                if (e.type === 'touchstart') {
+                    pos3 = e.touches[0].clientX;
+                    pos4 = e.touches[0].clientY;
+                } else {
+                    pos3 = e.clientX;
+                    pos4 = e.clientY;
+                }
+                
+                document.onmouseup = closeDragElement;
+                document.ontouchend = closeDragElement;
+                document.onmousemove = elementDrag;
+                document.ontouchmove = elementDrag;
+                element.style.zIndex = ++AppState.zIndex;
+            };
+            
+            const elementDrag = (e) => {
+                e = e || window.event;
+                e.preventDefault();
+                
+                let clientX, clientY;
+                if (e.type === 'touchmove') {
+                    clientX = e.touches[0].clientX;
+                    clientY = e.touches[0].clientY;
+                } else {
+                    clientX = e.clientX;
+                    clientY = e.clientY;
+                }
+                
+                pos1 = pos3 - clientX;
+                pos2 = pos4 - clientY;
+                pos3 = clientX;
+                pos4 = clientY;
+                
+                const newTop = element.offsetTop - pos2;
+                const newLeft = element.offsetLeft - pos1;
+                
+                // Boundary checking
+                const maxTop = window.innerHeight - element.offsetHeight;
+                const maxLeft = window.innerWidth - element.offsetWidth;
+                
+                element.style.top = Math.max(0, Math.min(newTop, maxTop)) + "px";
+                element.style.left = Math.max(0, Math.min(newLeft, maxLeft)) + "px";
+            };
+            
+            const closeDragElement = () => {
+                document.onmouseup = null;
+                document.ontouchend = null;
+                document.onmousemove = null;
+                document.ontouchmove = null;
+            };
             
             header.onmousedown = dragMouseDown;
-            
-            function dragMouseDown(e) {
-                e = e || window.event;
-                e.preventDefault();
-                pos3 = e.clientX;
-                pos4 = e.clientY;
-                document.onmouseup = closeDragElement;
-                document.onmousemove = elementDrag;
-                element.style.zIndex = ++zIndex;
-            }
-            
-            function elementDrag(e) {
-                e = e || window.event;
-                e.preventDefault();
-                pos1 = pos3 - e.clientX;
-                pos2 = pos4 - e.clientY;
-                pos3 = e.clientX;
-                pos4 = e.clientY;
-                element.style.top = (element.offsetTop - pos2) + "px";
-                element.style.left = (element.offsetLeft - pos1) + "px";
-            }
-            
-            function closeDragElement() {
-                document.onmouseup = null;
-                document.onmousemove = null;
-            }
+            header.ontouchstart = dragMouseDown;
         }
         
         // Clock update
@@ -1022,33 +1362,39 @@
             const minutes = now.getMinutes().toString().padStart(2, '0');
             const ampm = hours >= 12 ? 'PM' : 'AM';
             const displayHours = hours % 12 || 12;
-            document.getElementById('clock').textContent = `${displayHours}:${minutes} ${ampm}`;
+            const clockEl = document.getElementById('clock');
+            if (clockEl) {
+                clockEl.textContent = `${displayHours}:${minutes} ${ampm}`;
+            }
         }
-        
-        setInterval(updateClock, 1000);
-        updateClock();
         
         // Sound effect
         function beep() {
-            const audioContext = new (window.AudioContext || window.webkitAudioContext)();
-            const oscillator = audioContext.createOscillator();
-            const gainNode = audioContext.createGain();
-            
-            oscillator.connect(gainNode);
-            gainNode.connect(audioContext.destination);
-            
-            oscillator.frequency.value = 800;
-            oscillator.type = 'square';
-            gainNode.gain.value = 0.1;
-            
-            oscillator.start();
-            oscillator.stop(audioContext.currentTime + 0.05);
+            try {
+                const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                const oscillator = audioContext.createOscillator();
+                const gainNode = audioContext.createGain();
+                
+                oscillator.connect(gainNode);
+                gainNode.connect(audioContext.destination);
+                
+                oscillator.frequency.value = 800;
+                oscillator.type = 'square';
+                gainNode.gain.value = 0.1;
+                
+                oscillator.start();
+                oscillator.stop(audioContext.currentTime + 0.05);
+            } catch (e) {
+                // Silently fail if audio is not supported
+            }
         }
         
         // Notification system
         function showNotification(message) {
             const notification = document.getElementById('notification');
             const notificationText = document.getElementById('notificationText');
+            if (!notification || !notificationText) return;
+            
             notificationText.textContent = message;
             notification.classList.add('show');
             beep();
@@ -1062,8 +1408,9 @@
         function sendChat() {
             const input = document.getElementById('chatInput');
             const display = document.getElementById('chatDisplay');
-            const message = input.value.trim();
+            if (!input || !display) return;
             
+            const message = input.value.trim();
             if (message === '') return;
             
             // Remove blinking cursor
@@ -1082,7 +1429,6 @@
             botMsg.style.marginTop = '10px';
             botMsg.style.color = '#00ff00';
             
-            // Simple responses
             let response = '';
             const lowerMsg = message.toLowerCase();
             
@@ -1105,7 +1451,9 @@
             } else if (lowerMsg.includes('modules')) {
                 response = 'Available modules: New Biz Pipeline, Premieres, Creative Challenge, Shoutouts, Articles, RALPH News, Suggestions, Announcements, Links, Innovation, Resources';
             } else if (lowerMsg.includes('tips')) {
-                response = 'Pro tip: Hold SHIFT while clicking to open multiple windows at once!';
+                response = AppState.isMobile ? 
+                    'Pro tip: Tap any icon to open its module!' : 
+                    'Pro tip: Hold SHIFT while clicking to open multiple windows at once!';
             } else {
                 const responses = [
                     'Processing request...',
@@ -1135,25 +1483,32 @@
             beep();
         }
         
-        // Enter key to send chat
-        document.addEventListener('DOMContentLoaded', () => {
-            const chatInput = document.getElementById('chatInput');
-            if (chatInput) {
-                chatInput.addEventListener('keypress', (e) => {
-                    if (e.key === 'Enter') {
-                        sendChat();
+        // Responsive handling
+        function handleResize() {
+            const wasMobile = AppState.isMobile;
+            AppState.isMobile = Utils.isMobileDevice();
+            
+            if (wasMobile !== AppState.isMobile) {
+                // Reset window positions when switching between mobile and desktop
+                document.querySelectorAll('.window').forEach(windowEl => {
+                    if (AppState.isMobile) {
+                        windowEl.style.cssText = '';
+                    } else {
+                        windowEl.dataset.maximized = 'false';
                     }
                 });
             }
-        });
+        }
         
         // Boot sequence
-        window.addEventListener('load', () => {
+        function bootSequence() {
             const bootScreen = document.getElementById('bootScreen');
             const desktop = document.getElementById('desktop');
             const loadingBar = document.getElementById('loadingBar');
             const loadingPercentage = document.getElementById('loadingPercentage');
             const bootMessages = document.getElementById('bootMessages');
+            
+            if (!bootScreen || !desktop) return;
             
             const messages = [
                 'Loading system kernel...',
@@ -1177,10 +1532,11 @@
                 progress += Math.random() * 15;
                 if (progress > 100) progress = 100;
                 
-                loadingBar.style.width = progress + '%';
-                loadingPercentage.textContent = Math.floor(progress) + '%';
+                if (loadingBar) loadingBar.style.width = progress + '%';
+                if (loadingPercentage) loadingPercentage.textContent = Math.floor(progress) + '%';
                 
-                if (messageIndex < messages.length && progress > (messageIndex / messages.length) * 100) {
+                if (bootMessages && messageIndex < messages.length && 
+                    progress > (messageIndex / messages.length) * 100) {
                     const messageDiv = document.createElement('div');
                     messageDiv.className = 'boot-message';
                     messageDiv.textContent = '> ' + messages[messageIndex];
@@ -1198,7 +1554,7 @@
                         
                         // Make chatbot window draggable
                         const chatbotWindow = document.getElementById('chatbot');
-                        if (chatbotWindow) {
+                        if (chatbotWindow && !AppState.isMobile) {
                             makeDraggable(chatbotWindow);
                         }
                         
@@ -1208,15 +1564,62 @@
                     }, 1000);
                 }
             }, 300);
-        });
+        }
         
-        // Keyboard shortcuts
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape') {
-                const windows = document.querySelectorAll('.window.active');
-                windows.forEach(w => w.classList.remove('active'));
+        // Initialize application
+        function init() {
+            // Detect device type
+            AppState.isMobile = Utils.isMobileDevice();
+            AppState.touchDevice = 'ontouchstart' in window;
+            
+            // Start boot sequence
+            bootSequence();
+            
+            // Start clock
+            setInterval(updateClock, 1000);
+            updateClock();
+            
+            // Handle responsive design
+            window.addEventListener('resize', Utils.debounce(handleResize, 250));
+            
+            // Keyboard shortcuts
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape') {
+                    document.querySelectorAll('.window.active').forEach(w => {
+                        w.classList.remove('active');
+                    });
+                }
+            });
+            
+            // Chat input handler
+            const chatInput = document.getElementById('chatInput');
+            if (chatInput) {
+                chatInput.addEventListener('keypress', (e) => {
+                    if (e.key === 'Enter') {
+                        sendChat();
+                    }
+                });
             }
-        });
+            
+            // Prevent zoom on double tap for mobile
+            if (AppState.touchDevice) {
+                let lastTouchEnd = 0;
+                document.addEventListener('touchend', (e) => {
+                    const now = Date.now();
+                    if (now - lastTouchEnd <= 300) {
+                        e.preventDefault();
+                    }
+                    lastTouchEnd = now;
+                }, false);
+            }
+        }
+        
+        // Start application when DOM is ready
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', init);
+        } else {
+            init();
+        }
     </script>
 </body>
 </html>
