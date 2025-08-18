@@ -8,6 +8,8 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <title>RALPH Intranet - System 1.0</title>
+    <script src="cms-config.js"></script>
+    <script src="api-integration.js"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=VT323&display=swap');
         
@@ -1026,7 +1028,7 @@
                     <h3>SUBMIT YOUR IDEA</h3>
                     <input type="text" placeholder="Your Name...">
                     <textarea rows="4" placeholder="Your brilliant idea here..."></textarea>
-                    <button class="pixel-button" onclick="showNotification('Suggestion submitted!')">SUBMIT</button>
+                    <button class="pixel-button" onclick="submitSuggestion()">SUBMIT</button>
                 </div>
                 <div class="module-item">
                     <h3>RECENT SUGGESTIONS</h3>
@@ -1156,7 +1158,7 @@
         </div>
         
         <div class="taskbar">
-            <button class="start-button">
+            <button class="start-button" onclick="handleStartButton()">
                 <span class="ralph-logo"></span>
                 START
             </button>
@@ -1177,7 +1179,10 @@
             activeWindow: null,
             zIndex: 100,
             isMobile: false,
-            touchDevice: false
+            touchDevice: false,
+            config: null,
+            apiIntegration: null,
+            chatbotAI: null
         };
         
         // Utility functions
@@ -1404,8 +1409,20 @@
             }, 3000);
         }
         
-        // Chatbot functionality
-        function sendChat() {
+        // START button functionality
+        function handleStartButton() {
+            const chatbotWindow = document.getElementById('chatbot');
+            if (chatbotWindow && !chatbotWindow.classList.contains('active')) {
+                openWindow('chatbot');
+                showNotification('RALPH Assistant activated!');
+            } else {
+                showNotification('Assistant already running!');
+            }
+            beep();
+        }
+
+        // Enhanced chatbot functionality with AI integration
+        async function sendChat() {
             const input = document.getElementById('chatInput');
             const display = document.getElementById('chatDisplay');
             if (!input || !display) return;
@@ -1424,21 +1441,27 @@
             userMsg.innerHTML = `<span style="color: #ffffff;">USER:</span> ${message}`;
             display.appendChild(userMsg);
             
-            // Process bot response
-            const botMsg = document.createElement('div');
-            botMsg.style.marginTop = '10px';
-            botMsg.style.color = '#00ff00';
+            // Add loading indicator
+            const loadingMsg = document.createElement('div');
+            loadingMsg.style.marginTop = '10px';
+            loadingMsg.style.color = '#00ff00';
+            loadingMsg.innerHTML = `<span style="color: #ffff00;">ASSISTANT:</span> <span class="blink">Processing...</span>`;
+            display.appendChild(loadingMsg);
+            display.scrollTop = display.scrollHeight;
             
+            // Process bot response
             let response = '';
             const lowerMsg = message.toLowerCase();
             
+            // Handle built-in commands first
             if (lowerMsg.includes('help')) {
                 response = `Available commands:
 ► 'status' - Check system status
 ► 'time' - Get current time
 ► 'clear' - Clear chat history
 ► 'modules' - List all modules
-► 'tips' - Show productivity tips`;
+► 'tips' - Show productivity tips
+► 'refresh' - Update all module content`;
             } else if (lowerMsg.includes('status')) {
                 response = 'All systems operational. Network: ONLINE. Projects: 47 active.';
             } else if (lowerMsg.includes('time')) {
@@ -1446,16 +1469,35 @@
                 response = `Current time: ${now.toLocaleTimeString()}`;
             } else if (lowerMsg.includes('clear')) {
                 display.innerHTML = `<div style="color: #EB008B;">Chat cleared.</div>`;
+                if (AppState.chatbotAI) {
+                    AppState.chatbotAI.clearHistory();
+                }
                 input.value = '';
                 return;
             } else if (lowerMsg.includes('modules')) {
-                response = 'Available modules: New Biz Pipeline, Premieres, Creative Challenge, Shoutouts, Articles, RALPH News, Suggestions, Announcements, Links, Innovation, Resources';
+                const enabledModules = Object.entries(AppState.config?.modules || {})
+                    .filter(([id, config]) => config.enabled)
+                    .map(([id, config]) => config.title)
+                    .join(', ');
+                response = `Available modules: ${enabledModules}`;
             } else if (lowerMsg.includes('tips')) {
                 response = AppState.isMobile ? 
                     'Pro tip: Tap any icon to open its module!' : 
                     'Pro tip: Hold SHIFT while clicking to open multiple windows at once!';
+            } else if (lowerMsg.includes('refresh')) {
+                refreshAllModules();
+                response = 'Refreshing all module content from APIs...';
+            } else if (AppState.chatbotAI) {
+                // Use AI chatbot if available
+                try {
+                    response = await AppState.chatbotAI.sendMessage(message);
+                } catch (error) {
+                    console.error('Chatbot AI error:', error);
+                    response = 'I apologize, but I\'m having trouble processing your request right now.';
+                }
             } else {
-                const responses = [
+                // Fallback responses
+                const responses = AppState.config?.chatbot?.openai?.fallbackResponses || [
                     'Processing request...',
                     'That\'s interesting! Tell me more.',
                     'System acknowledged.',
@@ -1466,6 +1508,12 @@
                 response = responses[Math.floor(Math.random() * responses.length)];
             }
             
+            // Remove loading indicator and add actual response
+            display.removeChild(loadingMsg);
+            
+            const botMsg = document.createElement('div');
+            botMsg.style.marginTop = '10px';
+            botMsg.style.color = '#00ff00';
             botMsg.innerHTML = `<span style="color: #ffff00;">ASSISTANT:</span> ${response}`;
             display.appendChild(botMsg);
             
@@ -1481,6 +1529,104 @@
             input.value = '';
             display.scrollTop = display.scrollHeight;
             beep();
+        }
+
+        // CMS Functions
+        function loadContentFromCMS() {
+            if (!AppState.config) return;
+            
+            // Update chatbot welcome message
+            const welcomeArea = document.querySelector('#chatDisplay');
+            if (welcomeArea && AppState.config.chatbot) {
+                const chatConfig = AppState.config.chatbot;
+                welcomeArea.innerHTML = `
+                    <div style="color: #EB008B;">=======================================</div>
+                    <div style="color: #EB008B;">${chatConfig.title.toUpperCase()} - INITIALIZED</div>
+                    <div style="color: #EB008B;">=======================================</div>
+                    <div style="margin-top: 10px;">
+                        <span style="color: #ffff00;">ASSISTANT:</span> ${chatConfig.welcomeMessage}
+                    </div>
+                    <div style="margin-top: 10px;">
+                        ${chatConfig.helpText}
+                    </div>
+                    <div style="margin-top: 10px;">
+                        <span style="color: #ffff00;">TIP:</span> Press ESC to close all windows
+                    </div>
+                    <div style="margin-top: 10px;">
+                        Type 'help' for more commands or ask me anything!
+                    </div>
+                    <div style="margin-top: 10px; color: #00ff00;" class="blink">
+                        > _
+                    </div>
+                `;
+            }
+            
+            // Update module icons and titles
+            Object.entries(AppState.config.modules).forEach(([moduleId, moduleConfig]) => {
+                if (!moduleConfig.enabled) {
+                    const icon = document.querySelector(`[onclick="openWindow('${moduleId}')"]`);
+                    if (icon) icon.style.display = 'none';
+                    return;
+                }
+                
+                const windowElement = document.getElementById(moduleId);
+                if (windowElement) {
+                    const title = windowElement.querySelector('.window-title');
+                    if (title) {
+                        title.textContent = `${moduleConfig.icon} ${moduleConfig.title}`;
+                    }
+                }
+            });
+        }
+
+        function refreshAllModules() {
+            if (!AppState.apiIntegration || !AppState.config) return;
+            
+            Object.entries(AppState.config.modules).forEach(([moduleId, moduleConfig]) => {
+                if (moduleConfig.enabled && moduleConfig.apiEndpoint) {
+                    AppState.apiIntegration.updateModuleContent(moduleId, moduleConfig);
+                    AppState.apiIntegration.startAutoRefresh(moduleId, moduleConfig);
+                }
+            });
+        }
+
+        // Form submission handler
+        async function submitSuggestion() {
+            const nameInput = document.querySelector('#suggestions input[type="text"]');
+            const ideaInput = document.querySelector('#suggestions textarea');
+            
+            if (!nameInput || !ideaInput) return;
+            
+            const data = {
+                name: nameInput.value.trim(),
+                idea: ideaInput.value.trim(),
+                timestamp: new Date().toISOString()
+            };
+            
+            if (!data.name || !data.idea) {
+                showNotification('Please fill in all fields!');
+                return;
+            }
+            
+            if (AppState.config?.modules?.suggestions?.submitEndpoint) {
+                const result = await AppState.apiIntegration.submitData(
+                    AppState.config.modules.suggestions.submitEndpoint,
+                    data
+                );
+                
+                if (result.success) {
+                    nameInput.value = '';
+                    ideaInput.value = '';
+                    showNotification('Suggestion submitted successfully!');
+                } else {
+                    showNotification('Failed to submit suggestion. Please try again.');
+                }
+            } else {
+                // Simulate success if no API endpoint
+                nameInput.value = '';
+                ideaInput.value = '';
+                showNotification('Suggestion submitted!');
+            }
         }
         
         // Responsive handling
@@ -1567,10 +1713,35 @@
         }
         
         // Initialize application
-        function init() {
+        async function init() {
             // Detect device type
             AppState.isMobile = Utils.isMobileDevice();
             AppState.touchDevice = 'ontouchstart' in window;
+            
+            // Load CMS configuration
+            if (typeof CMS_CONFIG !== 'undefined') {
+                AppState.config = CMS_CONFIG;
+                
+                // Initialize API integration
+                if (typeof APIIntegration !== 'undefined') {
+                    AppState.apiIntegration = new APIIntegration(AppState.config);
+                }
+                
+                // Initialize ChatbotAI if configured
+                if (typeof ChatbotAI !== 'undefined' && AppState.config.chatbot?.openai) {
+                    AppState.chatbotAI = new ChatbotAI(AppState.config.chatbot.openai);
+                    
+                    // Load custom prompt if file exists
+                    try {
+                        await AppState.chatbotAI.initialize('custom-prompt.txt');
+                    } catch (error) {
+                        console.log('No custom prompt file found, using default');
+                    }
+                }
+                
+                // Load content from CMS
+                loadContentFromCMS();
+            }
             
             // Start boot sequence
             bootSequence();
@@ -1612,6 +1783,11 @@
                     lastTouchEnd = now;
                 }, false);
             }
+            
+            // Start auto-refresh for modules with API endpoints
+            setTimeout(() => {
+                refreshAllModules();
+            }, 2000); // Delay to ensure all elements are loaded
         }
         
         // Start application when DOM is ready
