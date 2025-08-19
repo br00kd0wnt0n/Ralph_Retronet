@@ -78,9 +78,9 @@ Always maintain a friendly, professional tone and embody RALPH's creative spirit
             content: {
                 header: "RALPH PIPELINE TRACKER 1.0",
                 activePitches: [
-                    { name: "Global Tech Corp - Video Campaign", progress: 75 },
-                    { name: "Fashion Brand X - Social Strategy", progress: 45 },
-                    { name: "Auto Company Z - Launch Film", progress: 90 }
+                    { name: "Global Tech Corp - Video Campaign", progress: 75, viewLink: "", downloadLink: "" },
+                    { name: "Fashion Brand X - Social Strategy", progress: 45, viewLink: "", downloadLink: "" },
+                    { name: "Auto Company Z - Launch Film", progress: 90, viewLink: "", downloadLink: "" }
                 ],
                 upcomingMeetings: [
                     { time: "Tomorrow 2:00 PM", client: "Tech Startup Pitch", urgent: true },
@@ -98,14 +98,14 @@ Always maintain a friendly, professional tone and embody RALPH's creative spirit
             enabled: true,
             content: {
                 thisMonth: [
-                    { date: "Dec 15", project: "Urban Dreams Documentary" },
-                    { date: "Dec 20", project: "Holiday Campaign Launch" },
-                    { date: "Dec 28", project: "Year-End Showcase" }
+                    { date: "Dec 15", project: "Urban Dreams Documentary", liveLink: "" },
+                    { date: "Dec 20", project: "Holiday Campaign Launch", liveLink: "" },
+                    { date: "Dec 28", project: "Year-End Showcase", liveLink: "" }
                 ],
                 nextMonth: [
-                    { date: "Jan 10", project: "New Product Launch Film" },
-                    { date: "Jan 15", project: "Brand Refresh Campaign" },
-                    { date: "Jan 25", project: "Super Bowl Teaser" }
+                    { date: "Jan 10", project: "New Product Launch Film", liveLink: "" },
+                    { date: "Jan 15", project: "Brand Refresh Campaign", liveLink: "" },
+                    { date: "Jan 25", project: "Super Bowl Teaser", liveLink: "" }
                 ]
             },
             apiEndpoint: null
@@ -285,6 +285,35 @@ Always maintain a friendly, professional tone and embody RALPH's creative spirit
                 ]
             },
             apiEndpoint: null
+        },
+
+        music: {
+            title: "Music Library Manager",
+            icon: "🎵",
+            enabled: true,
+            content: {
+                tracks: [
+                    { 
+                        id: 1, 
+                        title: "Kawaii Kitsune", 
+                        artist: "Kevin MacLeod", 
+                        file: "music/kawaii-kitsune-kevin-macleod-main-version-7984-04-02.mp3",
+                        duration: "4:02",
+                        uploadDate: "2024-08-19"
+                    },
+                    { 
+                        id: 2, 
+                        title: "Mirthaflare", 
+                        artist: "Ian Aisling", 
+                        file: "music/mirthaflare-ian-aisling-main-version-22101-02-36.mp3",
+                        duration: "2:36",
+                        uploadDate: "2024-08-19"
+                    }
+                ],
+                totalTracks: 2,
+                totalDuration: "6:38"
+            },
+            apiEndpoint: null
         }
     },
 
@@ -301,7 +330,10 @@ Always maintain a friendly, professional tone and embody RALPH's creative spirit
     }
 };
 
-// Export for use in other scripts
+// Make available globally for browser
+window.CMS_CONFIG = CMS_CONFIG;
+
+// Export for Node.js if needed
 if (typeof module !== 'undefined' && module.exports) {
     module.exports = CMS_CONFIG;
 }

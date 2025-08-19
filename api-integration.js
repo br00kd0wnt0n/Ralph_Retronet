@@ -345,7 +345,11 @@ class ChatbotAI {
     }
 }
 
-// Export for use in main application
+// Make available globally for browser
+window.APIIntegration = APIIntegration;
+window.ChatbotAI = ChatbotAI;
+
+// Export for Node.js if needed
 if (typeof module !== 'undefined' && module.exports) {
     module.exports = { APIIntegration, ChatbotAI };
 }

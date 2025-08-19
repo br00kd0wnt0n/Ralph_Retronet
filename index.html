@@ -5,11 +5,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta name="description" content="RALPH's Super-Intranet - Retro 90s Company Dashboard">
     <meta name="theme-color" content="#EB008B">
+    <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <title>RALPH Intranet - System 1.0</title>
-    <script src="cms-config.js"></script>
-    <script src="api-integration.js"></script>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🖥️</text></svg>")
+    <title></title>
+    <script>
+        // Fallback CMS config if external file fails to load
+        if (typeof CMS_CONFIG === 'undefined') {
+            console.log('Loading fallback CMS config...');
+        }
+    </script>
+    <script src="./cms-config.js" onerror="console.error('Failed to load cms-config.js')"></script>
+    <script src="./api-integration.js" onerror="console.error('Failed to load api-integration.js')"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=VT323&display=swap');
         
@@ -120,6 +128,36 @@
         .start-button:active {
             border-color: var(--gray-dark) var(--white) var(--white) var(--gray-dark);
         }
+
+        .sound-button {
+            background: var(--gray-light);
+            border: 2px solid;
+            border-color: var(--white) var(--gray-dark) var(--gray-dark) var(--white);
+            padding: 4px 8px;
+            font-size: 16px;
+            cursor: pointer;
+            font-family: 'VT323', monospace;
+            color: var(--black);
+            transition: all 0.1s;
+            min-width: 40px;
+            position: absolute;
+            right: 90px;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+
+        .sound-button:hover {
+            background: var(--white);
+        }
+
+        .sound-button:active {
+            border-color: var(--gray-dark) var(--white) var(--white) var(--gray-dark);
+        }
+
+        .sound-button.active {
+            background: var(--ralph-pink);
+            color: var(--white);
+        }
         
         .ralph-logo {
             width: 16px;
@@ -129,12 +167,366 @@
         }
         
         .clock {
-            margin-left: auto;
             background: var(--gray-light);
             border: 2px solid;
             border-color: var(--gray-dark) var(--white) var(--white) var(--gray-dark);
             padding: 4px 8px;
             font-size: 18px;
+            position: absolute;
+            right: 8px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .clock:hover {
+            background: var(--white);
+            border-color: var(--black) var(--gray-light) var(--gray-light) var(--black);
+        }
+
+        .timezone-panel {
+            position: absolute;
+            bottom: 100%;
+            right: 0;
+            background: var(--gray-light);
+            border: 2px solid;
+            border-color: var(--white) var(--gray-dark) var(--gray-dark) var(--white);
+            min-width: 200px;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(10px);
+            transition: all 0.3s ease;
+            z-index: 1000;
+            box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+            font-size: 16px;
+        }
+
+        .clock:hover .timezone-panel {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .timezone-header {
+            background: var(--ralph-pink);
+            color: var(--white);
+            text-align: center;
+            padding: 6px;
+            border-bottom: 1px solid var(--gray-dark);
+            font-weight: bold;
+            text-shadow: 1px 1px 0 var(--black);
+        }
+
+        .timezone-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 4px 8px;
+            border-bottom: 1px solid var(--gray-dark);
+            transition: background-color 0.2s ease;
+        }
+
+        .timezone-item:last-child {
+            border-bottom: none;
+        }
+
+        .timezone-item:hover {
+            background: var(--ralph-pink);
+            color: var(--white);
+        }
+
+        .timezone-label {
+            font-weight: bold;
+        }
+
+        .timezone-city {
+            font-size: 14px;
+            color: var(--gray-dark);
+        }
+
+        .timezone-item:hover .timezone-city {
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        .timezone-time {
+            font-family: 'VT323', monospace;
+            font-size: 16px;
+            color: var(--black);
+        }
+
+        .timezone-item:hover .timezone-time {
+            color: var(--white);
+        }
+
+        /* Iframe Window Styles */
+        .iframe-window {
+            position: absolute;
+            background: var(--window-bg);
+            border: 2px solid;
+            border-color: var(--white) var(--gray-dark) var(--gray-dark) var(--white);
+            box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+            min-width: 600px;
+            min-height: 400px;
+            z-index: 1000;
+            display: none;
+        }
+
+        .iframe-window.active {
+            display: block;
+            z-index: 1001;
+        }
+
+        .iframe-header {
+            background: var(--ralph-pink);
+            color: var(--white);
+            padding: 4px 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: move;
+            font-size: 16px;
+            border-bottom: 1px solid var(--gray-dark);
+        }
+
+        .iframe-title {
+            font-weight: bold;
+            flex: 1;
+            text-overflow: ellipsis;
+            overflow: hidden;
+            white-space: nowrap;
+        }
+
+        .iframe-controls {
+            display: flex;
+            gap: 4px;
+        }
+
+        .iframe-control-btn {
+            width: 20px;
+            height: 20px;
+            background: var(--gray-light);
+            border: 1px solid;
+            border-color: var(--white) var(--gray-dark) var(--gray-dark) var(--white);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: bold;
+            color: var(--black);
+        }
+
+        .iframe-control-btn:hover {
+            background: var(--white);
+        }
+
+        .iframe-control-btn:active {
+            border-color: var(--gray-dark) var(--white) var(--white) var(--gray-dark);
+        }
+
+        .iframe-content {
+            width: 100%;
+            height: calc(100% - 29px);
+            border: none;
+            background: var(--white);
+        }
+
+        .iframe-loading {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            background: var(--white);
+            font-family: 'VT323', monospace;
+            font-size: 18px;
+            color: var(--ralph-pink);
+        }
+
+        /* Music Player Styles */
+        .music-player {
+            position: fixed;
+            bottom: 80px;
+            right: 20px;
+            width: 280px;
+            height: 120px;
+            background: var(--gray-light);
+            border: 2px solid;
+            border-color: var(--white) var(--gray-dark) var(--gray-dark) var(--white);
+            display: none;
+            z-index: 1000;
+            font-family: 'VT323', monospace;
+            box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+
+        .music-player.active {
+            display: block;
+        }
+        
+        .player-header {
+            background: var(--ralph-pink);
+            color: white;
+            padding: 2px 8px;
+            font-size: 14px;
+            cursor: move;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--gray-dark);
+        }
+        
+        .player-close {
+            background: var(--gray-light);
+            border: 1px solid var(--gray-dark);
+            color: var(--black);
+            padding: 2px 6px;
+            font-size: 12px;
+            cursor: pointer;
+        }
+        .player-close:hover {
+            background: var(--white);
+        }
+        
+        .volume-section {
+            display: flex;
+            align-items: center;
+            padding: 4px 8px;
+            gap: 8px;
+        }
+        
+        .volume-label {
+            font-size: 12px;
+            color: var(--black);
+            font-family: 'VT323', monospace;
+        }
+        
+        .volume-slider {
+            width: 60px;
+            height: 15px;
+            -webkit-appearance: none;
+            appearance: none;
+            background: var(--gray-dark);
+            border: 1px solid var(--black);
+            outline: none;
+        }
+        
+        .volume-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 12px;
+            height: 12px;
+            background: var(--ralph-pink);
+            border: 1px solid var(--black);
+            cursor: pointer;
+        }
+        
+        .volume-slider::-moz-range-thumb {
+            width: 12px;
+            height: 12px;
+            background: var(--ralph-pink);
+            border: 1px solid var(--black);
+            cursor: pointer;
+            border-radius: 0;
+        }
+
+
+        .player-display {
+            background: #0a0a0a;
+            color: var(--terminal-green);
+            padding: 4px 8px;
+            font-size: 11px;
+            height: 32px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            border-bottom: 1px solid #333;
+        }
+
+        .track-info {
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+        }
+
+        .track-time {
+            font-size: 10px;
+            color: var(--terminal-cyan);
+        }
+
+        .player-controls {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 8px;
+            gap: 4px;
+            background: linear-gradient(135deg, #2a2a2a, #1a1a1a);
+        }
+
+        .control-btn {
+            width: 24px;
+            height: 20px;
+            background: var(--gray-light);
+            border: 1px solid;
+            border-color: var(--white) var(--gray-dark) var(--gray-dark) var(--white);
+            cursor: pointer;
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--black);
+            font-family: 'VT323', monospace;
+        }
+
+        .control-btn:hover {
+            background: var(--white);
+        }
+
+        .control-btn:active {
+            border-color: var(--gray-dark) var(--white) var(--white) var(--gray-dark);
+        }
+
+        .control-btn.play {
+            background: var(--ralph-pink);
+            color: var(--white);
+            width: 32px;
+        }
+
+        .volume-section {
+            display: flex;
+            align-items: center;
+            padding: 4px 8px;
+            background: #2a2a2a;
+            border-top: 1px solid #333;
+            gap: 4px;
+        }
+
+        .volume-label {
+            color: var(--gray-light);
+            font-size: 10px;
+        }
+
+        .volume-slider {
+            flex: 1;
+            height: 4px;
+            background: #0a0a0a;
+            border: 1px inset #333;
+            position: relative;
+        }
+
+        .volume-fill {
+            height: 100%;
+            background: var(--ralph-pink);
+            width: 70%;
+            transition: width 0.1s;
+        }
+
+        .playlist-btn {
+            background: var(--gray-dark);
+            border: 1px solid #555;
+            color: var(--white);
+            padding: 2px 6px;
+            cursor: pointer;
+            font-size: 10px;
         }
         
         .desktop-icons {
@@ -783,6 +1175,11 @@
                 <div class="icon-image">📁</div>
                 <div class="icon-label">Resources</div>
             </div>
+            
+            <div class="icon" onclick="openAdminLogin()">
+                <div class="icon-image">⚙️</div>
+                <div class="icon-label">Intranet Admin</div>
+            </div>
         </div>
         
         <!-- Windows -->
@@ -1157,16 +1554,117 @@
             </div>
         </div>
         
+        
         <div class="taskbar">
             <button class="start-button" onclick="handleStartButton()">
                 <span class="ralph-logo"></span>
                 START
             </button>
-            <div class="clock" id="clock">12:00 PM</div>
+            <div class="clock" id="clock">
+                12:00 PM
+                <div class="timezone-panel">
+                    <div class="timezone-header">WORLD CLOCKS</div>
+                    <div class="timezone-item">
+                        <div>
+                            <div class="timezone-label">LA</div>
+                            <div class="timezone-city">Los Angeles</div>
+                        </div>
+                        <div class="timezone-time" id="timezone-la">12:00 PM</div>
+                    </div>
+                    <div class="timezone-item">
+                        <div>
+                            <div class="timezone-label">NY</div>
+                            <div class="timezone-city">New York</div>
+                        </div>
+                        <div class="timezone-time" id="timezone-ny">3:00 PM</div>
+                    </div>
+                    <div class="timezone-item">
+                        <div>
+                            <div class="timezone-label">LDN</div>
+                            <div class="timezone-city">London</div>
+                        </div>
+                        <div class="timezone-time" id="timezone-ldn">8:00 PM</div>
+                    </div>
+                    <div class="timezone-item">
+                        <div>
+                            <div class="timezone-label">TYO</div>
+                            <div class="timezone-city">Tokyo</div>
+                        </div>
+                        <div class="timezone-time" id="timezone-tyo">5:00 AM</div>
+                    </div>
+                    <div class="timezone-item">
+                        <div>
+                            <div class="timezone-label">MUM</div>
+                            <div class="timezone-city">Mumbai</div>
+                        </div>
+                        <div class="timezone-time" id="timezone-mum">1:30 AM</div>
+                    </div>
+                </div>
+            </div>
+            <button class="sound-button" onclick="toggleMusicPlayer()" title="Music Player">
+                🎵
+            </button>
         </div>
         
         <div class="notification" id="notification">
             <span id="notificationText">System Alert!</span>
+        </div>
+
+        <!-- Music Player -->
+        <div class="music-player" id="musicPlayer">
+            <div class="player-header">
+                <span>RALPH PLAYER v1.0</span>
+                <button class="player-close" onclick="toggleMusicPlayer()">✕</button>
+            </div>
+            <div class="player-display">
+                <div class="track-info" id="trackInfo">No track loaded</div>
+                <div class="track-time" id="trackTime">00:00 / 00:00</div>
+            </div>
+            <div class="player-controls">
+                <button class="control-btn" onclick="previousTrack()" title="Previous">⏮</button>
+                <button class="control-btn play" onclick="togglePlayPause()" id="playBtn" title="Play/Pause">▶</button>
+                <button class="control-btn" onclick="nextTrack()" title="Next">⏭</button>
+                <button class="control-btn" onclick="stopTrack()" title="Stop">⏹</button>
+            </div>
+            <div class="volume-section">
+                <span class="volume-label">VOL</span>
+                <input type="range" class="volume-slider" min="0" max="100" value="70" oninput="setVolume(this.value)" id="volumeSlider">
+            </div>
+        </div>
+        
+        <!-- Admin Login Window -->
+        <div id="adminLogin" class="window" style="top: 50%; left: 50%; transform: translate(-50%, -50%); width: 400px; height: 300px;">
+            <div class="window-header">
+                <div class="window-title">⚙️ Admin Access Required</div>
+                <div class="window-controls">
+                    <button class="window-button" onclick="closeWindow('adminLogin')">X</button>
+                </div>
+            </div>
+            <div class="window-content" style="display: flex; flex-direction: column; justify-content: center; padding: 24px;">
+                <div class="ascii-art" style="text-align: center; margin-bottom: 20px;">
+    ╔══════════════════════════╗
+    ║      ADMIN ACCESS        ║
+    ║    SECURITY REQUIRED     ║
+    ╚══════════════════════════╝
+                </div>
+                <form id="adminLoginForm" style="display: flex; flex-direction: column; gap: 16px;">
+                    <div>
+                        <label style="display: block; margin-bottom: 4px; font-weight: bold;">USERNAME:</label>
+                        <input type="text" id="adminUsername" style="width: 100%; padding: 8px; background: #000; color: #00ff00; border: 2px solid #808080; font-family: 'VT323', monospace; font-size: 16px;">
+                    </div>
+                    <div>
+                        <label style="display: block; margin-bottom: 4px; font-weight: bold;">PASSWORD:</label>
+                        <input type="password" id="adminPassword" style="width: 100%; padding: 8px; background: #000; color: #00ff00; border: 2px solid #808080; font-family: 'VT323', monospace; font-size: 16px;">
+                    </div>
+                    <div style="display: flex; gap: 8px; margin-top: 16px;">
+                        <button type="submit" class="pixel-button" style="flex: 1;">ACCESS CMS</button>
+                        <button type="button" class="pixel-button" onclick="closeWindow('adminLogin')" style="flex: 1;">CANCEL</button>
+                    </div>
+                </form>
+                <div id="adminLoginError" style="display: none; margin-top: 16px; color: #ff0000; text-align: center; font-weight: bold;">
+                    ⚠️ ACCESS DENIED - Invalid credentials
+                </div>
+            </div>
         </div>
     </div>
     
@@ -1228,8 +1726,6 @@
                 AppState.windows[windowId] = { draggable: null };
                 makeDraggable(windowEl);
             }
-            
-            beep();
         }
         
         function closeWindow(windowId) {
@@ -1240,7 +1736,6 @@
             if (AppState.activeWindow === windowId) {
                 AppState.activeWindow = null;
             }
-            beep();
         }
         
         function minimizeWindow(windowId) {
@@ -1251,7 +1746,6 @@
             setTimeout(() => {
                 windowEl.style.display = '';
             }, 100);
-            beep();
         }
         
         function maximizeWindow(windowId) {
@@ -1291,7 +1785,6 @@
                     windowEl.dataset.maximized = 'true';
                 }
             }
-            beep();
         }
         
         function makeDraggable(element) {
@@ -1363,35 +1856,214 @@
         // Clock update
         function updateClock() {
             const now = new Date();
+            
+            // Local time (main clock)
             const hours = now.getHours();
             const minutes = now.getMinutes().toString().padStart(2, '0');
             const ampm = hours >= 12 ? 'PM' : 'AM';
             const displayHours = hours % 12 || 12;
             const clockEl = document.getElementById('clock');
+            
             if (clockEl) {
-                clockEl.textContent = `${displayHours}:${minutes} ${ampm}`;
+                // Update main clock text (need to preserve the timezone panel HTML)
+                const timezonePanel = clockEl.querySelector('.timezone-panel');
+                clockEl.innerHTML = `${displayHours}:${minutes} ${ampm}`;
+                if (timezonePanel) {
+                    clockEl.appendChild(timezonePanel);
+                }
+            }
+            
+            // Update timezone clocks
+            updateTimezoneClocks();
+        }
+
+        function updateTimezoneClocks() {
+            const now = new Date();
+            
+            // Define timezones with their UTC offsets (considering DST is complex, using standard time)
+            const timezones = [
+                { id: 'timezone-la', offset: -8, dst: true },    // Los Angeles (PST/PDT)
+                { id: 'timezone-ny', offset: -5, dst: true },    // New York (EST/EDT)  
+                { id: 'timezone-ldn', offset: 0, dst: true },    // London (GMT/BST)
+                { id: 'timezone-tyo', offset: 9, dst: false },   // Tokyo (JST)
+                { id: 'timezone-mum', offset: 5.5, dst: false }  // Mumbai (IST)
+            ];
+            
+            timezones.forEach(tz => {
+                const element = document.getElementById(tz.id);
+                if (element) {
+                    // Get current month to determine DST (simplified - March to October)
+                    const month = now.getMonth() + 1;
+                    const isDSTActive = tz.dst && (month >= 3 && month <= 10);
+                    const effectiveOffset = tz.offset + (isDSTActive ? 1 : 0);
+                    
+                    // Calculate timezone time
+                    const utc = now.getTime() + (now.getTimezoneOffset() * 60000);
+                    const timezoneTime = new Date(utc + (effectiveOffset * 3600000));
+                    
+                    const tzHours = timezoneTime.getHours();
+                    const tzMinutes = timezoneTime.getMinutes().toString().padStart(2, '0');
+                    const tzAmpm = tzHours >= 12 ? 'PM' : 'AM';
+                    const tzDisplayHours = tzHours % 12 || 12;
+                    
+                    element.textContent = `${tzDisplayHours}:${tzMinutes} ${tzAmpm}`;
+                }
+            });
+        }
+        
+        // Iframe Window Management
+        let iframeWindows = [];
+        let iframeCounter = 0;
+
+        function createIframeWindow(url, title) {
+            const windowId = `iframe-${++iframeCounter}`;
+            const windowElement = document.createElement('div');
+            windowElement.id = windowId;
+            windowElement.className = 'iframe-window active';
+            windowElement.style.top = `${50 + (iframeCounter * 30)}px`;
+            windowElement.style.left = `${50 + (iframeCounter * 30)}px`;
+            windowElement.style.width = '800px';
+            windowElement.style.height = '600px';
+
+            windowElement.innerHTML = `
+                <div class="iframe-header">
+                    <div class="iframe-title">${title}</div>
+                    <div class="iframe-controls">
+                        <button class="iframe-control-btn" onclick="maximizeIframeWindow('${windowId}')" title="Maximize">🗖</button>
+                        <button class="iframe-control-btn" onclick="closeIframeWindow('${windowId}')" title="Close">✕</button>
+                    </div>
+                </div>
+                <div class="iframe-loading">Loading...</div>
+            `;
+
+            document.body.appendChild(windowElement);
+            iframeWindows.push({id: windowId, element: windowElement, url: url, title: title});
+            
+            // Make window draggable
+            makeIframeDraggable(windowElement);
+            
+            // Load content after a brief delay
+            setTimeout(() => {
+                loadIframeContent(windowId, url);
+            }, 500);
+
+            return windowId;
+        }
+
+        function loadIframeContent(windowId, url) {
+            const windowElement = document.getElementById(windowId);
+            if (windowElement) {
+                const loadingDiv = windowElement.querySelector('.iframe-loading');
+                if (loadingDiv) {
+                    const iframe = document.createElement('iframe');
+                    iframe.className = 'iframe-content';
+                    iframe.src = url;
+                    iframe.onload = () => {
+                        loadingDiv.style.display = 'none';
+                    };
+                    iframe.onerror = () => {
+                        loadingDiv.textContent = 'Failed to load content';
+                    };
+                    loadingDiv.parentNode.replaceChild(iframe, loadingDiv);
+                }
+            }
+        }
+
+        function closeIframeWindow(windowId) {
+            const windowElement = document.getElementById(windowId);
+            if (windowElement) {
+                windowElement.remove();
+                iframeWindows = iframeWindows.filter(w => w.id !== windowId);
+            }
+        }
+
+        function maximizeIframeWindow(windowId) {
+            const windowData = iframeWindows.find(w => w.id === windowId);
+            if (windowData) {
+                // Open in new browser tab
+                window.open(windowData.url, '_blank');
+                // Optionally close the iframe window
+                closeIframeWindow(windowId);
+            }
+        }
+
+        function makeIframeDraggable(windowElement) {
+            const header = windowElement.querySelector('.iframe-header');
+            let pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
+
+            header.onmousedown = dragMouseDown;
+
+            function dragMouseDown(e) {
+                e = e || window.event;
+                e.preventDefault();
+                pos3 = e.clientX;
+                pos4 = e.clientY;
+                document.onmouseup = closeDragElement;
+                document.onmousemove = elementDrag;
+                
+                // Bring to front
+                windowElement.style.zIndex = 1001;
+            }
+
+            function elementDrag(e) {
+                e = e || window.event;
+                e.preventDefault();
+                pos1 = pos3 - e.clientX;
+                pos2 = pos4 - e.clientY;
+                pos3 = e.clientX;
+                pos4 = e.clientY;
+                windowElement.style.top = (windowElement.offsetTop - pos2) + "px";
+                windowElement.style.left = (windowElement.offsetLeft - pos1) + "px";
+            }
+
+            function closeDragElement() {
+                document.onmouseup = null;
+                document.onmousemove = null;
+            }
+        }
+
+        // Sound effect with proper user gesture handling
+        let audioContext = null;
+        let audioEnabled = false;
+        
+        function initAudio() {
+            if (!audioEnabled && (window.AudioContext || window.webkitAudioContext)) {
+                try {
+                    audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                    if (audioContext.state === 'suspended') {
+                        audioContext.resume().then(() => {
+                            audioEnabled = true;
+                        });
+                    } else {
+                        audioEnabled = true;
+                    }
+                } catch (e) {
+                    console.log('Audio not supported');
+                }
             }
         }
         
-        // Sound effect
         function beep() {
-            try {
-                const audioContext = new (window.AudioContext || window.webkitAudioContext)();
-                const oscillator = audioContext.createOscillator();
-                const gainNode = audioContext.createGain();
-                
-                oscillator.connect(gainNode);
-                gainNode.connect(audioContext.destination);
-                
-                oscillator.frequency.value = 800;
-                oscillator.type = 'square';
-                gainNode.gain.value = 0.1;
-                
-                oscillator.start();
-                oscillator.stop(audioContext.currentTime + 0.05);
-            } catch (e) {
-                // Silently fail if audio is not supported
+            // Only try to play sound if audio has been properly initialized
+            if (audioEnabled && audioContext && audioContext.state === 'running') {
+                try {
+                    const oscillator = audioContext.createOscillator();
+                    const gainNode = audioContext.createGain();
+                    
+                    oscillator.connect(gainNode);
+                    gainNode.connect(audioContext.destination);
+                    
+                    oscillator.frequency.value = 800;
+                    oscillator.type = 'square';
+                    gainNode.gain.value = 0.1;
+                    
+                    oscillator.start();
+                    oscillator.stop(audioContext.currentTime + 0.05);
+                } catch (e) {
+                    // Silently fail if audio error occurs
+                }
             }
+            // If audio not enabled, just continue silently (no error)
         }
         
         // Notification system
@@ -1402,7 +2074,6 @@
             
             notificationText.textContent = message;
             notification.classList.add('show');
-            beep();
             
             setTimeout(() => {
                 notification.classList.remove('show');
@@ -1418,7 +2089,6 @@
             } else {
                 showNotification('Assistant already running!');
             }
-            beep();
         }
 
         // Enhanced chatbot functionality with AI integration
@@ -1528,7 +2198,6 @@
             // Clear input and scroll to bottom
             input.value = '';
             display.scrollTop = display.scrollHeight;
-            beep();
         }
 
         // CMS Functions
@@ -1589,6 +2258,79 @@
                 }
             });
         }
+
+        // Admin login functionality
+        function openAdminLogin() {
+            openWindow('adminLogin');
+            // Focus on username field
+            setTimeout(() => {
+                document.getElementById('adminUsername').focus();
+            }, 100);
+        }
+
+        // Admin credentials (in production, this would be server-side)
+        const ADMIN_CREDS = {
+            username: 'ralph',
+            password: 'admin123'
+        };
+
+        // Handle admin login form
+        document.addEventListener('DOMContentLoaded', () => {
+            const adminForm = document.getElementById('adminLoginForm');
+            if (adminForm) {
+                adminForm.addEventListener('submit', async (e) => {
+                    e.preventDefault();
+                    
+                    const username = document.getElementById('adminUsername').value;
+                    const password = document.getElementById('adminPassword').value;
+                    
+                    try {
+                        const response = await fetch('/api/admin-auth', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify({ username, password })
+                        });
+                        
+                        const result = await response.json();
+                        
+                        if (result.success) {
+                            // Success - redirect to admin panel with session
+                            showNotification('Access granted! Opening CMS...');
+                            setTimeout(() => {
+                                window.open(`/admin/${result.sessionId}`, '_blank');
+                                closeWindow('adminLogin');
+                                // Clear the form
+                                document.getElementById('adminUsername').value = '';
+                                document.getElementById('adminPassword').value = '';
+                            }, 1500);
+                        } else {
+                            throw new Error('Authentication failed');
+                        }
+                    } catch (error) {
+                        // Show error
+                        const errorDiv = document.getElementById('adminLoginError');
+                        errorDiv.style.display = 'block';
+                        
+                        // Clear error after 3 seconds
+                        setTimeout(() => {
+                            errorDiv.style.display = 'none';
+                        }, 3000);
+                        
+                        // Clear password field
+                        document.getElementById('adminPassword').value = '';
+                    }
+                });
+                
+                // Enter key support for password field
+                document.getElementById('adminPassword').addEventListener('keypress', (e) => {
+                    if (e.key === 'Enter') {
+                        adminForm.dispatchEvent(new Event('submit'));
+                    }
+                });
+            }
+        });
 
         // Form submission handler
         async function submitSuggestion() {
@@ -1688,7 +2430,6 @@
                     messageDiv.textContent = '> ' + messages[messageIndex];
                     bootMessages.appendChild(messageDiv);
                     bootMessages.scrollTop = bootMessages.scrollHeight;
-                    beep();
                     messageIndex++;
                 }
                 
@@ -1712,11 +2453,217 @@
             }, 300);
         }
         
+        // Music Player Functionality
+        let musicPlayer = {
+            audio: null,
+            isPlaying: false,
+            currentTrack: 0,
+            volume: 0.7,
+            playlist: [
+                { title: 'Kawaii Kitsune', artist: 'Kevin MacLeod', file: 'music/kawaii-kitsune-kevin-macleod-main-version-7984-04-02.mp3' },
+                { title: 'Mirthaflare', artist: 'Ian Aisling', file: 'music/mirthaflare-ian-aisling-main-version-22101-02-36.mp3' }
+            ]
+        };
+        
+        function toggleMusicPlayer() {
+            const player = document.getElementById('musicPlayer');
+            const button = document.querySelector('.sound-button');
+            
+            if (player.classList.contains('active')) {
+                player.classList.remove('active');
+                button.classList.remove('active');
+            } else {
+                player.classList.add('active');
+                button.classList.add('active');
+                initializeMusicPlayer();
+                
+                // Make draggable if not already
+                if (!player.draggableInitialized && !AppState.isMobile) {
+                    makeMusicPlayerDraggable(player);
+                    player.draggableInitialized = true;
+                }
+            }
+        }
+        
+        function initializeMusicPlayer() {
+            if (!musicPlayer.audio) {
+                musicPlayer.audio = new Audio();
+                musicPlayer.audio.volume = musicPlayer.volume;
+                
+                musicPlayer.audio.addEventListener('timeupdate', updateTrackTime);
+                musicPlayer.audio.addEventListener('ended', nextTrack);
+                musicPlayer.audio.addEventListener('loadstart', () => {
+                    document.getElementById('trackInfo').textContent = 'Loading...';
+                });
+                musicPlayer.audio.addEventListener('canplay', () => {
+                    const track = musicPlayer.playlist[musicPlayer.currentTrack];
+                    document.getElementById('trackInfo').textContent = `${track.artist} - ${track.title}`;
+                });
+                musicPlayer.audio.addEventListener('error', () => {
+                    document.getElementById('trackInfo').textContent = 'Error loading track';
+                });
+                
+                loadCurrentTrack();
+            }
+        }
+        
+        function loadCurrentTrack() {
+            if (musicPlayer.playlist.length > 0 && musicPlayer.currentTrack < musicPlayer.playlist.length) {
+                const track = musicPlayer.playlist[musicPlayer.currentTrack];
+                musicPlayer.audio.src = track.file;
+                document.getElementById('trackInfo').textContent = `${track.artist} - ${track.title}`;
+                document.getElementById('trackTime').textContent = '00:00 / 00:00';
+            }
+        }
+        
+        function togglePlayPause() {
+            if (!musicPlayer.audio) {
+                initializeMusicPlayer();
+                return;
+            }
+            
+            const playBtn = document.getElementById('playBtn');
+            
+            if (musicPlayer.isPlaying) {
+                musicPlayer.audio.pause();
+                playBtn.textContent = '▶';
+                musicPlayer.isPlaying = false;
+            } else {
+                musicPlayer.audio.play().then(() => {
+                    playBtn.textContent = '⏸';
+                    musicPlayer.isPlaying = true;
+                }).catch(() => {
+                    showNotification('Error playing audio - check file path');
+                });
+            }
+        }
+        
+        function stopTrack() {
+            if (musicPlayer.audio) {
+                musicPlayer.audio.pause();
+                musicPlayer.audio.currentTime = 0;
+                document.getElementById('playBtn').textContent = '▶';
+                musicPlayer.isPlaying = false;
+                updateTrackTime();
+            }
+        }
+        
+        function previousTrack() {
+            if (musicPlayer.playlist.length > 0) {
+                musicPlayer.currentTrack = (musicPlayer.currentTrack - 1 + musicPlayer.playlist.length) % musicPlayer.playlist.length;
+                loadCurrentTrack();
+                if (musicPlayer.isPlaying) {
+                    togglePlayPause();
+                    setTimeout(togglePlayPause, 100);
+                }
+            }
+        }
+        
+        function nextTrack() {
+            if (musicPlayer.playlist.length > 0) {
+                musicPlayer.currentTrack = (musicPlayer.currentTrack + 1) % musicPlayer.playlist.length;
+                loadCurrentTrack();
+                if (musicPlayer.isPlaying) {
+                    togglePlayPause();
+                    setTimeout(togglePlayPause, 100);
+                }
+            }
+        }
+        
+        function updateTrackTime() {
+            if (musicPlayer.audio) {
+                const current = formatTime(musicPlayer.audio.currentTime || 0);
+                const duration = formatTime(musicPlayer.audio.duration || 0);
+                document.getElementById('trackTime').textContent = `${current} / ${duration}`;
+                
+                // Update progress bar if exists
+                const progressBar = document.querySelector('.track-progress');
+                if (progressBar && musicPlayer.audio.duration) {
+                    const progress = (musicPlayer.audio.currentTime / musicPlayer.audio.duration) * 100;
+                    progressBar.style.width = progress + '%';
+                }
+            }
+        }
+        
+        function formatTime(seconds) {
+            if (!seconds || isNaN(seconds)) return '00:00';
+            const mins = Math.floor(seconds / 60);
+            const secs = Math.floor(seconds % 60);
+            return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+        }
+        
+        function setVolume(value) {
+            musicPlayer.volume = value / 100;
+            if (musicPlayer.audio) {
+                musicPlayer.audio.volume = musicPlayer.volume;
+            }
+            // Update slider visual if needed
+            const slider = document.getElementById('volumeSlider');
+            if (slider && typeof value === 'number') {
+                slider.value = value;
+            }
+        }
+        
+        function makeMusicPlayerDraggable(element) {
+            if (AppState.isMobile) return; // Disable dragging on mobile
+            
+            let pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
+            const header = element.querySelector('.player-header');
+            if (!header) return;
+            
+            const dragMouseDown = (e) => {
+                e = e || window.event;
+                e.preventDefault();
+                pos3 = e.clientX;
+                pos4 = e.clientY;
+                document.onmouseup = closeDragElement;
+                document.onmousemove = elementDrag;
+            };
+            
+            const elementDrag = (e) => {
+                e = e || window.event;
+                e.preventDefault();
+                pos1 = pos3 - e.clientX;
+                pos2 = pos4 - e.clientY;
+                pos3 = e.clientX;
+                pos4 = e.clientY;
+                
+                let newTop = element.offsetTop - pos2;
+                let newLeft = element.offsetLeft - pos1;
+                
+                // Keep within viewport bounds
+                const rect = element.getBoundingClientRect();
+                const maxTop = window.innerHeight - rect.height - 40;
+                const maxLeft = window.innerWidth - rect.width;
+                
+                newTop = Math.max(0, Math.min(newTop, maxTop));
+                newLeft = Math.max(0, Math.min(newLeft, maxLeft));
+                
+                element.style.top = newTop + "px";
+                element.style.left = newLeft + "px";
+                element.style.right = "auto"; // Override right positioning
+                element.style.bottom = "auto"; // Override bottom positioning
+            };
+            
+            const closeDragElement = () => {
+                document.onmouseup = null;
+                document.onmousemove = null;
+            };
+            
+            header.onmousedown = dragMouseDown;
+            header.style.cursor = 'move';
+        }
+        
         // Initialize application
         async function init() {
             // Detect device type
             AppState.isMobile = Utils.isMobileDevice();
             AppState.touchDevice = 'ontouchstart' in window;
+            
+            // Enable audio on first user interaction
+            document.addEventListener('click', initAudio, { once: true });
+            document.addEventListener('keydown', initAudio, { once: true });
+            document.addEventListener('touchstart', initAudio, { once: true });
             
             // Load CMS configuration
             if (typeof CMS_CONFIG !== 'undefined') {

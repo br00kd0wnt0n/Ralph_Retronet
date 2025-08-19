@@ -1,0 +1,2937 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RALPH CMS Admin</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=VT323&family=Inter:wght@400;500;600&display=swap');
+        
+        :root {
+            --ralph-pink: #EB008B;
+            --ralph-pink-light: #ff1493;
+            --dark-bg: #1a1a1a;
+            --card-bg: #2d2d2d;
+            --text-light: #f5f5f5;
+            --text-gray: #b0b0b0;
+            --border-color: #404040;
+            --success: #10b981;
+            --error: #ef4444;
+            --warning: #f59e0b;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--dark-bg);
+            color: var(--text-light);
+            line-height: 1.6;
+        }
+
+        .login-container {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            background: linear-gradient(135deg, var(--dark-bg) 0%, #2d1b69 100%);
+        }
+
+        .login-card {
+            background: var(--card-bg);
+            border-radius: 16px;
+            padding: 40px;
+            width: 100%;
+            max-width: 400px;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5);
+        }
+
+        .login-header {
+            text-align: center;
+            margin-bottom: 32px;
+        }
+
+        .login-header h1 {
+            font-family: 'VT323', monospace;
+            font-size: 32px;
+            color: var(--ralph-pink);
+            margin-bottom: 8px;
+            text-shadow: 0 0 10px rgba(235, 0, 139, 0.3);
+        }
+
+        .login-header p {
+            color: var(--text-gray);
+            font-size: 14px;
+        }
+
+        .form-group {
+            margin-bottom: 24px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: var(--text-light);
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px 16px;
+            background: var(--dark-bg);
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            color: var(--text-light);
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: var(--ralph-pink);
+            box-shadow: 0 0 0 3px rgba(235, 0, 139, 0.1);
+        }
+
+        .login-btn {
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(135deg, var(--ralph-pink) 0%, var(--ralph-pink-light) 100%);
+            border: none;
+            border-radius: 8px;
+            color: white;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .login-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(235, 0, 139, 0.3);
+        }
+
+        .admin-container {
+            display: none;
+            min-height: 100vh;
+            background: var(--dark-bg);
+        }
+
+        .admin-header {
+            background: var(--card-bg);
+            border-bottom: 1px solid var(--border-color);
+            padding: 16px 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .admin-header h1 {
+            font-family: 'VT323', monospace;
+            font-size: 24px;
+            color: var(--ralph-pink);
+        }
+
+        .admin-nav {
+            display: flex;
+            gap: 16px;
+            align-items: center;
+        }
+
+        .nav-btn {
+            padding: 8px 16px;
+            background: var(--dark-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            color: var(--text-light);
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .nav-btn:hover, .nav-btn.active {
+            background: var(--ralph-pink);
+            border-color: var(--ralph-pink);
+        }
+
+        .admin-content {
+            display: flex;
+            height: calc(100vh - 73px);
+        }
+
+        .admin-sidebar {
+            width: 280px;
+            background: var(--card-bg);
+            border-right: 1px solid var(--border-color);
+            padding: 24px;
+            overflow-y: auto;
+        }
+
+        .sidebar-section {
+            margin-bottom: 32px;
+        }
+
+        .sidebar-section h3 {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-gray);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 12px;
+        }
+
+        .sidebar-item {
+            padding: 12px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            margin-bottom: 4px;
+            transition: background 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .sidebar-item:hover, .sidebar-item.active {
+            background: var(--ralph-pink);
+        }
+
+        .sidebar-item .icon {
+            font-size: 18px;
+            width: 20px;
+            text-align: center;
+        }
+
+        .main-panel {
+            flex: 1;
+            padding: 24px;
+            overflow-y: auto;
+        }
+
+        .panel-section {
+            display: none;
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 24px;
+            border: 1px solid var(--border-color);
+        }
+
+        .panel-section.active {
+            display: block;
+        }
+
+        .section-header {
+            margin-bottom: 24px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .section-header h2 {
+            font-size: 24px;
+            margin-bottom: 8px;
+        }
+
+        .section-header p {
+            color: var(--text-gray);
+            font-size: 14px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin-bottom: 16px;
+        }
+
+        .form-field {
+            margin-bottom: 16px;
+        }
+
+        .form-field label {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: 500;
+            color: var(--text-light);
+            font-size: 14px;
+        }
+
+        .form-field input, 
+        .form-field textarea, 
+        .form-field select {
+            width: 100%;
+            padding: 10px 12px;
+            background: var(--dark-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            color: var(--text-light);
+            font-size: 14px;
+            transition: border-color 0.3s;
+        }
+
+        .form-field textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        .form-field input:focus, 
+        .form-field textarea:focus, 
+        .form-field select:focus {
+            outline: none;
+            border-color: var(--ralph-pink);
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border-radius: 6px;
+            border: none;
+            cursor: pointer;
+            font-weight: 500;
+            font-size: 14px;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background: var(--ralph-pink);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--ralph-pink-light);
+        }
+
+        .btn-secondary {
+            background: var(--dark-bg);
+            color: var(--text-light);
+            border: 1px solid var(--border-color);
+        }
+
+        .btn-secondary:hover {
+            background: var(--border-color);
+        }
+
+        .btn-success {
+            background: var(--success);
+            color: white;
+        }
+
+        .action-bar {
+            display: flex;
+            gap: 12px;
+            margin-top: 24px;
+            padding-top: 24px;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .module-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 16px;
+            margin-top: 16px;
+        }
+
+        .module-card {
+            background: var(--dark-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 16px;
+        }
+
+        .module-card h4 {
+            margin-bottom: 8px;
+            color: var(--ralph-pink);
+        }
+
+        .module-toggle {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 12px;
+        }
+
+        .switch {
+            position: relative;
+            width: 44px;
+            height: 24px;
+        }
+
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: var(--border-color);
+            transition: .4s;
+            border-radius: 24px;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 16px;
+            width: 16px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+
+        input:checked + .slider {
+            background-color: var(--ralph-pink);
+        }
+
+        input:checked + .slider:before {
+            transform: translateX(20px);
+        }
+
+        .alert {
+            padding: 12px 16px;
+            border-radius: 6px;
+            margin-bottom: 16px;
+            font-size: 14px;
+        }
+
+        .alert-success {
+            background: rgba(16, 185, 129, 0.1);
+            border: 1px solid var(--success);
+            color: var(--success);
+        }
+
+        .alert-error {
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid var(--error);
+            color: var(--error);
+        }
+
+        .json-editor {
+            background: #1e1e1e;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            padding: 16px;
+            font-family: 'Fira Code', monospace;
+            font-size: 13px;
+            color: #d4d4d4;
+            resize: vertical;
+            min-height: 300px;
+            white-space: pre;
+            overflow: auto;
+        }
+
+        /* Drag and Drop Styles */
+        .draggable-item {
+            cursor: move;
+            transition: all 0.2s ease;
+        }
+
+        .draggable-item:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .draggable-item.dragging {
+            opacity: 0.5;
+            transform: rotate(5deg);
+        }
+
+        .drag-over {
+            border-top: 2px solid var(--ralph-pink) !important;
+        }
+
+        .drag-handle {
+            cursor: move;
+            color: var(--text-gray);
+            margin-right: 8px;
+            font-size: 14px;
+        }
+
+        .drag-handle:hover {
+            color: var(--ralph-pink);
+        }
+
+        @media (max-width: 768px) {
+            .admin-content {
+                flex-direction: column;
+                height: auto;
+            }
+            
+            .admin-sidebar {
+                width: 100%;
+                order: 2;
+            }
+            
+            .main-panel {
+                order: 1;
+            }
+            
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Login Screen -->
+    <div class="login-container" id="loginContainer">
+        <div class="login-card">
+            <div class="login-header">
+                <h1>RALPH CMS</h1>
+                <p>Content Management System</p>
+            </div>
+            <form id="loginForm">
+                <div class="form-group">
+                    <label for="username">Username</label>
+                    <input type="text" id="username" name="username" required>
+                </div>
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" name="password" required>
+                </div>
+                <button type="submit" class="login-btn">Sign In</button>
+            </form>
+            <div id="loginError" class="alert alert-error" style="display: none; margin-top: 16px;">
+                Invalid credentials. Please try again.
+            </div>
+        </div>
+    </div>
+
+    <!-- Admin Panel -->
+    <div class="admin-container" id="adminContainer">
+        <div class="admin-header">
+            <h1>📊 RALPH CMS Admin</h1>
+            <div class="admin-nav">
+                <button class="nav-btn" onclick="saveChanges()">💾 Save Changes</button>
+                <button class="nav-btn" onclick="previewSite()">👁️ Preview</button>
+                <button class="nav-btn" onclick="logout()">🚪 Logout</button>
+            </div>
+        </div>
+
+        <div class="admin-content">
+            <div class="admin-sidebar">
+                <div class="sidebar-section">
+                    <h3>Content Management</h3>
+                    <div class="sidebar-item active" onclick="showPanel('dashboard')">
+                        <span class="icon">📊</span>
+                        <span>Dashboard</span>
+                    </div>
+                    <div class="sidebar-item" onclick="showPanel('modules')">
+                        <span class="icon">🔧</span>
+                        <span>Modules</span>
+                    </div>
+                    <div class="sidebar-item" onclick="showPanel('chatbot')">
+                        <span class="icon">🤖</span>
+                        <span>Chatbot</span>
+                    </div>
+                    <div class="sidebar-item" onclick="showPanel('system')">
+                        <span class="icon">⚙️</span>
+                        <span>System Settings</span>
+                    </div>
+                </div>
+
+                <div class="sidebar-section">
+                    <h3>Advanced</h3>
+                    <div class="sidebar-item" onclick="showPanel('api')">
+                        <span class="icon">🔌</span>
+                        <span>API Config</span>
+                    </div>
+                    <div class="sidebar-item" onclick="showPanel('raw')">
+                        <span class="icon">📝</span>
+                        <span>Raw Editor</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="main-panel">
+                <!-- Dashboard Panel -->
+                <div id="dashboard" class="panel-section active">
+                    <div class="section-header">
+                        <h2>Dashboard</h2>
+                        <p>Overview of your RALPH intranet system</p>
+                    </div>
+                    
+                    <div class="module-list">
+                        <div class="module-card">
+                            <h4>📊 New Business Pipeline</h4>
+                            <p>Manage active pitches and meetings</p>
+                            <div class="module-toggle">
+                                <label class="switch">
+                                    <input type="checkbox" checked>
+                                    <span class="slider"></span>
+                                </label>
+                                <span>Enabled</span>
+                            </div>
+                        </div>
+
+                        <div class="module-card">
+                            <h4>🎬 Premiere Calendar</h4>
+                            <p>Track project launch dates</p>
+                            <div class="module-toggle">
+                                <label class="switch">
+                                    <input type="checkbox" checked>
+                                    <span class="slider"></span>
+                                </label>
+                                <span>Enabled</span>
+                            </div>
+                        </div>
+
+                        <div class="module-card">
+                            <h4>🤖 AI Chatbot</h4>
+                            <p>AI-powered assistant integration</p>
+                            <div class="module-toggle">
+                                <label class="switch">
+                                    <input type="checkbox" id="chatbotToggle">
+                                    <span class="slider"></span>
+                                </label>
+                                <span>OpenAI Integration</span>
+                            </div>
+                        </div>
+
+                        <div class="module-card">
+                            <h4>🔄 Auto-Refresh</h4>
+                            <p>Real-time content updates</p>
+                            <div class="module-toggle">
+                                <label class="switch">
+                                    <input type="checkbox" checked>
+                                    <span class="slider"></span>
+                                </label>
+                                <span>Active</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Modules Panel -->
+                <div id="modules" class="panel-section">
+                    <div class="section-header">
+                        <h2>Module Management</h2>
+                        <p>Configure content for each dashboard module</p>
+                    </div>
+
+                    <div class="form-field">
+                        <label>Select Module to Edit</label>
+                        <select id="moduleSelect" onchange="loadModuleEditor()">
+                            <option value="newBiz">📊 New Business Pipeline</option>
+                            <option value="premieres">🎬 Premiere Calendar</option>
+                            <option value="challenge">🎨 Creative Challenge</option>
+                            <option value="shoutouts">🎉 Shoutouts & Celebrations</option>
+                            <option value="articles">📰 Industry Articles</option>
+                            <option value="ralphNews">📢 RALPH News</option>
+                            <option value="suggestions">💭 Suggestion Box</option>
+                            <option value="announcements">📣 Announcements</option>
+                            <option value="links">🔗 Quick Links</option>
+                            <option value="innovation">💡 Innovation Updates</option>
+                            <option value="resources">📁 Resources</option>
+                            <option value="music">🎵 Music Library Manager</option>
+                        </select>
+                    </div>
+
+                    <div id="moduleEditor">
+                        <!-- Module-specific forms will be loaded here -->
+                    </div>
+                </div>
+
+                <!-- Chatbot Panel -->
+                <div id="chatbot" class="panel-section">
+                    <div class="section-header">
+                        <h2>Chatbot Configuration</h2>
+                        <p>Configure your AI assistant settings</p>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-field">
+                            <label>Assistant Name</label>
+                            <input type="text" id="chatbotTitle" value="RALPH Assistant v1.0">
+                        </div>
+                        <div class="form-field">
+                            <label>OpenAI Model</label>
+                            <select id="openaiModel">
+                                <option value="gpt-4">GPT-4 (Recommended)</option>
+                                <option value="gpt-3.5-turbo">GPT-3.5 Turbo (Faster)</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-field">
+                        <label>OpenAI API Key</label>
+                        <input type="password" id="openaiKey" placeholder="sk-...">
+                    </div>
+
+                    <div class="form-field">
+                        <label>Welcome Message</label>
+                        <textarea id="welcomeMessage">Welcome to RALPH's Super-Intranet!</textarea>
+                    </div>
+
+                    <div class="form-field">
+                        <label>Custom System Prompt</label>
+                        <textarea id="systemPrompt" rows="10">You are the RALPH Assistant, helping employees with company information and creative projects.</textarea>
+                    </div>
+                </div>
+
+                <!-- System Settings Panel -->
+                <div id="system" class="panel-section">
+                    <div class="section-header">
+                        <h2>System Settings</h2>
+                        <p>Configure global system preferences</p>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-field">
+                            <label>Company Name</label>
+                            <input type="text" id="companyName" value="RALPH">
+                        </div>
+                        <div class="form-field">
+                            <label>Primary Color</label>
+                            <input type="color" id="primaryColor" value="#EB008B">
+                        </div>
+                    </div>
+
+                    <div class="form-field">
+                        <label>Boot Messages (one per line)</label>
+                        <textarea id="bootMessages" rows="8">Loading system kernel...
+Initializing RALPH protocols...
+Checking security clearance...
+Loading user preferences...
+Mounting network drives...
+Starting creative services...
+Loading project database...
+System ready!</textarea>
+                    </div>
+                </div>
+
+                <!-- API Configuration Panel -->
+                <div id="api" class="panel-section">
+                    <div class="section-header">
+                        <h2>API Configuration</h2>
+                        <p>Connect external data sources and APIs</p>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-field">
+                            <label>Base API URL</label>
+                            <input type="url" id="apiBaseUrl" placeholder="https://api.yourcompany.com">
+                        </div>
+                        <div class="form-field">
+                            <label>Refresh Interval (ms)</label>
+                            <input type="number" id="refreshInterval" value="60000">
+                        </div>
+                    </div>
+
+                    <div class="form-field">
+                        <label>API Headers (JSON format)</label>
+                        <textarea id="apiHeaders" rows="4">{
+  "Content-Type": "application/json",
+  "Authorization": "Bearer your-token-here"
+}</textarea>
+                    </div>
+                </div>
+
+                <!-- Raw Editor Panel -->
+                <div id="raw" class="panel-section">
+                    <div class="section-header">
+                        <h2>Raw Configuration Editor</h2>
+                        <p>Advanced users: Edit the raw CMS configuration JSON</p>
+                    </div>
+
+                    <textarea id="rawEditor" class="json-editor"></textarea>
+                    
+                    <div class="action-bar">
+                        <button class="btn btn-primary" onclick="updateFromRaw()">📝 Update from JSON</button>
+                        <button class="btn btn-secondary" onclick="formatJSON()">🎨 Format JSON</button>
+                        <button class="btn btn-secondary" onclick="resetToDefault()">🔄 Reset to Default</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Inline CMS Config as fallback
+        const CMS_CONFIG = {
+            system: {
+                version: "1.0",
+                companyName: "RALPH",
+                primaryColor: "#EB008B",
+                bootMessages: [
+                    'Loading system kernel...',
+                    'Initializing RALPH protocols...',
+                    'Checking security clearance...',
+                    'Loading user preferences...',
+                    'Mounting network drives...',
+                    'Starting creative services...',
+                    'Loading project database...',
+                    'Initializing communication modules...',
+                    'Checking for updates...',
+                    'Loading desktop environment...',
+                    'Starting RALPH SUPER-INTRANET...',
+                    'System ready!'
+                ]
+            },
+            chatbot: {
+                enabled: true,
+                title: "RALPH Assistant v1.0",
+                welcomeMessage: "Welcome to RALPH Super-Intranet!",
+                helpText: `Here's what you can do:\n► Click any desktop icon to open modules\n► Drag windows by their title bars\n► Minimize, maximize, or close windows\n► Submit suggestions in the Suggestion Box\n► Accept monthly creative challenges\n► Check project pipelines and deadlines\n► Send shoutouts to team members`,
+                openai: {
+                    enabled: false,
+                    apiKey: "",
+                    model: "gpt-4",
+                    temperature: 0.7,
+                    maxTokens: 150,
+                    systemPrompt: `You are the RALPH company assistant. You help employees with:\n- Company policies and procedures\n- Project information and deadlines\n- Technical support\n- Creative inspiration\n- Team collaboration\nAlways maintain a friendly, professional tone and embody RALPH's creative spirit.`,
+                    fallbackResponses: [
+                        'Processing request...',
+                        "That's interesting! Tell me more.",
+                        'System acknowledged.',
+                        'Roger that!',
+                        'Command received.',
+                        'Affirmative!'
+                    ]
+                }
+            },
+            modules: {
+                newBiz: {
+                    title: "New Business Pipeline v2.0",
+                    icon: "📊",
+                    enabled: true,
+                    content: {
+                        header: "RALPH PIPELINE TRACKER 1.0",
+                        activePitches: [
+                            { name: "Global Tech Corp - Video Campaign", progress: 75, viewLink: "", downloadLink: "" },
+                            { name: "Fashion Brand X - Social Strategy", progress: 45, viewLink: "", downloadLink: "" },
+                            { name: "Auto Company Z - Launch Film", progress: 90, viewLink: "", downloadLink: "" }
+                        ],
+                        upcomingMeetings: [
+                            { time: "Tomorrow 2:00 PM", client: "Tech Startup Pitch", urgent: true },
+                            { time: "Thursday", client: "Beauty Brand Presentation", urgent: false },
+                            { time: "Next Week", client: "Entertainment Client RFP", urgent: false }
+                        ]
+                    },
+                    apiEndpoint: null
+                },
+                premieres: {
+                    title: "Project Premiere Calendar",
+                    icon: "🎬",
+                    enabled: true,
+                    content: {
+                        thisMonth: [
+                            { date: "Dec 15", project: "Urban Dreams Documentary", liveLink: "" },
+                            { date: "Dec 20", project: "Holiday Campaign Launch", liveLink: "" },
+                            { date: "Dec 28", project: "Year-End Showcase", liveLink: "" }
+                        ],
+                        nextMonth: [
+                            { date: "Jan 10", project: "New Product Launch Film", liveLink: "" },
+                            { date: "Jan 15", project: "Brand Refresh Campaign", liveLink: "" },
+                            { date: "Jan 25", project: "Super Bowl Teaser", liveLink: "" }
+                        ]
+                    },
+                    apiEndpoint: null
+                },
+                challenge: {
+                    title: "Monthly Creative Challenge",
+                    icon: "🎨",
+                    enabled: true,
+                    content: {
+                        currentChallenge: {
+                            month: "DECEMBER",
+                            theme: "Retro Future",
+                            description: "Create a 30-second concept using only 8-bit graphics and chiptune music!",
+                            prize: "🏆 Golden Pixel Award + Extra PTO Day"
+                        },
+                        lastWinner: {
+                            name: "Sarah M.",
+                            concept: "Neon Dreams"
+                        }
+                    },
+                    apiEndpoint: null
+                },
+                shoutouts: {
+                    title: "Shoutouts & Celebrations",
+                    icon: "🎉",
+                    enabled: true,
+                    content: {
+                        birthdays: [
+                            { date: "Today", person: "Mike R. from Production", highlight: true },
+                            { date: "Dec 18", person: "Jennifer L. from Creative" },
+                            { date: "Dec 22", person: "Alex T. from Strategy" }
+                        ],
+                        anniversaries: [
+                            { years: 5, person: "David K." },
+                            { years: 3, person: "Lisa M." },
+                            { years: 1, person: "Team Expansion Crew!" }
+                        ],
+                        shoutouts: [
+                            { message: "Huge thanks to the edit team for crushing it on the Tech Corp project!", from: "Management" },
+                            { message: "Props to IT for the smooth system upgrade!", from: "Everyone" }
+                        ]
+                    },
+                    apiEndpoint: null
+                },
+                articles: {
+                    title: "Industry Articles",
+                    icon: "📰",
+                    enabled: true,
+                    content: {
+                        trending: [
+                            "The Rise of AI in Creative Production",
+                            "2025 Design Trends to Watch",
+                            "Sustainable Filmmaking Practices"
+                        ],
+                        mustReads: [
+                            { source: "AdWeek", title: "Agencies of the Future" },
+                            { source: "Campaign", title: "Digital First Strategies" },
+                            { source: "Creative Review", title: "Best Campaigns 2024" }
+                        ]
+                    },
+                    apiEndpoint: null
+                },
+                ralphNews: {
+                    title: "RALPH News Network",
+                    icon: "📢",
+                    enabled: true,
+                    content: {
+                        breaking: [
+                            { headline: "New Office Space Opening Q1 2025!", live: true },
+                            { headline: "Award Win: Best Campaign at Industry Awards", live: false },
+                            { headline: "Client Win: Major Automotive Account", live: false }
+                        ],
+                        updates: [
+                            "New Equipment in Studio B",
+                            "Holiday Party December 20th",
+                            "Q4 Numbers Looking Strong!"
+                        ]
+                    },
+                    apiEndpoint: null
+                },
+                suggestions: {
+                    title: "Digital Suggestion Box",
+                    icon: "💭",
+                    enabled: true,
+                    content: {
+                        recentSuggestions: [
+                            { idea: "Coffee machine upgrade", status: "APPROVED" },
+                            { idea: "Flexible Friday hours", status: "IN REVIEW" },
+                            { idea: "Pet-friendly office days", status: "CONSIDERING" }
+                        ]
+                    },
+                    apiEndpoint: null,
+                    submitEndpoint: null
+                },
+                announcements: {
+                    title: "System Announcements",
+                    icon: "📣",
+                    enabled: true,
+                    content: {
+                        important: [
+                            "System maintenance scheduled for Saturday 2:00 AM",
+                            "Please save all work before Friday EOD"
+                        ],
+                        general: [
+                            "Parking lot B closed for repairs this week",
+                            "New health benefits info session Thursday",
+                            "Kitchen renovation complete - enjoy!"
+                        ]
+                    },
+                    apiEndpoint: null
+                },
+                links: {
+                    title: "Quick Links Directory",
+                    icon: "🔗",
+                    enabled: true,
+                    content: {
+                        internal: [
+                            { name: "TIMESHEET SYSTEM", url: "#" },
+                            { name: "PROJECT TRACKER", url: "#" },
+                            { name: "EXPENSE REPORTS", url: "#" },
+                            { name: "IT HELPDESK", url: "#" }
+                        ],
+                        external: [
+                            { name: "CLIENT PORTAL", url: "#" },
+                            { name: "VENDOR DATABASE", url: "#" },
+                            { name: "STOCK FOOTAGE", url: "#" }
+                        ]
+                    },
+                    apiEndpoint: null
+                },
+                innovation: {
+                    title: "Innovation Lab Updates",
+                    icon: "💡",
+                    enabled: true,
+                    content: {
+                        experiments: [
+                            { name: "VR Production Pipeline - Phase 2", progress: 60 },
+                            { name: "AI-Assisted Editing Tools", progress: 40 },
+                            { name: "Real-time Rendering System", progress: 80 }
+                        ],
+                        nextSession: {
+                            topic: "Future of Motion Graphics",
+                            speaker: "Guest from Pixar"
+                        }
+                    },
+                    apiEndpoint: null
+                },
+                resources: {
+                    title: "Resource Center",
+                    icon: "📁",
+                    enabled: true,
+                    content: {
+                        documents: [
+                            "Brand Guidelines v3.2",
+                            "Employee Handbook 2024",
+                            "Creative Best Practices",
+                            "Client Onboarding Guide"
+                        ],
+                        templates: [
+                            "Presentation Template",
+                            "Project Brief Template",
+                            "Invoice Template"
+                        ],
+                        training: [
+                            "New Software Tutorials",
+                            "Client Communication 101",
+                            "Project Management Basics"
+                        ]
+                    },
+                    apiEndpoint: null
+                },
+                music: {
+                    title: "Music Library Manager",
+                    icon: "🎵",
+                    enabled: true,
+                    content: {
+                        tracks: [
+                            { 
+                                id: 1, 
+                                title: "Kawaii Kitsune", 
+                                artist: "Kevin MacLeod", 
+                                file: "music/kawaii-kitsune-kevin-macleod-main-version-7984-04-02.mp3",
+                                duration: "4:02",
+                                uploadDate: "2024-08-19"
+                            },
+                            { 
+                                id: 2, 
+                                title: "Mirthaflare", 
+                                artist: "Ian Aisling", 
+                                file: "music/mirthaflare-ian-aisling-main-version-22101-02-36.mp3",
+                                duration: "2:36",
+                                uploadDate: "2024-08-19"
+                            }
+                        ],
+                        totalTracks: 2,
+                        totalDuration: "6:38"
+                    },
+                    apiEndpoint: null
+                }
+            },
+            api: {
+                baseUrl: "",
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                refreshInterval: 60000,
+                retryAttempts: 3,
+                timeout: 5000
+            }
+        };
+        
+        // Make available globally
+        window.CMS_CONFIG = CMS_CONFIG;
+    </script>
+    <script>
+        // Admin Authentication
+        const ADMIN_CREDENTIALS = {
+            username: 'ralph',
+            password: 'admin123' // Change this in production!
+        };
+
+        let currentConfig = {};
+        let isLoggedIn = false;
+
+        // Login functionality
+        document.getElementById('loginForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+
+            if (username === ADMIN_CREDENTIALS.username && password === ADMIN_CREDENTIALS.password) {
+                login();
+            } else {
+                document.getElementById('loginError').style.display = 'block';
+                setTimeout(() => {
+                    document.getElementById('loginError').style.display = 'none';
+                }, 3000);
+            }
+        });
+
+        function login() {
+            isLoggedIn = true;
+            document.getElementById('loginContainer').style.display = 'none';
+            document.getElementById('adminContainer').style.display = 'block';
+            
+            // Ensure CMS_CONFIG is loaded first
+            console.log('Login - CMS_CONFIG available:', typeof CMS_CONFIG !== 'undefined');
+            
+            loadCurrentConfig();
+            
+            // Initialize module editor after login with longer delay
+            setTimeout(() => {
+                loadModuleEditor();
+            }, 500);
+        }
+
+        function logout() {
+            isLoggedIn = false;
+            document.getElementById('adminContainer').style.display = 'none';
+            document.getElementById('loginContainer').style.display = 'flex';
+            document.getElementById('username').value = '';
+            document.getElementById('password').value = '';
+        }
+
+        // Panel navigation
+        function showPanel(panelId) {
+            // Hide all panels
+            document.querySelectorAll('.panel-section').forEach(panel => {
+                panel.classList.remove('active');
+            });
+            
+            // Remove active class from sidebar items
+            document.querySelectorAll('.sidebar-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            
+            // Show selected panel
+            document.getElementById(panelId).classList.add('active');
+            
+            // Add active class to clicked sidebar item
+            event.target.closest('.sidebar-item').classList.add('active');
+
+            // Special handling for raw editor panel
+            if (panelId === 'raw') {
+                // Update raw editor with current config
+                updateConfigFromFields();
+                document.getElementById('rawEditor').value = JSON.stringify(currentConfig, null, 2);
+            }
+        }
+
+        // Load current configuration
+        function loadCurrentConfig() {
+            console.log('loadCurrentConfig called');
+            console.log('CMS_CONFIG exists:', typeof CMS_CONFIG !== 'undefined');
+            
+            if (typeof CMS_CONFIG !== 'undefined') {
+                try {
+                    currentConfig = JSON.parse(JSON.stringify(CMS_CONFIG));
+                    console.log('Config loaded successfully, modules:', Object.keys(currentConfig.modules || {}));
+                    populateFields();
+                    const rawEditor = document.getElementById('rawEditor');
+                    if (rawEditor) {
+                        rawEditor.value = JSON.stringify(currentConfig, null, 2);
+                    }
+                } catch (error) {
+                    console.error('Error loading config:', error);
+                    currentConfig = {};
+                }
+            } else {
+                console.error('CMS_CONFIG is not defined');
+                currentConfig = {};
+            }
+        }
+
+        // Populate form fields with current config
+        function populateFields() {
+            // System settings
+            if (currentConfig.system) {
+                document.getElementById('companyName').value = currentConfig.system.companyName || '';
+                document.getElementById('primaryColor').value = currentConfig.system.primaryColor || '#EB008B';
+                document.getElementById('bootMessages').value = currentConfig.system.bootMessages?.join('\n') || '';
+            }
+
+            // Chatbot settings
+            if (currentConfig.chatbot) {
+                document.getElementById('chatbotTitle').value = currentConfig.chatbot.title || '';
+                document.getElementById('welcomeMessage').value = currentConfig.chatbot.welcomeMessage || '';
+                
+                if (currentConfig.chatbot.openai) {
+                    document.getElementById('openaiKey').value = currentConfig.chatbot.openai.apiKey || '';
+                    document.getElementById('openaiModel').value = currentConfig.chatbot.openai.model || 'gpt-4';
+                    document.getElementById('systemPrompt').value = currentConfig.chatbot.openai.systemPrompt || '';
+                    document.getElementById('chatbotToggle').checked = currentConfig.chatbot.openai.enabled || false;
+                }
+            }
+
+            // API settings
+            if (currentConfig.api) {
+                document.getElementById('apiBaseUrl').value = currentConfig.api.baseUrl || '';
+                document.getElementById('refreshInterval').value = currentConfig.api.refreshInterval || 60000;
+                document.getElementById('apiHeaders').value = JSON.stringify(currentConfig.api.headers || {}, null, 2);
+            }
+        }
+
+        // WYSIWYG Module Editor
+        function loadModuleEditor() {
+            console.log('loadModuleEditor called');
+            console.log('currentConfig:', currentConfig);
+            console.log('currentConfig.modules exists:', !!(currentConfig && currentConfig.modules));
+            
+            // Ensure config is loaded
+            if (!currentConfig || !currentConfig.modules) {
+                console.log('Config not loaded, loading now...');
+                loadCurrentConfig();
+                
+                // Double-check after loading
+                console.log('After loadCurrentConfig - currentConfig:', currentConfig);
+                console.log('After loadCurrentConfig - has modules:', !!(currentConfig && currentConfig.modules));
+                
+                if (!currentConfig || !currentConfig.modules) {
+                    console.error('Failed to load config - CMS_CONFIG available:', typeof CMS_CONFIG !== 'undefined');
+                    const moduleEditor = document.getElementById('moduleEditor');
+                    if (moduleEditor) {
+                        moduleEditor.innerHTML = '<p style="color: red;">Failed to load configuration. CMS_CONFIG status: ' + (typeof CMS_CONFIG !== 'undefined' ? 'Available' : 'Missing') + '</p>';
+                    }
+                    return;
+                }
+            }
+
+            const selectElement = document.getElementById('moduleSelect');
+            if (!selectElement) {
+                console.error('Module select element not found');
+                return;
+            }
+
+            const moduleId = selectElement.value;
+            console.log('Selected module ID:', moduleId);
+            
+            if (!moduleId) {
+                document.getElementById('moduleEditor').innerHTML = '<p>Please select a module to edit.</p>';
+                return;
+            }
+
+            const module = currentConfig.modules?.[moduleId];
+            
+            if (!module) {
+                console.log('Module not found:', moduleId, 'Available modules:', Object.keys(currentConfig.modules || {}));
+                document.getElementById('moduleEditor').innerHTML = `<p>Module "${moduleId}" not found. Available modules: ${Object.keys(currentConfig.modules || {}).join(', ')}</p>`;
+                return;
+            }
+
+            console.log('Loading editor for module:', module.title);
+
+            let editorHtml = `
+                <div class="section-header">
+                    <h3>${module.icon} ${module.title}</h3>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-field">
+                        <label>Module Title</label>
+                        <input type="text" id="moduleTitle" value="${module.title}">
+                    </div>
+                    <div class="form-field">
+                        <label>Module Icon</label>
+                        <input type="text" id="moduleIcon" value="${module.icon}">
+                    </div>
+                </div>
+
+                <div class="form-field">
+                    <label>API Endpoint (optional)</label>
+                    <input type="url" id="moduleApiEndpoint" value="${module.apiEndpoint || ''}" 
+                           placeholder="https://api.yourcompany.com/${moduleId}">
+                </div>
+
+                <div class="module-toggle">
+                    <label class="switch">
+                        <input type="checkbox" id="moduleEnabled" ${module.enabled ? 'checked' : ''}>
+                        <span class="slider"></span>
+                    </label>
+                    <span>Module Enabled</span>
+                </div>
+            `;
+
+            // Add module-specific WYSIWYG editors
+            editorHtml += getModuleSpecificEditor(moduleId, module.content);
+
+            editorHtml += `
+                <div class="action-bar">
+                    <button class="btn btn-primary" onclick="updateModule('${moduleId}')">💾 Update Module</button>
+                    <button class="btn btn-secondary" onclick="resetModule('${moduleId}')">🔄 Reset to Default</button>
+                </div>
+            `;
+
+            document.getElementById('moduleEditor').innerHTML = editorHtml;
+            
+            // Initialize drag and drop for the loaded editor
+            setTimeout(() => {
+                initializeDragAndDrop();
+            }, 100);
+        }
+
+        // Get module-specific WYSIWYG editor
+        function getModuleSpecificEditor(moduleId, content) {
+            switch (moduleId) {
+                case 'newBiz':
+                    return getNewBizEditor(content);
+                case 'premieres':
+                    return getPremieresEditor(content);
+                case 'shoutouts':
+                    return getShoutoutsEditor(content);
+                case 'challenge':
+                    return getChallengeEditor(content);
+                case 'articles':
+                    return getArticlesEditor(content);
+                case 'ralphNews':
+                    return getRalphNewsEditor(content);
+                case 'announcements':
+                    return getAnnouncementsEditor(content);
+                case 'links':
+                    return getLinksEditor(content);
+                case 'innovation':
+                    return getInnovationEditor(content);
+                case 'resources':
+                    return getResourcesEditor(content);
+                case 'music':
+                    return getMusicEditor(content);
+                case 'suggestions':
+                    return getSuggestionsEditor(content);
+                default:
+                    return getGenericEditor(content);
+            }
+        }
+
+        // New Business Pipeline Editor (renamed from New Biz Pipeline)
+        function getNewBizEditor(content) {
+            const activePitches = content.activePitches || [];
+            const upcomingMeetings = content.upcomingMeetings || [];
+
+            return `
+                <div style="background: #1e1e1e; padding: 20px; border-radius: 8px; margin: 16px 0;">
+                    <h4 style="color: var(--ralph-pink); margin-bottom: 16px;">📊 Active Pitches</h4>
+                    <div id="activePitches">
+                        ${activePitches.map((pitch, index) => `
+                            <div class="pitch-item draggable-item" draggable="true" style="background: #2d2d2d; padding: 12px; margin-bottom: 8px; border-radius: 6px;">
+                                <div style="display: flex; gap: 12px; align-items: center; margin-bottom: 8px;">
+                                    <span class="drag-handle">⋮⋮</span>
+                                    <button onclick="removePitch(${index})" style="background: #ef4444; color: white; border: none; border-radius: 4px; padding: 4px 8px; cursor: pointer;">✕</button>
+                                    <input type="text" value="${pitch.name}" placeholder="Pitch name" style="flex: 1; background: #1e1e1e; border: 1px solid #404040; color: white; padding: 8px; border-radius: 4px;">
+                                    <input type="number" value="${pitch.progress}" min="0" max="100" placeholder="Progress %" style="width: 80px; background: #1e1e1e; border: 1px solid #404040; color: white; padding: 8px; border-radius: 4px;">
+                                    <span style="color: #b0b0b0;">%</span>
+                                </div>
+                                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-left: 44px;">
+                                    <input type="url" value="${pitch.viewLink || ''}" placeholder="Google Slides View Link" style="background: #1e1e1e; border: 1px solid #404040; color: white; padding: 6px; border-radius: 4px; font-size: 12px;">
+                                    <input type="url" value="${pitch.downloadLink || ''}" placeholder="Brief Download Link" style="background: #1e1e1e; border: 1px solid #404040; color: white; padding: 6px; border-radius: 4px; font-size: 12px;">
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                    <button onclick="addPitch()" class="btn btn-secondary" style="margin-top: 8px;">+ Add Pitch</button>
+
+                    <h4 style="color: var(--ralph-pink); margin: 24px 0 16px;">📅 Upcoming Meetings</h4>
+                    <div id="upcomingMeetings">
+                        ${upcomingMeetings.map((meeting, index) => `
+                            <div class="meeting-item draggable-item" draggable="true" style="background: #2d2d2d; padding: 12px; margin-bottom: 8px; border-radius: 6px; display: flex; gap: 12px; align-items: center;">
+                                <span class="drag-handle">⋮⋮</span>
+                                <button onclick="removeMeeting(${index})" style="background: #ef4444; color: white; border: none; border-radius: 4px; padding: 4px 8px; cursor: pointer;">✕</button>
+                                <input type="text" value="${meeting.time}" placeholder="Time" style="width: 150px; background: #1e1e1e; border: 1px solid #404040; color: white; padding: 8px; border-radius: 4px;">
+                                <input type="text" value="${meeting.client}" placeholder="Client/Description" style="flex: 1; background: #1e1e1e; border: 1px solid #404040; color: white; padding: 8px; border-radius: 4px;">
+                                <label style="display: flex; align-items: center; gap: 8px; color: #b0b0b0;">
+                                    <input type="checkbox" ${meeting.urgent ? 'checked' : ''}>
+                                    Urgent
+                                </label>
+                            </div>
+                        `).join('')}
+                    </div>
+                    <button onclick="addMeeting()" class="btn btn-secondary" style="margin-top: 8px;">+ Add Meeting</button>
+                </div>
+            `;
+        }
+
+        // Premieres Calendar Editor
+        function getPremieresEditor(content) {
+            const thisMonth = content.thisMonth || [];
+            const nextMonth = content.nextMonth || [];
+
+            return `
+                <div style="background: #1e1e1e; padding: 20px; border-radius: 8px; margin: 16px 0;">
+                    <h4 style="color: var(--ralph-pink); margin-bottom: 16px;">📅 This Month</h4>
+                    <div id="thisMonth">
+                        ${thisMonth.map((item, index) => `
+                            <div class="premiere-item draggable-item" draggable="true" style="background: #2d2d2d; padding: 12px; margin-bottom: 8px; border-radius: 6px;">
+                                <div style="display: flex; gap: 12px; align-items: center; margin-bottom: 8px;">
+                                    <span class="drag-handle">⋮⋮</span>
+                                    <button onclick="removeThisMonth(${index})" style="background: #ef4444; color: white; border: none; border-radius: 4px; padding: 4px 8px; cursor: pointer;">✕</button>
+                                    <input type="text" value="${item.date}" placeholder="Date" style="width: 100px; background: #1e1e1e; border: 1px solid #404040; color: white; padding: 8px; border-radius: 4px;">
+                                    <input type="text" value="${item.project}" placeholder="Project name" style="flex: 1; background: #1e1e1e; border: 1px solid #404040; color: white; padding: 8px; border-radius: 4px;">
+                                </div>
+                                <div style="margin-left: 44px;">
+                                    <input type="url" value="${item.liveLink || ''}" placeholder="Live Link (Optional)" style="width: 100%; background: #1e1e1e; border: 1px solid #404040; color: white; padding: 6px; border-radius: 4px; font-size: 12px;">
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                    <button onclick="addThisMonth()" class="btn btn-secondary" style="margin-top: 8px;">+ Add This Month</button>
+
+                    <h4 style="color: var(--ralph-pink); margin: 24px 0 16px;">📅 Next Month</h4>
+                    <div id="nextMonth">
+                        ${nextMonth.map((item, index) => `
+                            <div class="premiere-item draggable-item" draggable="true" style="background: #2d2d2d; padding: 12px; margin-bottom: 8px; border-radius: 6px;">
+                                <div style="display: flex; gap: 12px; align-items: center; margin-bottom: 8px;">
+                                    <span class="drag-handle">⋮⋮</span>
+                                    <button onclick="removeNextMonth(${index})" style="background: #ef4444; color: white; border: none; border-radius: 4px; padding: 4px 8px; cursor: pointer;">✕</button>
+                                    <input type="text" value="${item.date}" placeholder="Date" style="width: 100px; background: #1e1e1e; border: 1px solid #404040; color: white; padding: 8px; border-radius: 4px;">
+                                    <input type="text" value="${item.project}" placeholder="Project name" style="flex: 1; background: #1e1e1e; border: 1px solid #404040; color: white; padding: 8px; border-radius: 4px;">
+                                </div>
+                                <div style="margin-left: 44px;">
+                                    <input type="url" value="${item.liveLink || ''}" placeholder="Live Link (Optional)" style="width: 100%; background: #1e1e1e; border: 1px solid #404040; color: white; padding: 6px; border-radius: 4px; font-size: 12px;">
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                    <button onclick="addNextMonth()" class="btn btn-secondary" style="margin-top: 8px;">+ Add Next Month</button>
+                </div>
+            `;
+        }
+
+        // Shoutouts Editor
+        function getShoutoutsEditor(content) {
+            const birthdays = content.birthdays || [];
+            const anniversaries = content.anniversaries || [];
+            const shoutouts = content.shoutouts || [];
+
+            return `
+                <div style="background: #1e1e1e; padding: 20px; border-radius: 8px; margin: 16px 0;">
+                    <h4 style="color: var(--ralph-pink); margin-bottom: 16px;">🎂 Birthdays</h4>
+                    <div id="birthdays">
+                        ${birthdays.map((item, index) => `
+                            <div class="birthday-item" style="background: #2d2d2d; padding: 12px; margin-bottom: 8px; border-radius: 6px; display: flex; gap: 12px; align-items: center;">
+                                <button onclick="removeBirthday(${index})" style="background: #ef4444; color: white; border: none; border-radius: 4px; padding: 4px 8px; cursor: pointer;">✕</button>
+                                <input type="text" value="${item.date}" placeholder="Date" style="width: 100px; background: #1e1e1e; border: 1px solid #404040; color: white; padding: 8px; border-radius: 4px;">
+                                <input type="text" value="${item.person}" placeholder="Person name" style="flex: 1; background: #1e1e1e; border: 1px solid #404040; color: white; padding: 8px; border-radius: 4px;">
+                                <label style="display: flex; align-items: center; gap: 8px; color: #b0b0b0;">
+                                    <input type="checkbox" ${item.highlight ? 'checked' : ''}>
+                                    Highlight
+                                </label>
+                            </div>
+                        `).join('')}
+                    </div>
+                    <button onclick="addBirthday()" class="btn btn-secondary" style="margin-top: 8px;">+ Add Birthday</button>
+
+                    <h4 style="color: var(--ralph-pink); margin: 24px 0 16px;">🎊 Work Anniversaries</h4>
+                    <div id="anniversaries">
+                        ${anniversaries.map((item, index) => `
+                            <div class="anniversary-item" style="background: #2d2d2d; padding: 12px; margin-bottom: 8px; border-radius: 6px; display: flex; gap: 12px; align-items: center;">
+                                <button onclick="removeAnniversary(${index})" style="background: #ef4444; color: white; border: none; border-radius: 4px; padding: 4px 8px; cursor: pointer;">✕</button>
+                                <input type="number" value="${item.years}" placeholder="Years" style="width: 80px; background: #1e1e1e; border: 1px solid #404040; color: white; padding: 8px; border-radius: 4px;">
+                                <span style="color: #b0b0b0;">years</span>
+                                <input type="text" value="${item.person}" placeholder="Person name" style="flex: 1; background: #1e1e1e; border: 1px solid #404040; color: white; padding: 8px; border-radius: 4px;">
+                            </div>
+                        `).join('')}
+                    </div>
+                    <button onclick="addAnniversary()" class="btn btn-secondary" style="margin-top: 8px;">+ Add Anniversary</button>
+
+                    <h4 style="color: var(--ralph-pink); margin: 24px 0 16px;">📢 Shoutouts</h4>
+                    <div id="shoutouts">
+                        ${shoutouts.map((item, index) => `
+                            <div class="shoutout-item" style="background: #2d2d2d; padding: 12px; margin-bottom: 8px; border-radius: 6px;">
+                                <div style="display: flex; gap: 12px; align-items: flex-start; margin-bottom: 8px;">
+                                    <button onclick="removeShoutout(${index})" style="background: #ef4444; color: white; border: none; border-radius: 4px; padding: 4px 8px; cursor: pointer;">✕</button>
+                                    <textarea placeholder="Shoutout message" style="flex: 1; background: #1e1e1e; border: 1px solid #404040; color: white; padding: 8px; border-radius: 4px; min-height: 60px; resize: vertical;">${item.message}</textarea>
+                                </div>
+                                <input type="text" value="${item.from}" placeholder="From (person/department)" style="width: 200px; background: #1e1e1e; border: 1px solid #404040; color: white; padding: 8px; border-radius: 4px; margin-left: 44px;">
+                            </div>
+                        `).join('')}
+                    </div>
+                    <button onclick="addShoutout()" class="btn btn-secondary" style="margin-top: 8px;">+ Add Shoutout</button>
+                </div>
+            `;
+        }
+
+        // Generic fallback editor for other modules
+        function getGenericEditor(content) {
+            return `
+                <div class="form-field">
+                    <label>Module Content (JSON)</label>
+                    <textarea id="moduleContent" class="json-editor" rows="15">${JSON.stringify(content || {}, null, 2)}</textarea>
+                    <small style="color: #b0b0b0; margin-top: 4px; display: block;">Advanced: Edit raw JSON content</small>
+                </div>
+            `;
+        }
+
+        // Creative Challenge Editor
+        function getChallengeEditor(content) {
+            const currentChallenge = content.currentChallenge || {};
+            const lastWinner = content.lastWinner || {};
+
+            return `
+                <div style="background: #1e1e1e; padding: 20px; border-radius: 8px; margin: 16px 0;">
+                    <h4 style="color: var(--ralph-pink); margin-bottom: 16px;">🎨 Current Challenge</h4>
+                    <div style="background: #2d2d2d; padding: 16px; border-radius: 6px; margin-bottom: 16px;">
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px;">
+                            <div>
+                                <label style="color: #b0b0b0; margin-bottom: 4px; display: block;">Month</label>
+                                <input type="text" id="challengeMonth" value="${currentChallenge.month || ''}" placeholder="DECEMBER" style="width: 100%; background: #1e1e1e; border: 1px solid #404040; color: white; padding: 8px; border-radius: 4px;">
+                            </div>
+                            <div>
+                                <label style="color: #b0b0b0; margin-bottom: 4px; display: block;">Theme</label>
+                                <input type="text" id="challengeTheme" value="${currentChallenge.theme || ''}" placeholder="Retro Future" style="width: 100%; background: #1e1e1e; border: 1px solid #404040; color: white; padding: 8px; border-radius: 4px;">
+                            </div>
+                        </div>
+                        <div style="margin-bottom: 12px;">
+                            <label style="color: #b0b0b0; margin-bottom: 4px; display: block;">Description</label>
+                            <textarea id="challengeDescription" placeholder="Create a 30-second concept using only 8-bit graphics..." style="width: 100%; background: #1e1e1e; border: 1px solid #404040; color: white; padding: 8px; border-radius: 4px; min-height: 60px; resize: vertical;">${currentChallenge.description || ''}</textarea>
+                        </div>
+                        <div>
+                            <label style="color: #b0b0b0; margin-bottom: 4px; display: block;">Prize</label>
+                            <input type="text" id="challengePrize" value="${currentChallenge.prize || ''}" placeholder="🏆 Golden Pixel Award + Extra PTO Day" style="width: 100%; background: #1e1e1e; border: 1px solid #404040; color: white; padding: 8px; border-radius: 4px;">
+                        </div>
+                    </div>
+
+                    <h4 style="color: var(--ralph-pink); margin-bottom: 16px;">🏆 Last Winner</h4>
+                    <div style="background: #2d2d2d; padding: 16px; border-radius: 6px;">
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                            <div>
+                                <label style="color: #b0b0b0; margin-bottom: 4px; display: block;">Winner Name</label>
+                                <input type="text" id="lastWinnerName" value="${lastWinner.name || ''}" placeholder="Sarah M." style="width: 100%; background: #1e1e1e; border: 1px solid #404040; color: white; padding: 8px; border-radius: 4px;">
+                            </div>
+                            <div>
+                                <label style="color: #b0b0b0; margin-bottom: 4px; display: block;">Winning Concept</label>
+                                <input type="text" id="lastWinnerConcept" value="${lastWinner.concept || ''}" placeholder="Neon Dreams" style="width: 100%; background: #1e1e1e; border: 1px solid #404040; color: white; padding: 8px; border-radius: 4px;">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Industry Articles Editor
+        function getArticlesEditor(content) {
+            const trending = content.trending || [];
+            const mustReads = content.mustReads || [];
+
+            return `
+                <div style="background: #1e1e1e; padding: 20px; border-radius: 8px; margin: 16px 0;">
+                    <h4 style="color: var(--ralph-pink); margin-bottom: 16px;">📈 Trending Articles</h4>
+                    <div id="trendingArticles">
+                        ${trending.map((article, index) => `
+                            <div class="trending-item" style="background: #2d2d2d; padding: 12px; margin-bottom: 8px; border-radius: 6px; display: flex; gap: 12px; align-items: center;">
+                                <button onclick="removeTrendingArticle(${index})" style="background: #ef4444; color: white; border: none; border-radius: 4px; padding: 4px 8px; cursor: pointer;">✕</button>
+                                <input type="text" value="${article}" placeholder="Article title" style="flex: 1; background: #1e1e1e; border: 1px solid #404040; color: white; padding: 8px; border-radius: 4px;">
+                            </div>
+                        `).join('')}
+                    </div>
+                    <button onclick="addTrendingArticle()" class="btn btn-secondary" style="margin-top: 8px;">+ Add Trending Article</button>
+
+                    <h4 style="color: var(--ralph-pink); margin: 24px 0 16px;">📖 Must Reads</h4>
+                    <div id="mustReads">
+                        ${mustReads.map((item, index) => `
+                            <div class="mustread-item" style="background: #2d2d2d; padding: 12px; margin-bottom: 8px; border-radius: 6px; display: flex; gap: 12px; align-items: center;">
+                                <button onclick="removeMustRead(${index})" style="background: #ef4444; color: white; border: none; border-radius: 4px; padding: 4px 8px; cursor: pointer;">✕</button>
+                                <input type="text" value="${item.source || ''}" placeholder="Source" style="width: 120px; background: #1e1e1e; border: 1px solid #404040; color: white; padding: 8px; border-radius: 4px;">
+                                <input type="text" value="${item.title || ''}" placeholder="Article title" style="flex: 1; background: #1e1e1e; border: 1px solid #404040; color: white; padding: 8px; border-radius: 4px;">
+                            </div>
+                        `).join('')}
+                    </div>
+                    <button onclick="addMustRead()" class="btn btn-secondary" style="margin-top: 8px;">+ Add Must Read</button>
+                </div>
+            `;
+        }
+
+        // RALPH News Editor
+        function getRalphNewsEditor(content) {
+            const breaking = content.breaking || [];
+            const updates = content.updates || [];
+
+            return `
+                <div style="background: #1e1e1e; padding: 20px; border-radius: 8px; margin: 16px 0;">
+                    <h4 style="color: var(--ralph-pink); margin-bottom: 16px;">🔴 Breaking News</h4>
+                    <div id="breakingNews">
+                        ${breaking.map((item, index) => `
+                            <div class="breaking-item" style="background: #2d2d2d; padding: 12px; margin-bottom: 8px; border-radius: 6px; display: flex; gap: 12px; align-items: center;">
+                                <button onclick="removeBreakingNews(${index})" style="background: #ef4444; color: white; border: none; border-radius: 4px; padding: 4px 8px; cursor: pointer;">✕</button>
+                                <input type="text" value="${item.headline || ''}" placeholder="Headline" style="flex: 1; background: #1e1e1e; border: 1px solid #404040; color: white; padding: 8px; border-radius: 4px;">
+                                <label style="display: flex; align-items: center; gap: 8px; color: #b0b0b0;">
+                                    <input type="checkbox" ${item.live ? 'checked' : ''}>
+                                    Live
+                                </label>
+                            </div>
+                        `).join('')}
+                    </div>
+                    <button onclick="addBreakingNews()" class="btn btn-secondary" style="margin-top: 8px;">+ Add Breaking News</button>
+
+                    <h4 style="color: var(--ralph-pink); margin: 24px 0 16px;">📰 General Updates</h4>
+                    <div id="generalUpdates">
+                        ${updates.map((update, index) => `
+                            <div class="update-item" style="background: #2d2d2d; padding: 12px; margin-bottom: 8px; border-radius: 6px; display: flex; gap: 12px; align-items: center;">
+                                <button onclick="removeGeneralUpdate(${index})" style="background: #ef4444; color: white; border: none; border-radius: 4px; padding: 4px 8px; cursor: pointer;">✕</button>
+                                <input type="text" value="${update}" placeholder="Update text" style="flex: 1; background: #1e1e1e; border: 1px solid #404040; color: white; padding: 8px; border-radius: 4px;">
+                            </div>
+                        `).join('')}
+                    </div>
+                    <button onclick="addGeneralUpdate()" class="btn btn-secondary" style="margin-top: 8px;">+ Add General Update</button>
+                </div>
+            `;
+        }
+
+        // System Announcements Editor
+        function getAnnouncementsEditor(content) {
+            const important = content.important || [];
+            const general = content.general || [];
+
+            return `
+                <div style="background: #1e1e1e; padding: 20px; border-radius: 8px; margin: 16px 0;">
+                    <h4 style="color: var(--ralph-pink); margin-bottom: 16px;">⚠️ Important Announcements</h4>
+                    <div id="importantAnnouncements">
+                        ${important.map((announcement, index) => `
+                            <div class="important-item" style="background: #2d2d2d; padding: 12px; margin-bottom: 8px; border-radius: 6px; display: flex; gap: 12px; align-items: center;">
+                                <button onclick="removeImportantAnnouncement(${index})" style="background: #ef4444; color: white; border: none; border-radius: 4px; padding: 4px 8px; cursor: pointer;">✕</button>
+                                <input type="text" value="${announcement}" placeholder="Important announcement" style="flex: 1; background: #1e1e1e; border: 1px solid #404040; color: white; padding: 8px; border-radius: 4px;">
+                            </div>
+                        `).join('')}
+                    </div>
+                    <button onclick="addImportantAnnouncement()" class="btn btn-secondary" style="margin-top: 8px;">+ Add Important Announcement</button>
+
+                    <h4 style="color: var(--ralph-pink); margin: 24px 0 16px;">📢 General Announcements</h4>
+                    <div id="generalAnnouncements">
+                        ${general.map((announcement, index) => `
+                            <div class="general-item" style="background: #2d2d2d; padding: 12px; margin-bottom: 8px; border-radius: 6px; display: flex; gap: 12px; align-items: center;">
+                                <button onclick="removeGeneralAnnouncement(${index})" style="background: #ef4444; color: white; border: none; border-radius: 4px; padding: 4px 8px; cursor: pointer;">✕</button>
+                                <input type="text" value="${announcement}" placeholder="General announcement" style="flex: 1; background: #1e1e1e; border: 1px solid #404040; color: white; padding: 8px; border-radius: 4px;">
+                            </div>
+                        `).join('')}
+                    </div>
+                    <button onclick="addGeneralAnnouncement()" class="btn btn-secondary" style="margin-top: 8px;">+ Add General Announcement</button>
+                </div>
+            `;
+        }
+
+        // Quick Links Editor
+        function getLinksEditor(content) {
+            const internal = content.internal || [];
+            const external = content.external || [];
+
+            return `
+                <div style="background: #1e1e1e; padding: 20px; border-radius: 8px; margin: 16px 0;">
+                    <h4 style="color: var(--ralph-pink); margin-bottom: 16px;">🏢 Internal Links</h4>
+                    <div id="internalLinks">
+                        ${internal.map((link, index) => `
+                            <div class="internal-link-item" style="background: #2d2d2d; padding: 12px; margin-bottom: 8px; border-radius: 6px; display: flex; gap: 12px; align-items: center;">
+                                <button onclick="removeInternalLink(${index})" style="background: #ef4444; color: white; border: none; border-radius: 4px; padding: 4px 8px; cursor: pointer;">✕</button>
+                                <input type="text" value="${link.name || ''}" placeholder="Link name" style="width: 200px; background: #1e1e1e; border: 1px solid #404040; color: white; padding: 8px; border-radius: 4px;">
+                                <input type="url" value="${link.url || ''}" placeholder="URL" style="flex: 1; background: #1e1e1e; border: 1px solid #404040; color: white; padding: 8px; border-radius: 4px;">
+                            </div>
+                        `).join('')}
+                    </div>
+                    <button onclick="addInternalLink()" class="btn btn-secondary" style="margin-top: 8px;">+ Add Internal Link</button>
+
+                    <h4 style="color: var(--ralph-pink); margin: 24px 0 16px;">🌐 External Links</h4>
+                    <div id="externalLinks">
+                        ${external.map((link, index) => `
+                            <div class="external-link-item" style="background: #2d2d2d; padding: 12px; margin-bottom: 8px; border-radius: 6px; display: flex; gap: 12px; align-items: center;">
+                                <button onclick="removeExternalLink(${index})" style="background: #ef4444; color: white; border: none; border-radius: 4px; padding: 4px 8px; cursor: pointer;">✕</button>
+                                <input type="text" value="${link.name || ''}" placeholder="Link name" style="width: 200px; background: #1e1e1e; border: 1px solid #404040; color: white; padding: 8px; border-radius: 4px;">
+                                <input type="url" value="${link.url || ''}" placeholder="URL" style="flex: 1; background: #1e1e1e; border: 1px solid #404040; color: white; padding: 8px; border-radius: 4px;">
+                            </div>
+                        `).join('')}
+                    </div>
+                    <button onclick="addExternalLink()" class="btn btn-secondary" style="margin-top: 8px;">+ Add External Link</button>
+                </div>
+            `;
+        }
+
+        // Innovation Lab Editor
+        function getInnovationEditor(content) {
+            const experiments = content.experiments || [];
+            const nextSession = content.nextSession || {};
+
+            return `
+                <div style="background: #1e1e1e; padding: 20px; border-radius: 8px; margin: 16px 0;">
+                    <h4 style="color: var(--ralph-pink); margin-bottom: 16px;">🧪 Current Experiments</h4>
+                    <div id="experiments">
+                        ${experiments.map((experiment, index) => `
+                            <div class="experiment-item" style="background: #2d2d2d; padding: 12px; margin-bottom: 8px; border-radius: 6px; display: flex; gap: 12px; align-items: center;">
+                                <button onclick="removeExperiment(${index})" style="background: #ef4444; color: white; border: none; border-radius: 4px; padding: 4px 8px; cursor: pointer;">✕</button>
+                                <input type="text" value="${experiment.name || ''}" placeholder="Experiment name" style="flex: 1; background: #1e1e1e; border: 1px solid #404040; color: white; padding: 8px; border-radius: 4px;">
+                                <input type="number" value="${experiment.progress || 0}" min="0" max="100" placeholder="Progress %" style="width: 80px; background: #1e1e1e; border: 1px solid #404040; color: white; padding: 8px; border-radius: 4px;">
+                                <span style="color: #b0b0b0;">%</span>
+                            </div>
+                        `).join('')}
+                    </div>
+                    <button onclick="addExperiment()" class="btn btn-secondary" style="margin-top: 8px;">+ Add Experiment</button>
+
+                    <h4 style="color: var(--ralph-pink); margin: 24px 0 16px;">📅 Next Session</h4>
+                    <div style="background: #2d2d2d; padding: 16px; border-radius: 6px;">
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                            <div>
+                                <label style="color: #b0b0b0; margin-bottom: 4px; display: block;">Topic</label>
+                                <input type="text" id="nextSessionTopic" value="${nextSession.topic || ''}" placeholder="Future of Motion Graphics" style="width: 100%; background: #1e1e1e; border: 1px solid #404040; color: white; padding: 8px; border-radius: 4px;">
+                            </div>
+                            <div>
+                                <label style="color: #b0b0b0; margin-bottom: 4px; display: block;">Speaker</label>
+                                <input type="text" id="nextSessionSpeaker" value="${nextSession.speaker || ''}" placeholder="Guest from Pixar" style="width: 100%; background: #1e1e1e; border: 1px solid #404040; color: white; padding: 8px; border-radius: 4px;">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Resources Center Editor
+        function getResourcesEditor(content) {
+            const documents = content.documents || [];
+            const templates = content.templates || [];
+            const training = content.training || [];
+
+            return `
+                <div style="background: #1e1e1e; padding: 20px; border-radius: 8px; margin: 16px 0;">
+                    <h4 style="color: var(--ralph-pink); margin-bottom: 16px;">📄 Documents</h4>
+                    <div id="documents">
+                        ${documents.map((doc, index) => `
+                            <div class="document-item" style="background: #2d2d2d; padding: 12px; margin-bottom: 8px; border-radius: 6px; display: flex; gap: 12px; align-items: center;">
+                                <button onclick="removeDocument(${index})" style="background: #ef4444; color: white; border: none; border-radius: 4px; padding: 4px 8px; cursor: pointer;">✕</button>
+                                <input type="text" value="${doc}" placeholder="Document name" style="flex: 1; background: #1e1e1e; border: 1px solid #404040; color: white; padding: 8px; border-radius: 4px;">
+                            </div>
+                        `).join('')}
+                    </div>
+                    <button onclick="addDocument()" class="btn btn-secondary" style="margin-top: 8px;">+ Add Document</button>
+
+                    <h4 style="color: var(--ralph-pink); margin: 24px 0 16px;">📋 Templates</h4>
+                    <div id="templates">
+                        ${templates.map((template, index) => `
+                            <div class="template-item" style="background: #2d2d2d; padding: 12px; margin-bottom: 8px; border-radius: 6px; display: flex; gap: 12px; align-items: center;">
+                                <button onclick="removeTemplate(${index})" style="background: #ef4444; color: white; border: none; border-radius: 4px; padding: 4px 8px; cursor: pointer;">✕</button>
+                                <input type="text" value="${template}" placeholder="Template name" style="flex: 1; background: #1e1e1e; border: 1px solid #404040; color: white; padding: 8px; border-radius: 4px;">
+                            </div>
+                        `).join('')}
+                    </div>
+                    <button onclick="addTemplate()" class="btn btn-secondary" style="margin-top: 8px;">+ Add Template</button>
+
+                    <h4 style="color: var(--ralph-pink); margin: 24px 0 16px;">🎓 Training</h4>
+                    <div id="training">
+                        ${training.map((course, index) => `
+                            <div class="training-item" style="background: #2d2d2d; padding: 12px; margin-bottom: 8px; border-radius: 6px; display: flex; gap: 12px; align-items: center;">
+                                <button onclick="removeTraining(${index})" style="background: #ef4444; color: white; border: none; border-radius: 4px; padding: 4px 8px; cursor: pointer;">✕</button>
+                                <input type="text" value="${course}" placeholder="Training course name" style="flex: 1; background: #1e1e1e; border: 1px solid #404040; color: white; padding: 8px; border-radius: 4px;">
+                            </div>
+                        `).join('')}
+                    </div>
+                    <button onclick="addTraining()" class="btn btn-secondary" style="margin-top: 8px;">+ Add Training Course</button>
+                </div>
+            `;
+        }
+
+        // Suggestions Editor
+        function getSuggestionsEditor(content) {
+            const recentSuggestions = content.recentSuggestions || [];
+
+            return `
+                <div style="background: #1e1e1e; padding: 20px; border-radius: 8px; margin: 16px 0;">
+                    <h4 style="color: var(--ralph-pink); margin-bottom: 16px;">💡 Recent Suggestions</h4>
+                    <div id="recentSuggestions">
+                        ${recentSuggestions.map((suggestion, index) => `
+                            <div class="suggestion-item" style="background: #2d2d2d; padding: 12px; margin-bottom: 8px; border-radius: 6px;">
+                                <div style="display: flex; gap: 12px; align-items: flex-start; margin-bottom: 8px;">
+                                    <button onclick="removeSuggestion(${index})" style="background: #ef4444; color: white; border: none; border-radius: 4px; padding: 4px 8px; cursor: pointer;">✕</button>
+                                    <textarea placeholder="Suggestion idea" style="flex: 1; background: #1e1e1e; border: 1px solid #404040; color: white; padding: 8px; border-radius: 4px; min-height: 60px; resize: vertical;">${suggestion.idea || ''}</textarea>
+                                </div>
+                                <select style="width: 150px; background: #1e1e1e; border: 1px solid #404040; color: white; padding: 8px; border-radius: 4px; margin-left: 44px;">
+                                    <option value="APPROVED" ${suggestion.status === 'APPROVED' ? 'selected' : ''}>APPROVED</option>
+                                    <option value="IN REVIEW" ${suggestion.status === 'IN REVIEW' ? 'selected' : ''}>IN REVIEW</option>
+                                    <option value="CONSIDERING" ${suggestion.status === 'CONSIDERING' ? 'selected' : ''}>CONSIDERING</option>
+                                    <option value="ON HOLD" ${suggestion.status === 'ON HOLD' ? 'selected' : ''}>ON HOLD</option>
+                                </select>
+                            </div>
+                        `).join('')}
+                    </div>
+                    <button onclick="addSuggestion()" class="btn btn-secondary" style="margin-top: 8px;">+ Add Suggestion</button>
+                </div>
+            `;
+        }
+
+        // Update module
+        function updateModule(moduleId) {
+            const title = document.getElementById('moduleTitle').value;
+            const icon = document.getElementById('moduleIcon').value;
+            const apiEndpoint = document.getElementById('moduleApiEndpoint').value;
+            const enabled = document.getElementById('moduleEnabled').checked;
+            
+            let content = {};
+            
+            // Handle WYSIWYG data collection for specific modules
+            if (moduleId === 'newBiz') {
+                content = getNewBizWYSIWYGData();
+            } else if (moduleId === 'premieres') {
+                content = getPremieresWYSIWYGData();
+            } else if (moduleId === 'shoutouts') {
+                content = getShoutoutsWYSIWYGData();
+            } else if (moduleId === 'challenge') {
+                content = getChallengeWYSIWYGData();
+            } else if (moduleId === 'articles') {
+                content = getArticlesWYSIWYGData();
+            } else if (moduleId === 'ralphNews') {
+                content = getRalphNewsWYSIWYGData();
+            } else if (moduleId === 'announcements') {
+                content = getAnnouncementsWYSIWYGData();
+            } else if (moduleId === 'links') {
+                content = getLinksWYSIWYGData();
+            } else if (moduleId === 'innovation') {
+                content = getInnovationWYSIWYGData();
+            } else if (moduleId === 'resources') {
+                content = getResourcesWYSIWYGData();
+            } else if (moduleId === 'music') {
+                content = getMusicWYSIWYGData();
+            } else if (moduleId === 'suggestions') {
+                content = getSuggestionsWYSIWYGData();
+            } else {
+                // Fallback to JSON editor for other modules
+                try {
+                    const jsonEditor = document.getElementById('moduleContent');
+                    if (jsonEditor) {
+                        content = JSON.parse(jsonEditor.value);
+                    } else {
+                        content = currentConfig.modules[moduleId].content; // Keep existing content
+                    }
+                } catch (e) {
+                    alert('Invalid JSON in module content. Please check your syntax.');
+                    return;
+                }
+            }
+
+            currentConfig.modules[moduleId] = {
+                ...currentConfig.modules[moduleId],
+                title,
+                icon,
+                apiEndpoint: apiEndpoint || null,
+                enabled,
+                content
+            };
+
+            showAlert('Module updated successfully!', 'success');
+        }
+
+        // Collect WYSIWYG data for New Business Pipeline
+        function getNewBizWYSIWYGData() {
+            const activePitches = [];
+            const activePitchesContainer = document.getElementById('activePitches');
+            if (activePitchesContainer) {
+                Array.from(activePitchesContainer.children).forEach(item => {
+                    const inputs = item.querySelectorAll('input');
+                    if (inputs.length >= 4) {
+                        activePitches.push({
+                            name: inputs[0].value,
+                            progress: parseInt(inputs[1].value) || 0,
+                            viewLink: inputs[2].value,
+                            downloadLink: inputs[3].value
+                        });
+                    }
+                });
+            }
+
+            const upcomingMeetings = [];
+            const meetingsContainer = document.getElementById('upcomingMeetings');
+            if (meetingsContainer) {
+                Array.from(meetingsContainer.children).forEach(item => {
+                    const inputs = item.querySelectorAll('input');
+                    if (inputs.length >= 3) {
+                        upcomingMeetings.push({
+                            time: inputs[0].value,
+                            client: inputs[1].value,
+                            urgent: inputs[2].checked
+                        });
+                    }
+                });
+            }
+
+            return {
+                header: "RALPH PIPELINE TRACKER 1.0",
+                activePitches,
+                upcomingMeetings
+            };
+        }
+
+        // Collect WYSIWYG data for Premieres Calendar
+        function getPremieresWYSIWYGData() {
+            const thisMonth = [];
+            const thisMonthContainer = document.getElementById('thisMonth');
+            if (thisMonthContainer) {
+                Array.from(thisMonthContainer.children).forEach(item => {
+                    const inputs = item.querySelectorAll('input');
+                    if (inputs.length >= 3) {
+                        thisMonth.push({
+                            date: inputs[0].value,
+                            project: inputs[1].value,
+                            liveLink: inputs[2].value
+                        });
+                    }
+                });
+            }
+
+            const nextMonth = [];
+            const nextMonthContainer = document.getElementById('nextMonth');
+            if (nextMonthContainer) {
+                Array.from(nextMonthContainer.children).forEach(item => {
+                    const inputs = item.querySelectorAll('input');
+                    if (inputs.length >= 3) {
+                        nextMonth.push({
+                            date: inputs[0].value,
+                            project: inputs[1].value,
+                            liveLink: inputs[2].value
+                        });
+                    }
+                });
+            }
+
+            return {
+                thisMonth,
+                nextMonth
+            };
+        }
+
+        // Collect WYSIWYG data for Shoutouts
+        function getShoutoutsWYSIWYGData() {
+            const birthdays = [];
+            const birthdaysContainer = document.getElementById('birthdays');
+            if (birthdaysContainer) {
+                Array.from(birthdaysContainer.children).forEach(item => {
+                    const inputs = item.querySelectorAll('input');
+                    if (inputs.length >= 3) {
+                        birthdays.push({
+                            date: inputs[0].value,
+                            person: inputs[1].value,
+                            highlight: inputs[2].checked
+                        });
+                    }
+                });
+            }
+
+            const anniversaries = [];
+            const anniversariesContainer = document.getElementById('anniversaries');
+            if (anniversariesContainer) {
+                Array.from(anniversariesContainer.children).forEach(item => {
+                    const inputs = item.querySelectorAll('input');
+                    if (inputs.length >= 2) {
+                        anniversaries.push({
+                            years: parseInt(inputs[0].value) || 1,
+                            person: inputs[1].value
+                        });
+                    }
+                });
+            }
+
+            const shoutouts = [];
+            const shoutoutsContainer = document.getElementById('shoutouts');
+            if (shoutoutsContainer) {
+                Array.from(shoutoutsContainer.children).forEach(item => {
+                    const textarea = item.querySelector('textarea');
+                    const input = item.querySelector('input[type="text"]');
+                    if (textarea && input) {
+                        shoutouts.push({
+                            message: textarea.value,
+                            from: input.value
+                        });
+                    }
+                });
+            }
+
+            return {
+                birthdays,
+                anniversaries,
+                shoutouts
+            };
+        }
+
+        // Collect WYSIWYG data for Creative Challenge
+        function getChallengeWYSIWYGData() {
+            return {
+                currentChallenge: {
+                    month: document.getElementById('challengeMonth')?.value || '',
+                    theme: document.getElementById('challengeTheme')?.value || '',
+                    description: document.getElementById('challengeDescription')?.value || '',
+                    prize: document.getElementById('challengePrize')?.value || ''
+                },
+                lastWinner: {
+                    name: document.getElementById('lastWinnerName')?.value || '',
+                    concept: document.getElementById('lastWinnerConcept')?.value || ''
+                }
+            };
+        }
+
+        // Collect WYSIWYG data for Articles
+        function getArticlesWYSIWYGData() {
+            const trending = [];
+            const trendingContainer = document.getElementById('trendingArticles');
+            if (trendingContainer) {
+                Array.from(trendingContainer.children).forEach(item => {
+                    const input = item.querySelector('input');
+                    if (input && input.value.trim()) {
+                        trending.push(input.value);
+                    }
+                });
+            }
+
+            const mustReads = [];
+            const mustReadsContainer = document.getElementById('mustReads');
+            if (mustReadsContainer) {
+                Array.from(mustReadsContainer.children).forEach(item => {
+                    const inputs = item.querySelectorAll('input');
+                    if (inputs.length >= 2) {
+                        mustReads.push({
+                            source: inputs[0].value,
+                            title: inputs[1].value
+                        });
+                    }
+                });
+            }
+
+            return { trending, mustReads };
+        }
+
+        // Collect WYSIWYG data for RALPH News
+        function getRalphNewsWYSIWYGData() {
+            const breaking = [];
+            const breakingContainer = document.getElementById('breakingNews');
+            if (breakingContainer) {
+                Array.from(breakingContainer.children).forEach(item => {
+                    const inputs = item.querySelectorAll('input');
+                    if (inputs.length >= 2) {
+                        breaking.push({
+                            headline: inputs[0].value,
+                            live: inputs[1].checked
+                        });
+                    }
+                });
+            }
+
+            const updates = [];
+            const updatesContainer = document.getElementById('generalUpdates');
+            if (updatesContainer) {
+                Array.from(updatesContainer.children).forEach(item => {
+                    const input = item.querySelector('input');
+                    if (input && input.value.trim()) {
+                        updates.push(input.value);
+                    }
+                });
+            }
+
+            return { breaking, updates };
+        }
+
+        // Collect WYSIWYG data for Announcements
+        function getAnnouncementsWYSIWYGData() {
+            const important = [];
+            const importantContainer = document.getElementById('importantAnnouncements');
+            if (importantContainer) {
+                Array.from(importantContainer.children).forEach(item => {
+                    const input = item.querySelector('input');
+                    if (input && input.value.trim()) {
+                        important.push(input.value);
+                    }
+                });
+            }
+
+            const general = [];
+            const generalContainer = document.getElementById('generalAnnouncements');
+            if (generalContainer) {
+                Array.from(generalContainer.children).forEach(item => {
+                    const input = item.querySelector('input');
+                    if (input && input.value.trim()) {
+                        general.push(input.value);
+                    }
+                });
+            }
+
+            return { important, general };
+        }
+
+        // Collect WYSIWYG data for Links
+        function getLinksWYSIWYGData() {
+            const internal = [];
+            const internalContainer = document.getElementById('internalLinks');
+            if (internalContainer) {
+                Array.from(internalContainer.children).forEach(item => {
+                    const inputs = item.querySelectorAll('input');
+                    if (inputs.length >= 2) {
+                        internal.push({
+                            name: inputs[0].value,
+                            url: inputs[1].value
+                        });
+                    }
+                });
+            }
+
+            const external = [];
+            const externalContainer = document.getElementById('externalLinks');
+            if (externalContainer) {
+                Array.from(externalContainer.children).forEach(item => {
+                    const inputs = item.querySelectorAll('input');
+                    if (inputs.length >= 2) {
+                        external.push({
+                            name: inputs[0].value,
+                            url: inputs[1].value
+                        });
+                    }
+                });
+            }
+
+            return { internal, external };
+        }
+
+        // Collect WYSIWYG data for Innovation
+        function getInnovationWYSIWYGData() {
+            const experiments = [];
+            const experimentsContainer = document.getElementById('experiments');
+            if (experimentsContainer) {
+                Array.from(experimentsContainer.children).forEach(item => {
+                    const inputs = item.querySelectorAll('input');
+                    if (inputs.length >= 2) {
+                        experiments.push({
+                            name: inputs[0].value,
+                            progress: parseInt(inputs[1].value) || 0
+                        });
+                    }
+                });
+            }
+
+            return {
+                experiments,
+                nextSession: {
+                    topic: document.getElementById('nextSessionTopic')?.value || '',
+                    speaker: document.getElementById('nextSessionSpeaker')?.value || ''
+                }
+            };
+        }
+
+        // Collect WYSIWYG data for Resources
+        function getResourcesWYSIWYGData() {
+            const documents = [];
+            const documentsContainer = document.getElementById('documents');
+            if (documentsContainer) {
+                Array.from(documentsContainer.children).forEach(item => {
+                    const input = item.querySelector('input');
+                    if (input && input.value.trim()) {
+                        documents.push(input.value);
+                    }
+                });
+            }
+
+            const templates = [];
+            const templatesContainer = document.getElementById('templates');
+            if (templatesContainer) {
+                Array.from(templatesContainer.children).forEach(item => {
+                    const input = item.querySelector('input');
+                    if (input && input.value.trim()) {
+                        templates.push(input.value);
+                    }
+                });
+            }
+
+            const training = [];
+            const trainingContainer = document.getElementById('training');
+            if (trainingContainer) {
+                Array.from(trainingContainer.children).forEach(item => {
+                    const input = item.querySelector('input');
+                    if (input && input.value.trim()) {
+                        training.push(input.value);
+                    }
+                });
+            }
+
+            return { documents, templates, training };
+        }
+
+        // Collect WYSIWYG data for Music
+        function getMusicWYSIWYGData() {
+            const tracks = [];
+            const tracksContainer = document.getElementById('musicTracks');
+            if (tracksContainer) {
+                Array.from(tracksContainer.children).forEach((item, index) => {
+                    const inputs = item.querySelectorAll('input');
+                    if (inputs.length >= 5) {
+                        tracks.push({
+                            id: index + 1,
+                            title: inputs[2].value || `Track ${index + 1}`,
+                            artist: inputs[3].value || 'Unknown Artist',
+                            file: inputs[5].value || '',
+                            duration: inputs[4].value || '0:00',
+                            uploadDate: new Date().toISOString().split('T')[0]
+                        });
+                    }
+                });
+            }
+
+            // Calculate total duration (rough estimate)
+            let totalSeconds = 0;
+            tracks.forEach(track => {
+                const [mins, secs] = track.duration.split(':').map(n => parseInt(n) || 0);
+                totalSeconds += mins * 60 + secs;
+            });
+            const totalMins = Math.floor(totalSeconds / 60);
+            const remainingSecs = totalSeconds % 60;
+            const totalDuration = `${totalMins}:${remainingSecs.toString().padStart(2, '0')}`;
+
+            return {
+                tracks,
+                totalTracks: tracks.length,
+                totalDuration
+            };
+        }
+
+        // Collect WYSIWYG data for Suggestions
+        function getSuggestionsWYSIWYGData() {
+            const recentSuggestions = [];
+            const suggestionsContainer = document.getElementById('recentSuggestions');
+            if (suggestionsContainer) {
+                Array.from(suggestionsContainer.children).forEach(item => {
+                    const textarea = item.querySelector('textarea');
+                    const select = item.querySelector('select');
+                    if (textarea && select) {
+                        recentSuggestions.push({
+                            idea: textarea.value,
+                            status: select.value
+                        });
+                    }
+                });
+            }
+
+            return { recentSuggestions };
+        }
+
+        // Save all changes
+        function saveChanges() {
+            // Update config from form fields
+            updateConfigFromFields();
+            
+            // Here you would typically send to a backend API
+            // For now, we'll simulate saving
+            console.log('Saving config:', currentConfig);
+            
+            // Update the raw editor
+            document.getElementById('rawEditor').value = JSON.stringify(currentConfig, null, 2);
+            
+            showAlert('Configuration saved successfully!', 'success');
+        }
+
+        function updateConfigFromFields() {
+            // Update system settings
+            currentConfig.system = {
+                ...currentConfig.system,
+                companyName: document.getElementById('companyName').value,
+                primaryColor: document.getElementById('primaryColor').value,
+                bootMessages: document.getElementById('bootMessages').value.split('\n').filter(msg => msg.trim())
+            };
+
+            // Update chatbot settings
+            currentConfig.chatbot = {
+                ...currentConfig.chatbot,
+                title: document.getElementById('chatbotTitle').value,
+                welcomeMessage: document.getElementById('welcomeMessage').value,
+                openai: {
+                    ...currentConfig.chatbot.openai,
+                    enabled: document.getElementById('chatbotToggle').checked,
+                    apiKey: document.getElementById('openaiKey').value,
+                    model: document.getElementById('openaiModel').value,
+                    systemPrompt: document.getElementById('systemPrompt').value
+                }
+            };
+
+            // Update API settings
+            try {
+                const headers = JSON.parse(document.getElementById('apiHeaders').value);
+                currentConfig.api = {
+                    ...currentConfig.api,
+                    baseUrl: document.getElementById('apiBaseUrl').value,
+                    refreshInterval: parseInt(document.getElementById('refreshInterval').value),
+                    headers
+                };
+            } catch (e) {
+                console.error('Invalid JSON in API headers');
+            }
+        }
+
+        // Raw editor functions
+        function updateFromRaw() {
+            try {
+                currentConfig = JSON.parse(document.getElementById('rawEditor').value);
+                populateFields();
+                showAlert('Configuration updated from JSON!', 'success');
+            } catch (e) {
+                showAlert('Invalid JSON format. Please check your syntax.', 'error');
+            }
+        }
+
+        function formatJSON() {
+            try {
+                const formatted = JSON.stringify(JSON.parse(document.getElementById('rawEditor').value), null, 2);
+                document.getElementById('rawEditor').value = formatted;
+            } catch (e) {
+                showAlert('Invalid JSON format. Cannot format.', 'error');
+            }
+        }
+
+        function resetToDefault() {
+            if (confirm('Are you sure you want to reset to default configuration? This will lose all your changes.')) {
+                if (typeof CMS_CONFIG !== 'undefined') {
+                    currentConfig = JSON.parse(JSON.stringify(CMS_CONFIG));
+                    populateFields();
+                    document.getElementById('rawEditor').value = JSON.stringify(currentConfig, null, 2);
+                    showAlert('Configuration reset to default!', 'success');
+                }
+            }
+        }
+
+        // Utility functions
+        function showAlert(message, type) {
+            const alertDiv = document.createElement('div');
+            alertDiv.className = `alert alert-${type}`;
+            alertDiv.textContent = message;
+            
+            const container = document.querySelector('.main-panel');
+            container.insertBefore(alertDiv, container.firstChild);
+            
+            setTimeout(() => {
+                alertDiv.remove();
+            }, 5000);
+        }
+
+        function previewSite() {
+            window.open('/', '_blank');
+        }
+
+        // Check for session-based auto-login
+        async function checkAutoLogin() {
+            const pathSegments = window.location.pathname.split('/');
+            const sessionId = pathSegments[2]; // /admin/sessionId
+            
+            if (sessionId) {
+                try {
+                    const response = await fetch(`/api/check-session/${sessionId}`);
+                    const result = await response.json();
+                    
+                    if (result.valid) {
+                        // Auto-login successful
+                        login();
+                        return true;
+                    }
+                } catch (error) {
+                    console.error('Session check failed:', error);
+                }
+            }
+            return false;
+        }
+
+        // Drag and Drop Functionality
+        function initializeDragAndDrop() {
+            // Add event listeners to all draggable items
+            document.querySelectorAll('.draggable-item').forEach(item => {
+                item.addEventListener('dragstart', handleDragStart);
+                item.addEventListener('dragend', handleDragEnd);
+                item.addEventListener('dragover', handleDragOver);
+                item.addEventListener('drop', handleDrop);
+                item.addEventListener('dragenter', handleDragEnter);
+                item.addEventListener('dragleave', handleDragLeave);
+            });
+        }
+
+        let draggedElement = null;
+        let draggedFromContainer = null;
+
+        function handleDragStart(e) {
+            draggedElement = this;
+            draggedFromContainer = this.parentNode;
+            this.classList.add('dragging');
+            e.dataTransfer.effectAllowed = 'move';
+        }
+
+        function handleDragEnd(e) {
+            this.classList.remove('dragging');
+            document.querySelectorAll('.drag-over').forEach(el => el.classList.remove('drag-over'));
+            draggedElement = null;
+            draggedFromContainer = null;
+        }
+
+        function handleDragOver(e) {
+            if (e.preventDefault) {
+                e.preventDefault();
+            }
+            e.dataTransfer.dropEffect = 'move';
+            return false;
+        }
+
+        function handleDragEnter(e) {
+            if (this !== draggedElement && this.classList.contains('draggable-item')) {
+                this.classList.add('drag-over');
+            }
+        }
+
+        function handleDragLeave(e) {
+            this.classList.remove('drag-over');
+        }
+
+        function handleDrop(e) {
+            if (e.stopPropagation) {
+                e.stopPropagation();
+            }
+
+            if (draggedElement !== this && this.classList.contains('draggable-item')) {
+                const container = this.parentNode;
+                const allItems = Array.from(container.children);
+                const draggedIndex = allItems.indexOf(draggedElement);
+                const targetIndex = allItems.indexOf(this);
+
+                if (draggedIndex < targetIndex) {
+                    container.insertBefore(draggedElement, this.nextSibling);
+                } else {
+                    container.insertBefore(draggedElement, this);
+                }
+
+                // Update indices for remove buttons
+                updateContainerIndices(container);
+            }
+
+            this.classList.remove('drag-over');
+            return false;
+        }
+
+        function updateContainerIndices(container) {
+            const containerId = container.id;
+            
+            switch (containerId) {
+                case 'activePitches':
+                    updatePitchIndices();
+                    break;
+                case 'upcomingMeetings':
+                    updateMeetingIndices();
+                    break;
+                case 'thisMonth':
+                    updateThisMonthIndices();
+                    break;
+                case 'nextMonth':
+                    updateNextMonthIndices();
+                    break;
+                case 'birthdays':
+                    updateBirthdayIndices();
+                    break;
+                case 'anniversaries':
+                    updateAnniversaryIndices();
+                    break;
+                case 'shoutouts':
+                    updateShoutoutIndices();
+                    break;
+                case 'trendingArticles':
+                    updateTrendingArticleIndices();
+                    break;
+                case 'mustReads':
+                    updateMustReadIndices();
+                    break;
+                case 'breakingNews':
+                    updateBreakingNewsIndices();
+                    break;
+                case 'generalUpdates':
+                    updateGeneralUpdateIndices();
+                    break;
+                case 'importantAnnouncements':
+                    updateImportantAnnouncementIndices();
+                    break;
+                case 'generalAnnouncements':
+                    updateGeneralAnnouncementIndices();
+                    break;
+                case 'internalLinks':
+                    updateInternalLinkIndices();
+                    break;
+                case 'externalLinks':
+                    updateExternalLinkIndices();
+                    break;
+                case 'experiments':
+                    updateExperimentIndices();
+                    break;
+                case 'documents':
+                    updateDocumentIndices();
+                    break;
+                case 'templates':
+                    updateTemplateIndices();
+                    break;
+                case 'training':
+                    updateTrainingIndices();
+                    break;
+                case 'recentSuggestions':
+                    updateSuggestionIndices();
+                    break;
+            }
+        }
+
+        // WYSIWYG Editor Functions for New Business Pipeline
+        function addPitch() {
+            const container = document.getElementById('activePitches');
+            const newIndex = container.children.length;
+            const newPitchHtml = `
+                <div class="pitch-item draggable-item" draggable="true" style="background: #2d2d2d; padding: 12px; margin-bottom: 8px; border-radius: 6px;">
+                    <div style="display: flex; gap: 12px; align-items: center; margin-bottom: 8px;">
+                        <span class="drag-handle">⋮⋮</span>
+                        <button onclick="removePitch(${newIndex})" style="background: #ef4444; color: white; border: none; border-radius: 4px; padding: 4px 8px; cursor: pointer;">✕</button>
+                        <input type="text" value="" placeholder="Pitch name" style="flex: 1; background: #1e1e1e; border: 1px solid #404040; color: white; padding: 8px; border-radius: 4px;">
+                        <input type="number" value="0" min="0" max="100" placeholder="Progress %" style="width: 80px; background: #1e1e1e; border: 1px solid #404040; color: white; padding: 8px; border-radius: 4px;">
+                        <span style="color: #b0b0b0;">%</span>
+                    </div>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-left: 44px;">
+                        <input type="url" value="" placeholder="Google Slides View Link" style="background: #1e1e1e; border: 1px solid #404040; color: white; padding: 6px; border-radius: 4px; font-size: 12px;">
+                        <input type="url" value="" placeholder="Brief Download Link" style="background: #1e1e1e; border: 1px solid #404040; color: white; padding: 6px; border-radius: 4px; font-size: 12px;">
+                    </div>
+                </div>
+            `;
+            container.insertAdjacentHTML('beforeend', newPitchHtml);
+            updatePitchIndices();
+            initializeDragAndDrop();
+        }
+
+        function removePitch(index) {
+            const container = document.getElementById('activePitches');
+            container.children[index].remove();
+            updatePitchIndices();
+        }
+
+        function updatePitchIndices() {
+            const container = document.getElementById('activePitches');
+            Array.from(container.children).forEach((item, index) => {
+                const removeBtn = item.querySelector('button');
+                removeBtn.setAttribute('onclick', `removePitch(${index})`);
+            });
+        }
+
+        function addMeeting() {
+            const container = document.getElementById('upcomingMeetings');
+            const newIndex = container.children.length;
+            const newMeetingHtml = `
+                <div class="meeting-item" style="background: #2d2d2d; padding: 12px; margin-bottom: 8px; border-radius: 6px; display: flex; gap: 12px; align-items: center;">
+                    <button onclick="removeMeeting(${newIndex})" style="background: #ef4444; color: white; border: none; border-radius: 4px; padding: 4px 8px; cursor: pointer;">✕</button>
+                    <input type="text" value="" placeholder="Time" style="width: 150px; background: #1e1e1e; border: 1px solid #404040; color: white; padding: 8px; border-radius: 4px;">
+                    <input type="text" value="" placeholder="Client/Description" style="flex: 1; background: #1e1e1e; border: 1px solid #404040; color: white; padding: 8px; border-radius: 4px;">
+                    <label style="display: flex; align-items: center; gap: 8px; color: #b0b0b0;">
+                        <input type="checkbox">
+                        Urgent
+                    </label>
+                </div>
+            `;
+            container.insertAdjacentHTML('beforeend', newMeetingHtml);
+            updateMeetingIndices();
+        }
+
+        function removeMeeting(index) {
+            const container = document.getElementById('upcomingMeetings');
+            container.children[index].remove();
+            updateMeetingIndices();
+        }
+
+        function updateMeetingIndices() {
+            const container = document.getElementById('upcomingMeetings');
+            Array.from(container.children).forEach((item, index) => {
+                const removeBtn = item.querySelector('button');
+                removeBtn.setAttribute('onclick', `removeMeeting(${index})`);
+            });
+        }
+
+        // WYSIWYG Editor Functions for Premieres Calendar
+        function addThisMonth() {
+            const container = document.getElementById('thisMonth');
+            const newIndex = container.children.length;
+            const newItemHtml = `
+                <div class="premiere-item" style="background: #2d2d2d; padding: 12px; margin-bottom: 8px; border-radius: 6px; display: flex; gap: 12px; align-items: center;">
+                    <button onclick="removeThisMonth(${newIndex})" style="background: #ef4444; color: white; border: none; border-radius: 4px; padding: 4px 8px; cursor: pointer;">✕</button>
+                    <input type="text" value="" placeholder="Date" style="width: 100px; background: #1e1e1e; border: 1px solid #404040; color: white; padding: 8px; border-radius: 4px;">
+                    <input type="text" value="" placeholder="Project name" style="flex: 1; background: #1e1e1e; border: 1px solid #404040; color: white; padding: 8px; border-radius: 4px;">
+                </div>
+            `;
+            container.insertAdjacentHTML('beforeend', newItemHtml);
+            updateThisMonthIndices();
+        }
+
+        function removeThisMonth(index) {
+            const container = document.getElementById('thisMonth');
+            container.children[index].remove();
+            updateThisMonthIndices();
+        }
+
+        function updateThisMonthIndices() {
+            const container = document.getElementById('thisMonth');
+            Array.from(container.children).forEach((item, index) => {
+                const removeBtn = item.querySelector('button');
+                removeBtn.setAttribute('onclick', `removeThisMonth(${index})`);
+            });
+        }
+
+        function addNextMonth() {
+            const container = document.getElementById('nextMonth');
+            const newIndex = container.children.length;
+            const newItemHtml = `
+                <div class="premiere-item" style="background: #2d2d2d; padding: 12px; margin-bottom: 8px; border-radius: 6px; display: flex; gap: 12px; align-items: center;">
+                    <button onclick="removeNextMonth(${newIndex})" style="background: #ef4444; color: white; border: none; border-radius: 4px; padding: 4px 8px; cursor: pointer;">✕</button>
+                    <input type="text" value="" placeholder="Date" style="width: 100px; background: #1e1e1e; border: 1px solid #404040; color: white; padding: 8px; border-radius: 4px;">
+                    <input type="text" value="" placeholder="Project name" style="flex: 1; background: #1e1e1e; border: 1px solid #404040; color: white; padding: 8px; border-radius: 4px;">
+                </div>
+            `;
+            container.insertAdjacentHTML('beforeend', newItemHtml);
+            updateNextMonthIndices();
+        }
+
+        function removeNextMonth(index) {
+            const container = document.getElementById('nextMonth');
+            container.children[index].remove();
+            updateNextMonthIndices();
+        }
+
+        function updateNextMonthIndices() {
+            const container = document.getElementById('nextMonth');
+            Array.from(container.children).forEach((item, index) => {
+                const removeBtn = item.querySelector('button');
+                removeBtn.setAttribute('onclick', `removeNextMonth(${index})`);
+            });
+        }
+
+        // WYSIWYG Editor Functions for Shoutouts
+        function addBirthday() {
+            const container = document.getElementById('birthdays');
+            const newIndex = container.children.length;
+            const newItemHtml = `
+                <div class="birthday-item" style="background: #2d2d2d; padding: 12px; margin-bottom: 8px; border-radius: 6px; display: flex; gap: 12px; align-items: center;">
+                    <button onclick="removeBirthday(${newIndex})" style="background: #ef4444; color: white; border: none; border-radius: 4px; padding: 4px 8px; cursor: pointer;">✕</button>
+                    <input type="text" value="" placeholder="Date" style="width: 100px; background: #1e1e1e; border: 1px solid #404040; color: white; padding: 8px; border-radius: 4px;">
+                    <input type="text" value="" placeholder="Person name" style="flex: 1; background: #1e1e1e; border: 1px solid #404040; color: white; padding: 8px; border-radius: 4px;">
+                    <label style="display: flex; align-items: center; gap: 8px; color: #b0b0b0;">
+                        <input type="checkbox">
+                        Highlight
+                    </label>
+                </div>
+            `;
+            container.insertAdjacentHTML('beforeend', newItemHtml);
+            updateBirthdayIndices();
+        }
+
+        function removeBirthday(index) {
+            const container = document.getElementById('birthdays');
+            container.children[index].remove();
+            updateBirthdayIndices();
+        }
+
+        function updateBirthdayIndices() {
+            const container = document.getElementById('birthdays');
+            Array.from(container.children).forEach((item, index) => {
+                const removeBtn = item.querySelector('button');
+                removeBtn.setAttribute('onclick', `removeBirthday(${index})`);
+            });
+        }
+
+        function addAnniversary() {
+            const container = document.getElementById('anniversaries');
+            const newIndex = container.children.length;
+            const newItemHtml = `
+                <div class="anniversary-item" style="background: #2d2d2d; padding: 12px; margin-bottom: 8px; border-radius: 6px; display: flex; gap: 12px; align-items: center;">
+                    <button onclick="removeAnniversary(${newIndex})" style="background: #ef4444; color: white; border: none; border-radius: 4px; padding: 4px 8px; cursor: pointer;">✕</button>
+                    <input type="number" value="1" placeholder="Years" style="width: 80px; background: #1e1e1e; border: 1px solid #404040; color: white; padding: 8px; border-radius: 4px;">
+                    <span style="color: #b0b0b0;">years</span>
+                    <input type="text" value="" placeholder="Person name" style="flex: 1; background: #1e1e1e; border: 1px solid #404040; color: white; padding: 8px; border-radius: 4px;">
+                </div>
+            `;
+            container.insertAdjacentHTML('beforeend', newItemHtml);
+            updateAnniversaryIndices();
+        }
+
+        function removeAnniversary(index) {
+            const container = document.getElementById('anniversaries');
+            container.children[index].remove();
+            updateAnniversaryIndices();
+        }
+
+        function updateAnniversaryIndices() {
+            const container = document.getElementById('anniversaries');
+            Array.from(container.children).forEach((item, index) => {
+                const removeBtn = item.querySelector('button');
+                removeBtn.setAttribute('onclick', `removeAnniversary(${index})`);
+            });
+        }
+
+        function addShoutout() {
+            const container = document.getElementById('shoutouts');
+            const newIndex = container.children.length;
+            const newItemHtml = `
+                <div class="shoutout-item" style="background: #2d2d2d; padding: 12px; margin-bottom: 8px; border-radius: 6px;">
+                    <div style="display: flex; gap: 12px; align-items: flex-start; margin-bottom: 8px;">
+                        <button onclick="removeShoutout(${newIndex})" style="background: #ef4444; color: white; border: none; border-radius: 4px; padding: 4px 8px; cursor: pointer;">✕</button>
+                        <textarea placeholder="Shoutout message" style="flex: 1; background: #1e1e1e; border: 1px solid #404040; color: white; padding: 8px; border-radius: 4px; min-height: 60px; resize: vertical;"></textarea>
+                    </div>
+                    <input type="text" value="" placeholder="From (person/department)" style="width: 200px; background: #1e1e1e; border: 1px solid #404040; color: white; padding: 8px; border-radius: 4px; margin-left: 44px;">
+                </div>
+            `;
+            container.insertAdjacentHTML('beforeend', newItemHtml);
+            updateShoutoutIndices();
+        }
+
+        function removeShoutout(index) {
+            const container = document.getElementById('shoutouts');
+            container.children[index].remove();
+            updateShoutoutIndices();
+        }
+
+        function updateShoutoutIndices() {
+            const container = document.getElementById('shoutouts');
+            Array.from(container.children).forEach((item, index) => {
+                const removeBtn = item.querySelector('button');
+                removeBtn.setAttribute('onclick', `removeShoutout(${index})`);
+            });
+        }
+
+        // Additional index update functions for drag-and-drop
+        function updateTrendingArticleIndices() {
+            const container = document.getElementById('trendingArticles');
+            if (container) {
+                Array.from(container.children).forEach((item, index) => {
+                    const removeBtn = item.querySelector('button');
+                    if (removeBtn) removeBtn.setAttribute('onclick', `removeTrendingArticle(${index})`);
+                });
+            }
+        }
+
+        function updateMustReadIndices() {
+            const container = document.getElementById('mustReads');
+            if (container) {
+                Array.from(container.children).forEach((item, index) => {
+                    const removeBtn = item.querySelector('button');
+                    if (removeBtn) removeBtn.setAttribute('onclick', `removeMustRead(${index})`);
+                });
+            }
+        }
+
+        function updateBreakingNewsIndices() {
+            const container = document.getElementById('breakingNews');
+            if (container) {
+                Array.from(container.children).forEach((item, index) => {
+                    const removeBtn = item.querySelector('button');
+                    if (removeBtn) removeBtn.setAttribute('onclick', `removeBreakingNews(${index})`);
+                });
+            }
+        }
+
+        function updateGeneralUpdateIndices() {
+            const container = document.getElementById('generalUpdates');
+            if (container) {
+                Array.from(container.children).forEach((item, index) => {
+                    const removeBtn = item.querySelector('button');
+                    if (removeBtn) removeBtn.setAttribute('onclick', `removeGeneralUpdate(${index})`);
+                });
+            }
+        }
+
+        function updateImportantAnnouncementIndices() {
+            const container = document.getElementById('importantAnnouncements');
+            if (container) {
+                Array.from(container.children).forEach((item, index) => {
+                    const removeBtn = item.querySelector('button');
+                    if (removeBtn) removeBtn.setAttribute('onclick', `removeImportantAnnouncement(${index})`);
+                });
+            }
+        }
+
+        function updateGeneralAnnouncementIndices() {
+            const container = document.getElementById('generalAnnouncements');
+            if (container) {
+                Array.from(container.children).forEach((item, index) => {
+                    const removeBtn = item.querySelector('button');
+                    if (removeBtn) removeBtn.setAttribute('onclick', `removeGeneralAnnouncement(${index})`);
+                });
+            }
+        }
+
+        function updateInternalLinkIndices() {
+            const container = document.getElementById('internalLinks');
+            if (container) {
+                Array.from(container.children).forEach((item, index) => {
+                    const removeBtn = item.querySelector('button');
+                    if (removeBtn) removeBtn.setAttribute('onclick', `removeInternalLink(${index})`);
+                });
+            }
+        }
+
+        function updateExternalLinkIndices() {
+            const container = document.getElementById('externalLinks');
+            if (container) {
+                Array.from(container.children).forEach((item, index) => {
+                    const removeBtn = item.querySelector('button');
+                    if (removeBtn) removeBtn.setAttribute('onclick', `removeExternalLink(${index})`);
+                });
+            }
+        }
+
+        function updateExperimentIndices() {
+            const container = document.getElementById('experiments');
+            if (container) {
+                Array.from(container.children).forEach((item, index) => {
+                    const removeBtn = item.querySelector('button');
+                    if (removeBtn) removeBtn.setAttribute('onclick', `removeExperiment(${index})`);
+                });
+            }
+        }
+
+        // Music Library Editor
+        function getMusicEditor(content) {
+            const tracks = content.tracks || [];
+
+            return `
+                <div style="background: #1e1e1e; padding: 20px; border-radius: 8px; margin: 16px 0;">
+                    <h4 style="color: var(--ralph-pink); margin-bottom: 16px;">🎵 Music Library</h4>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px;">
+                        <div style="background: #2d2d2d; padding: 12px; border-radius: 6px;">
+                            <strong style="color: var(--ralph-pink);">Total Tracks:</strong> 
+                            <span style="color: white;">${tracks.length}</span>
+                        </div>
+                        <div style="background: #2d2d2d; padding: 12px; border-radius: 6px;">
+                            <strong style="color: var(--ralph-pink);">Total Duration:</strong> 
+                            <span style="color: white;">${content.totalDuration || 'Unknown'}</span>
+                        </div>
+                    </div>
+                    
+                    <h4 style="color: var(--ralph-pink); margin: 24px 0 16px;">🎧 Track List</h4>
+                    <div id="musicTracks">
+                        ${tracks.map((track, index) => `
+                            <div class="track-item draggable-item" draggable="true" style="background: #2d2d2d; padding: 12px; margin-bottom: 8px; border-radius: 6px;">
+                                <div style="display: grid; grid-template-columns: auto auto 1fr 1fr auto auto; gap: 12px; align-items: center; margin-bottom: 8px;">
+                                    <span class="drag-handle">⋮⋮</span>
+                                    <button onclick="removeTrack(${index})" style="background: #ef4444; color: white; border: none; border-radius: 4px; padding: 4px 8px; cursor: pointer;">✕</button>
+                                    <input type="text" value="${track.title}" placeholder="Track Title" style="background: #1e1e1e; border: 1px solid #404040; color: white; padding: 8px; border-radius: 4px;">
+                                    <input type="text" value="${track.artist}" placeholder="Artist Name" style="background: #1e1e1e; border: 1px solid #404040; color: white; padding: 8px; border-radius: 4px;">
+                                    <input type="text" value="${track.duration}" placeholder="Duration" style="width: 80px; background: #1e1e1e; border: 1px solid #404040; color: white; padding: 8px; border-radius: 4px;">
+                                    <button onclick="playPreview('${track.file}')" style="background: var(--ralph-pink); color: white; border: none; border-radius: 4px; padding: 4px 8px; cursor: pointer;">▶</button>
+                                </div>
+                                <div style="display: grid; grid-template-columns: 1fr auto; gap: 8px; margin-left: 44px;">
+                                    <input type="text" value="${track.file}" placeholder="File Path (music/filename.mp3)" style="background: #1e1e1e; border: 1px solid #404040; color: white; padding: 6px; border-radius: 4px; font-size: 12px; font-family: monospace;">
+                                    <span style="color: #b0b0b0; font-size: 12px; padding: 6px;">Uploaded: ${track.uploadDate || 'Unknown'}</span>
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                    <button onclick="addTrack()" class="btn btn-secondary" style="margin-top: 8px;">+ Add Track</button>
+                    
+                    <div style="background: #2d2d2d; padding: 12px; border-radius: 6px; margin-top: 16px;">
+                        <h5 style="color: var(--ralph-pink); margin-bottom: 8px;">📁 File Management</h5>
+                        <p style="color: #b0b0b0; font-size: 14px; margin-bottom: 8px;">Upload MP3 files to the /music/ directory on your server, then add them to the library above.</p>
+                        <p style="color: #b0b0b0; font-size: 12px;">Supported formats: MP3. Recommended: 128-320 kbps, 44.1kHz</p>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Music management functions
+        function addTrack() {
+            const container = document.getElementById('musicTracks');
+            if (container) {
+                const index = container.children.length;
+                const trackHtml = `
+                    <div class="track-item draggable-item" draggable="true" style="background: #2d2d2d; padding: 12px; margin-bottom: 8px; border-radius: 6px;">
+                        <div style="display: grid; grid-template-columns: auto auto 1fr 1fr auto auto; gap: 12px; align-items: center; margin-bottom: 8px;">
+                            <span class="drag-handle">⋮⋮</span>
+                            <button onclick="removeTrack(${index})" style="background: #ef4444; color: white; border: none; border-radius: 4px; padding: 4px 8px; cursor: pointer;">✕</button>
+                            <input type="text" value="" placeholder="Track Title" style="background: #1e1e1e; border: 1px solid #404040; color: white; padding: 8px; border-radius: 4px;">
+                            <input type="text" value="" placeholder="Artist Name" style="background: #1e1e1e; border: 1px solid #404040; color: white; padding: 8px; border-radius: 4px;">
+                            <input type="text" value="" placeholder="Duration" style="width: 80px; background: #1e1e1e; border: 1px solid #404040; color: white; padding: 8px; border-radius: 4px;">
+                            <button onclick="playPreview('')" style="background: var(--ralph-pink); color: white; border: none; border-radius: 4px; padding: 4px 8px; cursor: pointer;">▶</button>
+                        </div>
+                        <div style="display: grid; grid-template-columns: 1fr auto; gap: 8px; margin-left: 44px;">
+                            <input type="text" value="" placeholder="File Path (music/filename.mp3)" style="background: #1e1e1e; border: 1px solid #404040; color: white; padding: 6px; border-radius: 4px; font-size: 12px; font-family: monospace;">
+                            <span style="color: #b0b0b0; font-size: 12px; padding: 6px;">Uploaded: ${new Date().toISOString().split('T')[0]}</span>
+                        </div>
+                    </div>
+                `;
+                container.insertAdjacentHTML('beforeend', trackHtml);
+                updateTrackIndices();
+            }
+        }
+
+        function removeTrack(index) {
+            const container = document.getElementById('musicTracks');
+            if (container && container.children[index]) {
+                container.children[index].remove();
+                updateTrackIndices();
+            }
+        }
+
+        function playPreview(filePath) {
+            if (filePath) {
+                const audio = new Audio(filePath);
+                audio.volume = 0.5;
+                audio.play().catch(e => console.log('Preview failed:', e));
+            } else {
+                alert('No file path specified');
+            }
+        }
+
+        function updateTrackIndices() {
+            const container = document.getElementById('musicTracks');
+            if (container) {
+                Array.from(container.children).forEach((item, index) => {
+                    const removeBtn = item.querySelector('button');
+                    if (removeBtn) removeBtn.setAttribute('onclick', `removeTrack(${index})`);
+                });
+            }
+        }
+
+        function updateDocumentIndices() {
+            const container = document.getElementById('documents');
+            if (container) {
+                Array.from(container.children).forEach((item, index) => {
+                    const removeBtn = item.querySelector('button');
+                    if (removeBtn) removeBtn.setAttribute('onclick', `removeDocument(${index})`);
+                });
+            }
+        }
+
+        function updateTemplateIndices() {
+            const container = document.getElementById('templates');
+            if (container) {
+                Array.from(container.children).forEach((item, index) => {
+                    const removeBtn = item.querySelector('button');
+                    if (removeBtn) removeBtn.setAttribute('onclick', `removeTemplate(${index})`);
+                });
+            }
+        }
+
+        function updateTrainingIndices() {
+            const container = document.getElementById('training');
+            if (container) {
+                Array.from(container.children).forEach((item, index) => {
+                    const removeBtn = item.querySelector('button');
+                    if (removeBtn) removeBtn.setAttribute('onclick', `removeTraining(${index})`);
+                });
+            }
+        }
+
+        function updateSuggestionIndices() {
+            const container = document.getElementById('recentSuggestions');
+            if (container) {
+                Array.from(container.children).forEach((item, index) => {
+                    const removeBtn = item.querySelector('button');
+                    if (removeBtn) removeBtn.setAttribute('onclick', `removeSuggestion(${index})`);
+                });
+            }
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', async () => {
+            // Try auto-login first
+            const autoLoggedIn = await checkAutoLogin();
+            
+            // Load initial module editor after config is loaded - with delay
+            if (autoLoggedIn && isLoggedIn) {
+                setTimeout(() => {
+                    loadModuleEditor();
+                }, 300);
+            }
+        });
+    </script>
+</body>
+</html>
