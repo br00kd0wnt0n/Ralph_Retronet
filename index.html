@@ -1064,6 +1064,171 @@
             }
         }
         
+        /* Banner popup styles - 8-bit style */
+        .banner-popup {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 480px;
+            max-width: 90vw;
+            background: 
+                repeating-linear-gradient(
+                    0deg,
+                    #ff00ff 0px,
+                    #ff00ff 4px,
+                    #00ffff 4px,
+                    #00ffff 8px,
+                    #ffff00 8px,
+                    #ffff00 12px,
+                    #ff0000 12px,
+                    #ff0000 16px
+                );
+            border: 4px solid var(--black);
+            box-shadow: 
+                0 0 0 2px var(--white),
+                0 0 0 6px var(--black),
+                8px 8px 0 var(--black);
+            z-index: 9999;
+            font-family: 'VT323', monospace;
+            animation: pixelBounce 0.6s steps(4, end);
+            display: none;
+            image-rendering: pixelated;
+            image-rendering: -moz-crisp-edges;
+            image-rendering: crisp-edges;
+        }
+        
+        .banner-popup.show {
+            display: block;
+        }
+        
+        @keyframes pixelBounce {
+            0% {
+                transform: translate(-50%, -50%) scale(0);
+            }
+            25% {
+                transform: translate(-50%, -50%) scale(0.5);
+            }
+            50% {
+                transform: translate(-50%, -50%) scale(1.2);
+            }
+            75% {
+                transform: translate(-50%, -50%) scale(0.8);
+            }
+            100% {
+                transform: translate(-50%, -50%) scale(1);
+            }
+        }
+        
+        .banner-header {
+            background: 
+                repeating-linear-gradient(
+                    90deg,
+                    var(--black) 0px,
+                    var(--black) 2px,
+                    var(--ralph-pink) 2px,
+                    var(--ralph-pink) 4px
+                );
+            color: var(--white);
+            padding: 12px 16px;
+            font-size: 18px;
+            font-weight: bold;
+            text-align: center;
+            text-shadow: 2px 2px 0 var(--black);
+            position: relative;
+            border-bottom: 4px solid var(--black);
+        }
+        
+        .banner-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: var(--terminal-green);
+            animation: scanline 1s linear infinite;
+        }
+        
+        @keyframes scanline {
+            0% { opacity: 0; }
+            50% { opacity: 1; }
+            100% { opacity: 0; }
+        }
+        
+        .banner-content {
+            padding: 20px;
+            background: var(--white);
+            color: var(--black);
+            font-size: 16px;
+            line-height: 1.2;
+            text-align: center;
+            border: 2px inset var(--gray-light);
+        }
+        
+        .banner-text {
+            margin-bottom: 16px;
+            font-weight: bold;
+            text-shadow: 1px 1px 0 var(--gray-light);
+        }
+        
+        .banner-highlight {
+            color: var(--ralph-pink);
+            font-weight: bold;
+            text-shadow: 1px 1px 0 var(--black);
+            background: var(--terminal-yellow);
+            padding: 2px 4px;
+            border: 1px solid var(--black);
+        }
+        
+        .banner-close {
+            background: var(--ralph-pink);
+            color: var(--white);
+            border: 4px outset var(--ralph-pink);
+            padding: 12px 20px;
+            font-family: 'VT323', monospace;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            text-shadow: 1px 1px 0 var(--black);
+            box-shadow: 4px 4px 0 var(--black);
+            transition: none;
+        }
+        
+        .banner-close:hover {
+            background: var(--terminal-green);
+            border-color: var(--terminal-green);
+        }
+        
+        .banner-close:active {
+            border: 4px inset var(--ralph-pink);
+            transform: translate(2px, 2px);
+            box-shadow: 2px 2px 0 var(--black);
+        }
+        
+        /* Mobile banner adjustments */
+        @media screen and (max-width: 600px) {
+            .banner-popup {
+                width: 300px;
+                font-size: 12px;
+            }
+            
+            .banner-header {
+                font-size: 14px;
+                padding: 8px 12px;
+            }
+            
+            .banner-content {
+                padding: 16px;
+                font-size: 14px;
+            }
+            
+            .banner-close {
+                padding: 8px 16px;
+                font-size: 14px;
+            }
+        }
+
         /* Touch device optimizations */
         @media (hover: none) and (pointer: coarse) {
             .icon:hover {
@@ -1730,11 +1895,11 @@
                 <form id="adminLoginForm" style="display: flex; flex-direction: column; gap: 16px;">
                     <div>
                         <label style="display: block; margin-bottom: 4px; font-weight: bold;">USERNAME:</label>
-                        <input type="text" id="adminUsername" style="width: 100%; padding: 8px; background: #000; color: #00ff00; border: 2px solid #808080; font-family: 'VT323', monospace; font-size: 16px;">
+                        <input type="text" id="adminUsername" value="ralph" style="width: 100%; padding: 8px; background: #000; color: #00ff00; border: 2px solid #808080; font-family: 'VT323', monospace; font-size: 16px;">
                     </div>
                     <div>
                         <label style="display: block; margin-bottom: 4px; font-weight: bold;">PASSWORD:</label>
-                        <input type="password" id="adminPassword" style="width: 100%; padding: 8px; background: #000; color: #00ff00; border: 2px solid #808080; font-family: 'VT323', monospace; font-size: 16px;">
+                        <input type="password" id="adminPassword" value="admin123" style="width: 100%; padding: 8px; background: #000; color: #00ff00; border: 2px solid #808080; font-family: 'VT323', monospace; font-size: 16px;">
                     </div>
                     <div style="display: flex; gap: 8px; margin-top: 16px;">
                         <button type="submit" class="pixel-button" style="flex: 1;">ACCESS CMS</button>
@@ -1745,6 +1910,22 @@
                     ⚠️ ACCESS DENIED - Invalid credentials
                 </div>
             </div>
+        </div>
+    </div>
+    
+    <!-- Welcome Banner Popup -->
+    <div id="welcomeBanner" class="banner-popup">
+        <div class="banner-header">
+            🎉 WELCOME TO THE RALPH HUB! 🎉
+        </div>
+        <div class="banner-content">
+            <div class="banner-text">
+                HEY, <span class="banner-highlight">RALPHIE!</span> This is our new information hub for all things Ralph. 
+            </div>
+            <div class="banner-text">
+                Use the <span class="banner-highlight">Suggestion Box</span> for any ideas for things you'd like to see on here.
+            </div>
+            <button class="banner-close" onclick="closeBanner()">GOT IT!</button>
         </div>
     </div>
     
@@ -2757,9 +2938,9 @@
                             setTimeout(() => {
                                 window.open(`/admin/${result.sessionId}`, '_blank');
                                 closeWindow('adminLogin');
-                                // Clear the form
-                                document.getElementById('adminUsername').value = '';
-                                document.getElementById('adminPassword').value = '';
+                                // Reset the form to default values
+                                document.getElementById('adminUsername').value = 'ralph';
+                                document.getElementById('adminPassword').value = 'admin123';
                             }, 1500);
                         } else {
                             throw new Error('Authentication failed');
@@ -2904,9 +3085,29 @@
                         setTimeout(() => {
                             showNotification('RALPH INTRANET SYSTEM 1.0 - READY');
                         }, 500);
+                        
+                        // Show welcome banner after 3 seconds
+                        setTimeout(() => {
+                            showWelcomeBanner();
+                        }, 3000);
                     }, 1000);
                 }
             }, 300);
+        }
+        
+        // Welcome Banner Functions
+        function showWelcomeBanner() {
+            const banner = document.getElementById('welcomeBanner');
+            if (banner) {
+                banner.classList.add('show');
+            }
+        }
+        
+        function closeBanner() {
+            const banner = document.getElementById('welcomeBanner');
+            if (banner) {
+                banner.classList.remove('show');
+            }
         }
         
         // Music Player Functionality
