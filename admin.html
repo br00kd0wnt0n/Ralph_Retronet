@@ -676,7 +676,14 @@
 
                     <div class="form-field">
                         <label>Custom System Prompt</label>
-                        <textarea id="systemPrompt" rows="10">You are the RALPH Assistant, helping employees with company information and creative projects.</textarea>
+                        <textarea id="systemPrompt" rows="10" placeholder="Enter your custom system prompt...">You are the RALPH Assistant, helping employees with company information and creative projects.</textarea>
+                        <div style="margin-top: 8px; display: flex; gap: 8px; align-items: center;">
+                            <input type="text" id="promptAuthor" placeholder="Your name" style="width: 120px; padding: 4px; font-size: 12px;">
+                            <input type="text" id="promptComment" placeholder="Brief description of changes (optional)" style="flex: 1; padding: 4px; font-size: 12px;">
+                            <button type="button" onclick="savePrompt()" style="background: #4CAF50; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 12px;">Save Prompt</button>
+                            <button type="button" onclick="showPromptHistory()" style="background: #2196F3; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 12px;">History</button>
+                        </div>
+                        <div id="promptStatus" style="margin-top: 4px; font-size: 12px; color: #666;"></div>
                     </div>
                 </div>
 
@@ -2386,6 +2393,197 @@ System ready!</textarea>
             }
         }
 
+        // Prompt Management Functions
+        async function savePrompt() {
+            const prompt = document.getElementById('systemPrompt').value.trim();
+            const author = document.getElementById('promptAuthor').value.trim() || 'Unknown';
+            const comment = document.getElementById('promptComment').value.trim();
+            
+            if (!prompt) {
+                showAlert('Prompt cannot be empty', 'error');
+                return;
+            }
+            
+            try {
+                const response = await fetch('/api/save-prompt', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        prompt: prompt,
+                        author: author,
+                        comment: comment
+                    })
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    showAlert(`Prompt saved successfully! Version: ${result.version}`, 'success');
+                    document.getElementById('promptComment').value = '';
+                    updatePromptStatus();
+                } else {
+                    showAlert(result.message || 'Failed to save prompt', 'error');
+                }
+            } catch (error) {
+                console.error('Error saving prompt:', error);
+                showAlert('Error saving prompt', 'error');
+            }
+        }
+        
+        async function showPromptHistory() {
+            try {
+                const response = await fetch('/api/prompt-history');
+                const result = await response.json();
+                
+                if (result.success) {
+                    displayPromptHistory(result.history);
+                } else {
+                    showAlert('Failed to load prompt history', 'error');
+                }
+            } catch (error) {
+                console.error('Error loading prompt history:', error);
+                showAlert('Error loading prompt history', 'error');
+            }
+        }
+        
+        function displayPromptHistory(history) {
+            const modal = document.createElement('div');
+            modal.style.cssText = `
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background: rgba(0,0,0,0.8);
+                z-index: 2000;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            `;
+            
+            const content = document.createElement('div');
+            content.style.cssText = `
+                background: white;
+                border-radius: 8px;
+                max-width: 800px;
+                max-height: 600px;
+                width: 90%;
+                overflow: hidden;
+                display: flex;
+                flex-direction: column;
+            `;
+            
+            const header = document.createElement('div');
+            header.style.cssText = `
+                padding: 20px;
+                background: var(--ralph-pink);
+                color: white;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+            `;
+            header.innerHTML = `
+                <h3 style="margin: 0;">System Prompt History</h3>
+                <button onclick="this.closest('.modal').remove()" style="background: none; border: none; color: white; font-size: 24px; cursor: pointer;">&times;</button>
+            `;
+            
+            const body = document.createElement('div');
+            body.style.cssText = `
+                padding: 20px;
+                overflow-y: auto;
+                flex: 1;
+            `;
+            
+            if (history.length === 0) {
+                body.innerHTML = '<p>No prompt history available.</p>';
+            } else {
+                const historyHtml = history.reverse().map(entry => `
+                    <div style="border: 1px solid #ddd; border-radius: 4px; padding: 12px; margin-bottom: 12px;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                            <strong>Version ${entry.id}</strong>
+                            <div style="font-size: 12px; color: #666;">
+                                by ${entry.author} on ${new Date(entry.timestamp).toLocaleString()}
+                            </div>
+                        </div>
+                        ${entry.comment ? `<div style="color: #666; font-style: italic; margin-bottom: 8px;">${entry.comment}</div>` : ''}
+                        <div style="background: #f5f5f5; padding: 8px; border-radius: 4px; font-family: monospace; font-size: 12px; max-height: 100px; overflow-y: auto;">
+                            ${entry.prompt.replace(/\n/g, '<br>')}
+                        </div>
+                        <div style="margin-top: 8px;">
+                            <button onclick="restorePrompt(${entry.id})" style="background: #4CAF50; color: white; border: none; padding: 4px 8px; border-radius: 4px; cursor: pointer; font-size: 12px;">Restore</button>
+                        </div>
+                    </div>
+                `).join('');
+                body.innerHTML = historyHtml;
+            }
+            
+            content.appendChild(header);
+            content.appendChild(body);
+            modal.appendChild(content);
+            modal.className = 'modal';
+            document.body.appendChild(modal);
+        }
+        
+        async function restorePrompt(versionId) {
+            const author = document.getElementById('promptAuthor').value.trim() || 'Unknown';
+            
+            if (!confirm(`Restore to version ${versionId}? This will create a new version with the restored content.`)) {
+                return;
+            }
+            
+            try {
+                const response = await fetch('/api/restore-prompt', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        versionId: versionId,
+                        author: author
+                    })
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    showAlert(`Prompt restored to version ${versionId}!`, 'success');
+                    document.querySelector('.modal').remove();
+                    loadCurrentPrompt();
+                } else {
+                    showAlert(result.message || 'Failed to restore prompt', 'error');
+                }
+            } catch (error) {
+                console.error('Error restoring prompt:', error);
+                showAlert('Error restoring prompt', 'error');
+            }
+        }
+        
+        async function loadCurrentPrompt() {
+            try {
+                const response = await fetch('/api/get-prompt');
+                const result = await response.json();
+                
+                if (result.success) {
+                    document.getElementById('systemPrompt').value = result.prompt;
+                    updatePromptStatus();
+                }
+            } catch (error) {
+                console.error('Error loading current prompt:', error);
+            }
+        }
+        
+        function updatePromptStatus() {
+            const statusDiv = document.getElementById('promptStatus');
+            statusDiv.textContent = 'Prompt loaded from persistent storage. Changes are automatically versioned.';
+            statusDiv.style.color = '#4CAF50';
+            
+            setTimeout(() => {
+                statusDiv.style.color = '#666';
+            }, 3000);
+        }
+
         // Utility functions
         function showAlert(message, type) {
             const alertDiv = document.createElement('div');
@@ -3027,6 +3225,7 @@ System ready!</textarea>
             if (autoLoggedIn && isLoggedIn) {
                 setTimeout(() => {
                     loadModuleEditor();
+                    loadCurrentPrompt(); // Load current prompt from persistent storage
                 }, 300);
             }
         });

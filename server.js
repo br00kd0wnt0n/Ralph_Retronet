@@ -1,8 +1,94 @@
 const express = require('express');
 const path = require('path');
+const fs = require('fs');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
+
+// Prompt management functions
+const PROMPT_STORAGE_FILE = path.join(__dirname, 'prompt-storage.json');
+const DEFAULT_PROMPT = 'You are the RALPH company assistant. You help employees with:\n- Company policies and procedures\n- Project information and deadlines\n- Technical support\n- Creative inspiration\n- Team collaboration\nAlways maintain a friendly, professional tone and embody RALPH\'s creative spirit.';
+
+// Initialize prompt storage file if it doesn't exist
+function initializePromptStorage() {
+    if (!fs.existsSync(PROMPT_STORAGE_FILE)) {
+        const initialData = {
+            currentPrompt: DEFAULT_PROMPT,
+            history: [
+                {
+                    id: 1,
+                    prompt: DEFAULT_PROMPT,
+                    author: 'System',
+                    timestamp: new Date().toISOString(),
+                    comment: 'Initial system prompt'
+                }
+            ],
+            nextId: 2
+        };
+        fs.writeFileSync(PROMPT_STORAGE_FILE, JSON.stringify(initialData, null, 2));
+    }
+}
+
+// Get current system prompt
+async function getSystemPrompt() {
+    try {
+        initializePromptStorage();
+        const data = JSON.parse(fs.readFileSync(PROMPT_STORAGE_FILE, 'utf8'));
+        return data.currentPrompt || DEFAULT_PROMPT;
+    } catch (error) {
+        console.error('Error reading prompt storage:', error);
+        return DEFAULT_PROMPT;
+    }
+}
+
+// Save new system prompt with versioning
+async function saveSystemPrompt(prompt, author = 'Unknown', comment = '') {
+    try {
+        initializePromptStorage();
+        const data = JSON.parse(fs.readFileSync(PROMPT_STORAGE_FILE, 'utf8'));
+        
+        // Don't save if prompt hasn't changed
+        if (data.currentPrompt === prompt) {
+            return { success: true, message: 'No changes to save' };
+        }
+        
+        // Add to history
+        const newEntry = {
+            id: data.nextId,
+            prompt: prompt,
+            author: author,
+            timestamp: new Date().toISOString(),
+            comment: comment || 'Prompt updated'
+        };
+        
+        data.history.push(newEntry);
+        data.currentPrompt = prompt;
+        data.nextId++;
+        
+        // Keep only last 50 versions to prevent file from growing too large
+        if (data.history.length > 50) {
+            data.history = data.history.slice(-50);
+        }
+        
+        fs.writeFileSync(PROMPT_STORAGE_FILE, JSON.stringify(data, null, 2));
+        return { success: true, message: 'Prompt saved successfully', version: newEntry.id };
+    } catch (error) {
+        console.error('Error saving prompt:', error);
+        return { success: false, message: 'Failed to save prompt: ' + error.message };
+    }
+}
+
+// Get prompt history
+async function getPromptHistory() {
+    try {
+        initializePromptStorage();
+        const data = JSON.parse(fs.readFileSync(PROMPT_STORAGE_FILE, 'utf8'));
+        return data.history || [];
+    } catch (error) {
+        console.error('Error reading prompt history:', error);
+        return [];
+    }
+}
 
 // Simple session management (in production, use proper session store)
 const activeSessions = new Map();
@@ -141,17 +227,8 @@ app.post('/api/chatbot', express.json(), async (req, res) => {
     }
     
     try {
-        // Read the system prompt from config
-        const fs = require('fs');
-        const configPath = path.join(__dirname, 'cms-config.json');
-        let systemPrompt = 'You are the RALPH company assistant. Help employees with company information, projects, and creative inspiration.';
-        
-        if (fs.existsSync(configPath)) {
-            const config = JSON.parse(fs.readFileSync(configPath, 'utf8'));
-            if (config.chatbot?.openai?.systemPrompt) {
-                systemPrompt = config.chatbot.openai.systemPrompt;
-            }
-        }
+        // Read the system prompt from persistent storage
+        const systemPrompt = await getSystemPrompt();
         
         // Prepare messages for OpenAI
         const messages = [
@@ -206,6 +283,73 @@ app.post('/api/chatbot', express.json(), async (req, res) => {
             fallback: true,
             error: error.message 
         });
+    }
+});
+
+// API endpoint to save system prompt
+app.post('/api/save-prompt', express.json(), async (req, res) => {
+    const { prompt, author = 'Unknown', comment = '' } = req.body;
+    
+    if (!prompt || prompt.trim() === '') {
+        return res.status(400).json({ success: false, message: 'Prompt cannot be empty' });
+    }
+    
+    try {
+        const result = await saveSystemPrompt(prompt.trim(), author, comment);
+        res.json(result);
+    } catch (error) {
+        console.error('Error saving prompt:', error);
+        res.status(500).json({ success: false, message: 'Failed to save prompt' });
+    }
+});
+
+// API endpoint to get current system prompt
+app.get('/api/get-prompt', async (req, res) => {
+    try {
+        const prompt = await getSystemPrompt();
+        res.json({ success: true, prompt });
+    } catch (error) {
+        console.error('Error getting prompt:', error);
+        res.status(500).json({ success: false, message: 'Failed to get prompt' });
+    }
+});
+
+// API endpoint to get prompt history
+app.get('/api/prompt-history', async (req, res) => {
+    try {
+        const history = await getPromptHistory();
+        res.json({ success: true, history });
+    } catch (error) {
+        console.error('Error getting prompt history:', error);
+        res.status(500).json({ success: false, message: 'Failed to get prompt history' });
+    }
+});
+
+// API endpoint to restore a previous prompt version
+app.post('/api/restore-prompt', express.json(), async (req, res) => {
+    const { versionId, author = 'Unknown' } = req.body;
+    
+    if (!versionId) {
+        return res.status(400).json({ success: false, message: 'Version ID required' });
+    }
+    
+    try {
+        const history = await getPromptHistory();
+        const targetVersion = history.find(entry => entry.id === parseInt(versionId));
+        
+        if (!targetVersion) {
+            return res.status(404).json({ success: false, message: 'Version not found' });
+        }
+        
+        const result = await saveSystemPrompt(
+            targetVersion.prompt, 
+            author, 
+            `Restored from version ${versionId} (originally by ${targetVersion.author})`
+        );
+        res.json(result);
+    } catch (error) {
+        console.error('Error restoring prompt:', error);
+        res.status(500).json({ success: false, message: 'Failed to restore prompt' });
     }
 });
 

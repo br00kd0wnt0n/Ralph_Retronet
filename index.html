@@ -2354,12 +2354,15 @@
 
         // Enhanced chatbot functionality with AI integration
         async function sendChat() {
+            console.log('💬 sendChat called');
             const input = document.getElementById('chatInput');
             const display = document.getElementById('chatDisplay');
             if (!input || !display) return;
             
             const message = input.value.trim();
             if (message === '') return;
+            
+            console.log('📝 Processing message:', message);
             
             // Remove blinking cursor
             const cursor = display.querySelector('.blink');
@@ -2446,6 +2449,7 @@
                     });
                     
                     const result = await apiResponse.json();
+                    console.log('🤖 API response received:', result);
                     response = result.response;
                     
                     if (result.fallback) {
@@ -2464,14 +2468,24 @@
                 }
             }
             
+            console.log('✅ Final response:', response);
+            
             // Remove loading indicator and add actual response
-            display.removeChild(loadingMsg);
+            try {
+                if (loadingMsg && loadingMsg.parentNode) {
+                    display.removeChild(loadingMsg);
+                    console.log('🗑️ Loading message removed');
+                }
+            } catch (error) {
+                console.log('Error removing loading message:', error);
+            }
             
             const botMsg = document.createElement('div');
             botMsg.style.marginTop = '10px';
             botMsg.style.color = '#00ff00';
             botMsg.innerHTML = `<span style="color: #ffff00;">ASSISTANT:</span> ${response}`;
             display.appendChild(botMsg);
+            console.log('📨 Bot response added to display');
             
             // Add new cursor
             const newCursor = document.createElement('div');
