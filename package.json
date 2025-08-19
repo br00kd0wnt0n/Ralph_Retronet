@@ -6,11 +6,17 @@
   "scripts": {
     "start": "node server.js"
   },
-  "keywords": ["intranet", "dashboard", "retro", "90s"],
+  "keywords": [
+    "intranet",
+    "dashboard",
+    "retro",
+    "90s"
+  ],
   "author": "RALPH",
   "license": "MIT",
   "dependencies": {
-    "express": "^4.18.2"
+    "express": "^4.18.2",
+    "node-fetch": "^2.7.0"
   },
   "engines": {
     "node": ">=14.0.0"

@@ -116,6 +116,99 @@ if (typeof module !== 'undefined' && module.exports) {
     }
 });
 
+// API endpoint for chatbot messages
+app.post('/api/chatbot', express.json(), async (req, res) => {
+    const { message, history = [] } = req.body;
+    
+    // Get OpenAI API key from environment variable
+    const apiKey = process.env.OPENAI_API_KEY;
+    
+    if (!apiKey) {
+        // Return fallback response if API key is not configured
+        const fallbackResponses = [
+            'Processing request...',
+            'That\'s interesting! Tell me more.',
+            'System acknowledged.',
+            'Roger that!',
+            'Command received.',
+            'Affirmative!'
+        ];
+        return res.json({ 
+            success: true, 
+            response: fallbackResponses[Math.floor(Math.random() * fallbackResponses.length)],
+            fallback: true 
+        });
+    }
+    
+    try {
+        // Read the system prompt from config
+        const fs = require('fs');
+        const configPath = path.join(__dirname, 'cms-config.json');
+        let systemPrompt = 'You are the RALPH company assistant. Help employees with company information, projects, and creative inspiration.';
+        
+        if (fs.existsSync(configPath)) {
+            const config = JSON.parse(fs.readFileSync(configPath, 'utf8'));
+            if (config.chatbot?.openai?.systemPrompt) {
+                systemPrompt = config.chatbot.openai.systemPrompt;
+            }
+        }
+        
+        // Prepare messages for OpenAI
+        const messages = [
+            { role: 'system', content: systemPrompt },
+            ...history.slice(-10), // Keep last 10 messages for context
+            { role: 'user', content: message }
+        ];
+        
+        // Make request to OpenAI
+        const fetch = require('node-fetch');
+        const response = await fetch('https://api.openai.com/v1/chat/completions', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${apiKey}`
+            },
+            body: JSON.stringify({
+                model: process.env.OPENAI_MODEL || 'gpt-3.5-turbo',
+                messages: messages,
+                temperature: 0.7,
+                max_tokens: 150
+            })
+        });
+        
+        if (!response.ok) {
+            throw new Error(`OpenAI API Error: ${response.status}`);
+        }
+        
+        const data = await response.json();
+        const aiResponse = data.choices[0].message.content;
+        
+        res.json({ 
+            success: true, 
+            response: aiResponse,
+            fallback: false 
+        });
+        
+    } catch (error) {
+        console.error('Chatbot error:', error);
+        
+        // Return error with fallback
+        const fallbackResponses = [
+            'I\'m having trouble processing that right now.',
+            'Let me think about that...',
+            'Interesting question! Tell me more.',
+            'System processing...'
+        ];
+        
+        res.json({ 
+            success: false, 
+            response: fallbackResponses[Math.floor(Math.random() * fallbackResponses.length)],
+            fallback: true,
+            error: error.message 
+        });
+    }
+});
+
 // API endpoint to get current configuration
 app.get('/api/get-config', (req, res) => {
     try {

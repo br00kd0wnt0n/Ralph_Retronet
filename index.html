@@ -2418,25 +2418,50 @@
             } else if (lowerMsg.includes('refresh')) {
                 refreshAllModules();
                 response = 'Refreshing all module content from APIs...';
-            } else if (AppState.chatbotAI) {
-                // Use AI chatbot if available
-                try {
-                    response = await AppState.chatbotAI.sendMessage(message);
-                } catch (error) {
-                    console.error('Chatbot AI error:', error);
-                    response = 'I apologize, but I\'m having trouble processing your request right now.';
-                }
             } else {
-                // Fallback responses
-                const responses = AppState.config?.chatbot?.openai?.fallbackResponses || [
-                    'Processing request...',
-                    'That\'s interesting! Tell me more.',
-                    'System acknowledged.',
-                    'Roger that!',
-                    'Command received.',
-                    'Affirmative!'
-                ];
-                response = responses[Math.floor(Math.random() * responses.length)];
+                // Use server-side chatbot endpoint
+                try {
+                    // Collect conversation history for context
+                    const history = [];
+                    const messages = display.querySelectorAll('div');
+                    messages.forEach(msg => {
+                        const text = msg.textContent;
+                        if (text.startsWith('USER:')) {
+                            history.push({ role: 'user', content: text.replace('USER: ', '') });
+                        } else if (text.startsWith('ASSISTANT:') && !text.includes('Processing...')) {
+                            history.push({ role: 'assistant', content: text.replace('ASSISTANT: ', '') });
+                        }
+                    });
+                    
+                    // Call server endpoint
+                    const apiResponse = await fetch('/api/chatbot', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            message: message,
+                            history: history.slice(-10) // Send last 10 messages for context
+                        })
+                    });
+                    
+                    const result = await apiResponse.json();
+                    response = result.response;
+                    
+                    if (result.fallback) {
+                        console.log('Using fallback response (API key not configured or error occurred)');
+                    }
+                } catch (error) {
+                    console.error('Chatbot API error:', error);
+                    // Fallback responses
+                    const responses = AppState.config?.chatbot?.openai?.fallbackResponses || [
+                        'I\'m having trouble processing that right now.',
+                        'Let me think about that...',
+                        'Interesting question! Tell me more.',
+                        'System processing...'
+                    ];
+                    response = responses[Math.floor(Math.random() * responses.length)];
+                }
             }
             
             // Remove loading indicator and add actual response
@@ -3331,17 +3356,8 @@
                     AppState.apiIntegration = new APIIntegration(AppState.config);
                 }
                 
-                // Initialize ChatbotAI if configured
-                if (typeof ChatbotAI !== 'undefined' && AppState.config.chatbot?.openai) {
-                    AppState.chatbotAI = new ChatbotAI(AppState.config.chatbot.openai);
-                    
-                    // Load custom prompt if file exists
-                    try {
-                        await AppState.chatbotAI.initialize('custom-prompt.txt');
-                    } catch (error) {
-                        console.log('No custom prompt file found, using default');
-                    }
-                }
+                // Chatbot is now handled server-side for security
+                console.log('💬 Chatbot configured - using secure server endpoint');
                 
                 // Load content from CMS
                 loadContentFromCMS();
