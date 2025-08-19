@@ -93,7 +93,22 @@
             z-index: 0;
             overflow: hidden;
             max-width: calc(100vw - 40px);
+            opacity: 0;
         }
+        
+        .desktop-ascii.animating {
+            opacity: 1;
+        }
+        
+        .ascii-char {
+            opacity: 0;
+            transition: opacity 0.15s ease-in;
+        }
+        
+        .ascii-char.visible {
+            opacity: 1;
+        }
+        
         
         .taskbar {
             position: fixed;
@@ -821,7 +836,9 @@
             text-shadow: 0 0 10px var(--ralph-pink);
             overflow: hidden;
             max-width: 100%;
+            opacity: 1;
         }
+        
         
         .boot-text {
             color: var(--terminal-green);
@@ -3064,6 +3081,82 @@
             }
         }
         
+        // Random character animation for ASCII art
+        function randomAnimateAscii(element, duration = 2000) {
+            if (!element) {
+                console.error('❌ Random animation: element not found');
+                return;
+            }
+            
+            const originalText = element.textContent;
+            const chars = [];
+            
+            // Wrap each character in a span with class for animation
+            let wrappedText = '';
+            for (let i = 0; i < originalText.length; i++) {
+                const char = originalText[i];
+                if (char === '\n') {
+                    wrappedText += '\n';
+                } else if (char === ' ') {
+                    wrappedText += ' '; // Keep spaces as-is
+                } else {
+                    chars.push(i);
+                    wrappedText += `<span class="ascii-char" data-index="${i}">${char}</span>`;
+                }
+            }
+            
+            element.innerHTML = wrappedText;
+            
+            // Shuffle the character indices for random order
+            const shuffledChars = [...chars].sort(() => Math.random() - 0.5);
+            
+            // Calculate timing for animation
+            const delayBetweenChars = duration / shuffledChars.length;
+            
+            console.log(`🎲 Starting random ASCII animation:`, {
+                element: element.className,
+                totalChars: chars.length,
+                duration: duration + 'ms',
+                delayPerChar: delayBetweenChars.toFixed(2) + 'ms'
+            });
+            
+            // Animate characters in random order
+            shuffledChars.forEach((charIndex, animationIndex) => {
+                setTimeout(() => {
+                    const charSpan = element.querySelector(`[data-index="${charIndex}"]`);
+                    if (charSpan) {
+                        charSpan.classList.add('visible');
+                    }
+                    
+                    // Log completion
+                    if (animationIndex === shuffledChars.length - 1) {
+                        console.log('✅ Random ASCII animation complete for', element.className);
+                    }
+                }, animationIndex * delayBetweenChars);
+            });
+        }
+        
+        // Start boot ASCII random animation
+        function startBootAsciiAnimation() {
+            const bootLogo = document.querySelector('.boot-logo');
+            if (!bootLogo) return;
+            
+            // Start animation immediately with 1.5 second duration
+            randomAnimateAscii(bootLogo, 1500);
+        }
+        
+        // Start desktop ASCII random animation
+        function startDesktopAsciiAnimation() {
+            const desktopAscii = document.querySelector('.desktop-ascii');
+            if (!desktopAscii) return;
+            
+            // Start animation with 2 second duration
+            setTimeout(() => {
+                desktopAscii.classList.add('animating');
+                randomAnimateAscii(desktopAscii, 2000);
+            }, 1000); // Small delay to let boot complete first
+        }
+
         // Boot sequence
         function bootSequence() {
             const bootScreen = document.getElementById('bootScreen');
@@ -3073,6 +3166,8 @@
             const bootMessages = document.getElementById('bootMessages');
             
             if (!bootScreen || !desktop) return;
+            
+            
             
             const messages = [
                 'Loading system kernel...',
@@ -3114,6 +3209,10 @@
                     setTimeout(() => {
                         bootScreen.classList.add('hide');
                         desktop.style.display = 'block';
+                        
+                        // Start desktop ASCII random animation
+                        startDesktopAsciiAnimation();
+                        
                         
                         // Make chatbot window draggable
                         const chatbotWindow = document.getElementById('chatbot');
