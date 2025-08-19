@@ -30,12 +30,10 @@ const CMS_CONFIG = {
         "welcomeMessage": "Welcome to RALPH Super-Intranet!",
         "helpText": "Here's what you can do:\n► Click any desktop icon to open modules\n► Drag windows by their title bars\n► Minimize, maximize, or close windows\n► Submit suggestions in the Suggestion Box\n► Accept monthly creative challenges\n► Check project pipelines and deadlines\n► Send shoutouts to team members",
         "openai": {
-            "enabled": false,
-            "apiKey": "",
-            "model": "gpt-4",
+            "enabled": true,
+            "model": "gpt-3.5-turbo",
             "temperature": 0.7,
             "maxTokens": 150,
-            "systemPrompt": "You are the RALPH company assistant. You help employees with:\n- Company policies and procedures\n- Project information and deadlines\n- Technical support\n- Creative inspiration\n- Team collaboration\nAlways maintain a friendly, professional tone and embody RALPH's creative spirit.",
             "fallbackResponses": [
                 "Processing request...",
                 "That's interesting! Tell me more.",

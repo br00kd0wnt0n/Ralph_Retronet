@@ -666,7 +666,10 @@
 
                     <div class="form-field">
                         <label>OpenAI API Key</label>
-                        <input type="password" id="openaiKey" placeholder="sk-...">
+                        <div style="padding: 8px; background: #e8f5e8; border: 1px solid #4CAF50; border-radius: 4px; color: #2e7d32; font-size: 14px;">
+                            🔒 API key is now managed securely via Railway environment variables.<br>
+                            Set <code>OPENAI_API_KEY</code> in your Railway dashboard.
+                        </div>
                     </div>
 
                     <div class="form-field">
@@ -1171,9 +1174,7 @@ System ready!</textarea>
                 document.getElementById('welcomeMessage').value = currentConfig.chatbot.welcomeMessage || '';
                 
                 if (currentConfig.chatbot.openai) {
-                    document.getElementById('openaiKey').value = currentConfig.chatbot.openai.apiKey || '';
                     document.getElementById('openaiModel').value = currentConfig.chatbot.openai.model || 'gpt-4';
-                    document.getElementById('systemPrompt').value = currentConfig.chatbot.openai.systemPrompt || '';
                     document.getElementById('chatbotToggle').checked = currentConfig.chatbot.openai.enabled || false;
                 }
             }
@@ -2342,9 +2343,8 @@ System ready!</textarea>
                 openai: {
                     ...currentConfig.chatbot.openai,
                     enabled: document.getElementById('chatbotToggle').checked,
-                    apiKey: document.getElementById('openaiKey').value,
-                    model: document.getElementById('openaiModel').value,
-                    systemPrompt: document.getElementById('systemPrompt').value
+                    model: document.getElementById('openaiModel').value
+                    // API key and system prompt are now managed separately
                 }
             };
 
