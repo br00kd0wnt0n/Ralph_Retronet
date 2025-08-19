@@ -72,10 +72,88 @@ app.get('/admin/:sessionId?', (req, res) => {
 
 // API endpoint for saving configuration
 app.post('/api/save-config', express.json(), (req, res) => {
-    // In a real implementation, you would save to database or file
-    // For now, just return success
-    console.log('Config update requested:', req.body);
-    res.json({ success: true, message: 'Configuration saved successfully' });
+    const fs = require('fs');
+    const path = require('path');
+    
+    try {
+        const configData = req.body;
+        console.log('Config update requested for modules:', Object.keys(configData.modules || {}));
+        
+        // Create the updated cms-config.js content
+        const configFileContent = `/**
+ * RALPH Retronet CMS Configuration
+ * This file contains all configurable content for the intranet dashboard
+ * Can be easily modified or connected to a backend CMS/API
+ */
+
+const CMS_CONFIG = ${JSON.stringify(configData, null, 4)};
+
+// Make available globally for browser
+if (typeof window !== 'undefined') {
+    window.CMS_CONFIG = CMS_CONFIG;
+}
+
+// Export for Node.js if needed
+if (typeof module !== 'undefined' && module.exports) {
+    module.exports = CMS_CONFIG;
+}
+`;
+        
+        // Write to cms-config.js file
+        const configFilePath = path.join(__dirname, 'cms-config.js');
+        fs.writeFileSync(configFilePath, configFileContent, 'utf8');
+        
+        // Also write a clean JSON file for easy loading
+        const jsonFilePath = path.join(__dirname, 'cms-config.json');
+        fs.writeFileSync(jsonFilePath, JSON.stringify(configData, null, 2), 'utf8');
+        
+        console.log('Configuration saved successfully to cms-config.js and cms-config.json');
+        res.json({ success: true, message: 'Configuration saved successfully' });
+        
+    } catch (error) {
+        console.error('Error saving configuration:', error);
+        res.status(500).json({ success: false, message: 'Failed to save configuration: ' + error.message });
+    }
+});
+
+// API endpoint to get current configuration
+app.get('/api/get-config', (req, res) => {
+    try {
+        const fs = require('fs');
+        const jsonConfigPath = path.join(__dirname, 'cms-config.json');
+        const jsConfigPath = path.join(__dirname, 'cms-config.js');
+        
+        // Try to read from JSON file first (cleaner)
+        if (fs.existsSync(jsonConfigPath)) {
+            const config = JSON.parse(fs.readFileSync(jsonConfigPath, 'utf8'));
+            res.json(config);
+        } 
+        // Fallback to original cms-config.js if JSON doesn't exist
+        else if (fs.existsSync(jsConfigPath)) {
+            // For initial load, read from the original config file
+            delete require.cache[require.resolve('./cms-config.js')];
+            
+            // Create a temporary global context to safely evaluate the config
+            const vm = require('vm');
+            const configContent = fs.readFileSync(jsConfigPath, 'utf8');
+            
+            // Extract just the config object
+            const configMatch = configContent.match(/const CMS_CONFIG = ({[\s\S]*?});/);
+            if (configMatch) {
+                const sandbox = {};
+                vm.createContext(sandbox);
+                vm.runInContext(`const CMS_CONFIG = ${configMatch[1]}`, sandbox);
+                res.json(sandbox.CMS_CONFIG);
+            } else {
+                throw new Error('Could not parse CMS_CONFIG from file');
+            }
+        } else {
+            throw new Error('Configuration file not found');
+        }
+    } catch (error) {
+        console.error('Error loading configuration:', error);
+        res.status(500).json({ error: 'Failed to load configuration: ' + error.message });
+    }
 });
 
 // Start server
