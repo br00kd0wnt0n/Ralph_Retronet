@@ -205,6 +205,74 @@
             text-align: center;
         }
 
+        /* Expandable modules section */
+        .sidebar-modules {
+            margin-top: 10px;
+        }
+
+        .sidebar-modules-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px 16px;
+            cursor: pointer;
+            background: #2d2d2d;
+            border-radius: 6px;
+            margin-bottom: 8px;
+            user-select: none;
+            transition: background 0.2s ease;
+        }
+
+        .sidebar-modules-header:hover {
+            background: #3d3d3d;
+        }
+
+        .expand-arrow {
+            transition: transform 0.3s ease;
+            font-size: 12px;
+        }
+
+        .sidebar-modules-header.expanded .expand-arrow {
+            transform: rotate(90deg);
+        }
+
+        .modules-submenu {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+        }
+
+        .modules-submenu.expanded {
+            max-height: 600px;
+            overflow-y: auto;
+        }
+
+        .module-submenu-item {
+            padding: 8px 12px 8px 24px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 13px;
+            border-left: 2px solid transparent;
+            transition: all 0.2s ease;
+        }
+
+        .module-submenu-item:hover {
+            background: #2d2d2d;
+            border-left-color: var(--ralph-pink);
+        }
+
+        .module-submenu-item.active {
+            background: #3d3d3d;
+            border-left-color: var(--ralph-pink);
+            color: var(--ralph-pink);
+        }
+
+        .module-icon {
+            font-size: 14px;
+        }
+
         .main-panel {
             flex: 1;
             padding: 24px;
@@ -584,10 +652,72 @@
                         <span class="icon">📊</span>
                         <span>Dashboard</span>
                     </div>
-                    <div class="sidebar-item" onclick="showPanel('modules')">
-                        <span class="icon">🔧</span>
-                        <span>Modules</span>
+                    
+                    <!-- Expandable Modules Section -->
+                    <div class="sidebar-modules">
+                        <div class="sidebar-modules-header expanded" onclick="toggleModulesMenu()">
+                            <div style="display: flex; align-items: center; gap: 8px;">
+                                <span class="icon">🔧</span>
+                                <span>MODULES</span>
+                            </div>
+                            <span class="expand-arrow">▶</span>
+                        </div>
+                        <div class="modules-submenu expanded" id="modulesSubmenu">
+                            <div class="module-submenu-item" onclick="loadSpecificModule('newBiz')">
+                                <span class="module-icon">📊</span>
+                                <span>New Business Pipeline</span>
+                            </div>
+                            <div class="module-submenu-item" onclick="loadSpecificModule('premieres')">
+                                <span class="module-icon">🎬</span>
+                                <span>Premiere Calendar</span>
+                            </div>
+                            <div class="module-submenu-item" onclick="loadSpecificModule('challenge')">
+                                <span class="module-icon">🎨</span>
+                                <span>Challenges</span>
+                            </div>
+                            <div class="module-submenu-item" onclick="loadSpecificModule('shoutouts')">
+                                <span class="module-icon">🎉</span>
+                                <span>Shoutouts & Celebrations</span>
+                            </div>
+                            <div class="module-submenu-item" onclick="loadSpecificModule('articles')">
+                                <span class="module-icon">📰</span>
+                                <span>Industry Articles</span>
+                            </div>
+                            <div class="module-submenu-item" onclick="loadSpecificModule('ralphNews')">
+                                <span class="module-icon">📢</span>
+                                <span>RALPH News</span>
+                            </div>
+                            <div class="module-submenu-item" onclick="loadSpecificModule('suggestions')">
+                                <span class="module-icon">💭</span>
+                                <span>Suggestion Box</span>
+                            </div>
+                            <div class="module-submenu-item" onclick="loadSpecificModule('announcements')">
+                                <span class="module-icon">📣</span>
+                                <span>Announcements</span>
+                            </div>
+                            <div class="module-submenu-item" onclick="loadSpecificModule('links')">
+                                <span class="module-icon">🔗</span>
+                                <span>Quick Links</span>
+                            </div>
+                            <div class="module-submenu-item" onclick="loadSpecificModule('innovation')">
+                                <span class="module-icon">💡</span>
+                                <span>Innovation Updates</span>
+                            </div>
+                            <div class="module-submenu-item" onclick="loadSpecificModule('resources')">
+                                <span class="module-icon">📁</span>
+                                <span>Resources</span>
+                            </div>
+                            <div class="module-submenu-item" onclick="loadSpecificModule('sharing')">
+                                <span class="module-icon">📲</span>
+                                <span>Weekly Share Challenge</span>
+                            </div>
+                            <div class="module-submenu-item" onclick="loadSpecificModule('music')">
+                                <span class="module-icon">🎵</span>
+                                <span>Music Library</span>
+                            </div>
+                        </div>
                     </div>
+                    
                     <div class="sidebar-item" onclick="showPanel('chatbot')">
                         <span class="icon">🤖</span>
                         <span>Chatbot</span>
@@ -673,30 +803,16 @@
                 <!-- Modules Panel -->
                 <div id="modules" class="panel-section">
                     <div class="section-header">
-                        <h2>Module Management</h2>
-                        <p>Configure content for each dashboard module</p>
-                    </div>
-
-                    <div class="form-field">
-                        <label>Select Module to Edit</label>
-                        <select id="moduleSelect" onchange="loadModuleEditor()">
-                            <option value="newBiz">📊 New Business Pipeline</option>
-                            <option value="premieres">🎬 Premiere Calendar</option>
-                            <option value="challenge">🎨 Challenges</option>
-                            <option value="shoutouts">🎉 Shoutouts & Celebrations</option>
-                            <option value="articles">📰 Industry Articles</option>
-                            <option value="ralphNews">📢 RALPH News</option>
-                            <option value="suggestions">💭 Suggestion Box</option>
-                            <option value="announcements">📣 Announcements</option>
-                            <option value="links">🔗 Quick Links</option>
-                            <option value="innovation">💡 Innovation Updates</option>
-                            <option value="resources">📁 Resources</option>
-                            <option value="music">🎵 Music Library Manager</option>
-                        </select>
+                        <h2 id="moduleTitle">Module Editor</h2>
+                        <p id="moduleDescription">Select a module from the sidebar to edit its content</p>
                     </div>
 
                     <div id="moduleEditor">
                         <!-- Module-specific forms will be loaded here -->
+                        <div style="padding: 40px; text-align: center; color: #888;">
+                            <p style="font-size: 16px;">👈 Select a module from the sidebar to begin editing</p>
+                            <p style="font-size: 14px; margin-top: 10px;">All modules are listed under the MODULES section</p>
+                        </div>
                     </div>
                 </div>
 
@@ -1204,20 +1320,19 @@ System ready!</textarea>
             }
         });
 
-        function login() {
+        async function login() {
             isLoggedIn = true;
             document.getElementById('loginContainer').style.display = 'none';
             document.getElementById('adminContainer').style.display = 'block';
             
-            // Ensure CMS_CONFIG is loaded first
-            console.log('Login - CMS_CONFIG available:', typeof CMS_CONFIG !== 'undefined');
+            // Load config from server
+            console.log('Login - loading config from server...');
+            await loadCurrentConfig();
             
-            loadCurrentConfig();
-            
-            // Initialize module editor after login with longer delay
+            // Initialize module editor after config is loaded
             setTimeout(() => {
                 loadModuleEditor();
-            }, 500);
+            }, 100);
         }
 
         function logout() {
@@ -1240,11 +1355,21 @@ System ready!</textarea>
                 item.classList.remove('active');
             });
             
+            // Remove active class from module submenu items
+            document.querySelectorAll('.module-submenu-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            
             // Show selected panel
             document.getElementById(panelId).classList.add('active');
             
             // Add active class to clicked sidebar item
-            event.target.closest('.sidebar-item').classList.add('active');
+            if (event && event.target) {
+                const sidebarItem = event.target.closest('.sidebar-item');
+                if (sidebarItem) {
+                    sidebarItem.classList.add('active');
+                }
+            }
 
             // Special handling for raw editor panel
             if (panelId === 'raw') {
@@ -1254,27 +1379,81 @@ System ready!</textarea>
             }
         }
 
-        // Load current configuration
-        function loadCurrentConfig() {
-            console.log('loadCurrentConfig called');
-            console.log('CMS_CONFIG exists:', typeof CMS_CONFIG !== 'undefined');
+        // Toggle modules submenu
+        function toggleModulesMenu() {
+            const header = document.querySelector('.sidebar-modules-header');
+            const submenu = document.getElementById('modulesSubmenu');
             
-            if (typeof CMS_CONFIG !== 'undefined') {
-                try {
-                    currentConfig = JSON.parse(JSON.stringify(CMS_CONFIG));
-                    console.log('Config loaded successfully, modules:', Object.keys(currentConfig.modules || {}));
+            header.classList.toggle('expanded');
+            submenu.classList.toggle('expanded');
+        }
+
+        // Load specific module from sidebar
+        async function loadSpecificModule(moduleId) {
+            // Show modules panel
+            document.querySelectorAll('.panel-section').forEach(panel => {
+                panel.classList.remove('active');
+            });
+            document.getElementById('modules').classList.add('active');
+            
+            // Remove active class from all sidebar items
+            document.querySelectorAll('.sidebar-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            
+            // Remove active class from all module items and add to selected
+            document.querySelectorAll('.module-submenu-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            if (event && event.target) {
+                const moduleItem = event.target.closest('.module-submenu-item');
+                if (moduleItem) {
+                    moduleItem.classList.add('active');
+                }
+            }
+            
+            // Load the module editor
+            await loadModuleEditorForModule(moduleId);
+        }
+
+        // Load current configuration from server
+        async function loadCurrentConfig() {
+            console.log('loadCurrentConfig called - fetching from server...');
+            
+            try {
+                const response = await fetch('/api/get-config');
+                if (response.ok) {
+                    currentConfig = await response.json();
+                    console.log('Config loaded from server successfully, modules:', Object.keys(currentConfig.modules || {}));
                     populateFields();
                     const rawEditor = document.getElementById('rawEditor');
                     if (rawEditor) {
                         rawEditor.value = JSON.stringify(currentConfig, null, 2);
                     }
-                } catch (error) {
-                    console.error('Error loading config:', error);
+                } else {
+                    throw new Error('Failed to load config from server');
+                }
+            } catch (error) {
+                console.error('Error loading config from server, falling back to CMS_CONFIG:', error);
+                
+                // Fallback to CMS_CONFIG if server request fails
+                if (typeof CMS_CONFIG !== 'undefined') {
+                    try {
+                        currentConfig = JSON.parse(JSON.stringify(CMS_CONFIG));
+                        console.log('Config loaded from fallback successfully, modules:', Object.keys(currentConfig.modules || {}));
+                        populateFields();
+                        const rawEditor = document.getElementById('rawEditor');
+                        if (rawEditor) {
+                            rawEditor.value = JSON.stringify(currentConfig, null, 2);
+                        }
+                    } catch (fallbackError) {
+                        console.error('Error with fallback config:', fallbackError);
+                        currentConfig = {};
+                    }
+                } else {
+                    console.error('Neither server config nor CMS_CONFIG available');
                     currentConfig = {};
                 }
-            } else {
-                console.error('CMS_CONFIG is not defined');
-                currentConfig = {};
             }
         }
 
@@ -1307,39 +1486,37 @@ System ready!</textarea>
             }
         }
 
-        // WYSIWYG Module Editor
-        function loadModuleEditor() {
-            console.log('loadModuleEditor called');
+        // WYSIWYG Module Editor - for backward compatibility
+        async function loadModuleEditor() {
+            console.log('loadModuleEditor called for initialization');
+        }
+
+        // Load module editor for a specific module
+        async function loadModuleEditorForModule(moduleId) {
+            console.log('loadModuleEditorForModule called for:', moduleId);
             console.log('currentConfig:', currentConfig);
             console.log('currentConfig.modules exists:', !!(currentConfig && currentConfig.modules));
             
-            // Ensure config is loaded
+            // Ensure config is loaded from server
             if (!currentConfig || !currentConfig.modules) {
-                console.log('Config not loaded, loading now...');
-                loadCurrentConfig();
+                console.log('Config not loaded, loading from server now...');
+                await loadCurrentConfig();
                 
                 // Double-check after loading
                 console.log('After loadCurrentConfig - currentConfig:', currentConfig);
                 console.log('After loadCurrentConfig - has modules:', !!(currentConfig && currentConfig.modules));
                 
                 if (!currentConfig || !currentConfig.modules) {
-                    console.error('Failed to load config - CMS_CONFIG available:', typeof CMS_CONFIG !== 'undefined');
+                    console.error('Failed to load config from server');
                     const moduleEditor = document.getElementById('moduleEditor');
                     if (moduleEditor) {
-                        moduleEditor.innerHTML = '<p style="color: red;">Failed to load configuration. CMS_CONFIG status: ' + (typeof CMS_CONFIG !== 'undefined' ? 'Available' : 'Missing') + '</p>';
+                        moduleEditor.innerHTML = '<p style="color: red;">Failed to load configuration from server. Please refresh the page and try again.</p>';
                     }
                     return;
                 }
             }
-
-            const selectElement = document.getElementById('moduleSelect');
-            if (!selectElement) {
-                console.error('Module select element not found');
-                return;
-            }
-
-            const moduleId = selectElement.value;
-            console.log('Selected module ID:', moduleId);
+            
+            console.log('Loading module:', moduleId);
             
             if (!moduleId) {
                 document.getElementById('moduleEditor').innerHTML = '<p>Please select a module to edit.</p>';
@@ -1355,6 +1532,16 @@ System ready!</textarea>
             }
 
             console.log('Loading editor for module:', module.title);
+            
+            // Update the header to show current module
+            const moduleTitleEl = document.getElementById('moduleTitle');
+            const moduleDescEl = document.getElementById('moduleDescription');
+            if (moduleTitleEl) {
+                moduleTitleEl.textContent = `${module.icon} ${module.title}`;
+            }
+            if (moduleDescEl) {
+                moduleDescEl.textContent = `Configure settings and content for ${module.title}`;
+            }
 
             let editorHtml = `
                 <div class="section-header">
@@ -1429,6 +1616,8 @@ System ready!</textarea>
                     return getInnovationEditor(content);
                 case 'resources':
                     return getResourcesEditor(content);
+                case 'sharing':
+                    return getSharingEditor(content);
                 case 'music':
                     return getMusicEditor(content);
                 case 'suggestions':
@@ -1965,6 +2154,8 @@ System ready!</textarea>
                 content = getMusicWYSIWYGData();
             } else if (moduleId === 'suggestions') {
                 content = getSuggestionsWYSIWYGData();
+            } else if (moduleId === 'sharing') {
+                content = getSharingWYSIWYGData();
             } else {
                 // Fallback to JSON editor for other modules
                 try {
@@ -3336,6 +3527,94 @@ System ready!</textarea>
             }
         }
 
+        // Weekly Share Challenge Editor
+        function getSharingEditor(content) {
+            const items = content.items || [];
+            const weekOf = content.weekOf || '';
+            const giftCardAmount = content.giftCardAmount || '$25';
+
+            return `
+                <div style="background: #1e1e1e; padding: 20px; border-radius: 8px; margin: 16px 0;">
+                    <h4 style="color: var(--ralph-pink); margin-bottom: 16px;">📲 Weekly Share Challenge Settings</h4>
+                    
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 20px;">
+                        <div>
+                            <label style="color: #ccc; display: block; margin-bottom: 5px;">Week Of</label>
+                            <input type="text" id="shareWeekOf" value="${weekOf}" placeholder="August 20, 2024" 
+                                   style="width: 100%; background: #2d2d2d; border: 1px solid #404040; color: white; padding: 8px; border-radius: 4px;">
+                        </div>
+                        <div>
+                            <label style="color: #ccc; display: block; margin-bottom: 5px;">Gift Card Amount</label>
+                            <input type="text" id="shareGiftAmount" value="${giftCardAmount}" placeholder="$25" 
+                                   style="width: 100%; background: #2d2d2d; border: 1px solid #404040; color: white; padding: 8px; border-radius: 4px;">
+                        </div>
+                    </div>
+                    
+                    <h5 style="color: var(--ralph-pink); margin-bottom: 12px;">Share Items (${items.length}/3)</h5>
+                    <div id="shareItemsEditor">
+                        ${items.map((item, index) => `
+                            <div class="share-item-editor" style="background: #2d2d2d; padding: 15px; border-radius: 6px; margin-bottom: 15px; border: 2px solid #404040;">
+                                <div style="display: flex; justify-content: between; align-items: center; margin-bottom: 10px;">
+                                    <h6 style="color: var(--ralph-pink); margin: 0;">Item ${index + 1}</h6>
+                                    <button onclick="removeShareItem(${index})" style="background: #ff4444; color: white; border: none; padding: 5px 10px; border-radius: 3px; cursor: pointer; margin-left: auto;">Remove</button>
+                                </div>
+                                
+                                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px;">
+                                    <div>
+                                        <label style="color: #ccc; font-size: 12px;">Type</label>
+                                        <input type="text" value="${item.type || ''}" placeholder="Instagram Post" 
+                                               style="width: 100%; background: #1e1e1e; border: 1px solid #404040; color: white; padding: 6px; border-radius: 3px; font-size: 12px;">
+                                    </div>
+                                    <div>
+                                        <label style="color: #ccc; font-size: 12px;">Platform</label>
+                                        <select style="width: 100%; background: #1e1e1e; border: 1px solid #404040; color: white; padding: 6px; border-radius: 3px; font-size: 12px;">
+                                            <option value="Instagram" ${item.platform === 'Instagram' ? 'selected' : ''}>Instagram</option>
+                                            <option value="TikTok" ${item.platform === 'TikTok' ? 'selected' : ''}>TikTok</option>
+                                            <option value="LinkedIn" ${item.platform === 'LinkedIn' ? 'selected' : ''}>LinkedIn</option>
+                                            <option value="Substack" ${item.platform === 'Substack' ? 'selected' : ''}>Substack</option>
+                                            <option value="YouTube" ${item.platform === 'YouTube' ? 'selected' : ''}>YouTube</option>
+                                            <option value="Twitter" ${item.platform === 'Twitter' ? 'selected' : ''}>Twitter</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                
+                                <div style="margin-bottom: 10px;">
+                                    <label style="color: #ccc; font-size: 12px;">Title</label>
+                                    <input type="text" value="${item.title || ''}" placeholder="Behind the Scenes at RALPH Studio" 
+                                           style="width: 100%; background: #1e1e1e; border: 1px solid #404040; color: white; padding: 6px; border-radius: 3px; font-size: 12px;">
+                                </div>
+                                
+                                <div style="margin-bottom: 10px;">
+                                    <label style="color: #ccc; font-size: 12px;">Description</label>
+                                    <textarea placeholder="Check out our creative process in action!" 
+                                              style="width: 100%; height: 50px; background: #1e1e1e; border: 1px solid #404040; color: white; padding: 6px; border-radius: 3px; font-size: 12px; resize: vertical;">${item.description || ''}</textarea>
+                                </div>
+                                
+                                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                                    <div>
+                                        <label style="color: #ccc; font-size: 12px;">Thumbnail URL</label>
+                                        <input type="url" value="${item.thumbnail || ''}" placeholder="https://via.placeholder.com/300x200" 
+                                               style="width: 100%; background: #1e1e1e; border: 1px solid #404040; color: white; padding: 6px; border-radius: 3px; font-size: 12px;">
+                                    </div>
+                                    <div>
+                                        <label style="color: #ccc; font-size: 12px;">Share URL</label>
+                                        <input type="url" value="${item.shareUrl || ''}" placeholder="https://instagram.com/p/example" 
+                                               style="width: 100%; background: #1e1e1e; border: 1px solid #404040; color: white; padding: 6px; border-radius: 3px; font-size: 12px;">
+                                    </div>
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                    
+                    ${items.length < 3 ? `
+                        <button onclick="addShareItem()" class="btn btn-secondary" style="margin-top: 10px;">+ Add Share Item</button>
+                    ` : `
+                        <p style="color: #888; font-size: 12px; margin-top: 10px;">Maximum of 3 items reached</p>
+                    `}
+                </div>
+            `;
+        }
+
         // Music Library Editor
         function getMusicEditor(content) {
             const tracks = content.tracks || [];
@@ -3478,17 +3757,155 @@ System ready!</textarea>
             }
         }
 
+        // Sharing Module Helper Functions
+        function addShareItem() {
+            const container = document.getElementById('shareItemsEditor');
+            if (!container) return;
+
+            const items = Array.from(container.querySelectorAll('.share-item-editor'));
+            if (items.length >= 3) {
+                showNotification('Maximum of 3 items allowed', 'error');
+                return;
+            }
+
+            const index = items.length;
+            const newItemHTML = `
+                <div class="share-item-editor" style="background: #2d2d2d; padding: 16px; border-radius: 6px; margin-bottom: 12px;">
+                    <div style="display: flex; justify-content: between; align-items: center; margin-bottom: 12px;">
+                        <h6 style="color: var(--ralph-pink); margin: 0;">Share Item ${index + 1}</h6>
+                        <button onclick="removeShareItem(${index})" style="background: #ef4444; color: white; border: none; border-radius: 4px; padding: 4px 8px; cursor: pointer; font-size: 12px;">Remove</button>
+                    </div>
+                    
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px;">
+                        <div>
+                            <label style="color: #ccc; display: block; margin-bottom: 4px; font-size: 12px;">Content Type</label>
+                            <select style="width: 100%; background: #1e1e1e; border: 1px solid #404040; color: white; padding: 8px; border-radius: 4px;">
+                                <option value="Instagram Post">Instagram Post</option>
+                                <option value="TikTok Video">TikTok Video</option>
+                                <option value="Substack Article">Substack Article</option>
+                                <option value="YouTube Video">YouTube Video</option>
+                                <option value="LinkedIn Post">LinkedIn Post</option>
+                                <option value="Twitter Post">Twitter Post</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label style="color: #ccc; display: block; margin-bottom: 4px; font-size: 12px;">Platform</label>
+                            <input type="text" placeholder="Instagram" style="width: 100%; background: #1e1e1e; border: 1px solid #404040; color: white; padding: 8px; border-radius: 4px;">
+                        </div>
+                    </div>
+                    
+                    <div style="margin-bottom: 12px;">
+                        <label style="color: #ccc; display: block; margin-bottom: 4px; font-size: 12px;">Title</label>
+                        <input type="text" placeholder="Enter share item title" style="width: 100%; background: #1e1e1e; border: 1px solid #404040; color: white; padding: 8px; border-radius: 4px;">
+                    </div>
+                    
+                    <div style="margin-bottom: 12px;">
+                        <label style="color: #ccc; display: block; margin-bottom: 4px; font-size: 12px;">Description</label>
+                        <textarea placeholder="Brief description of the content..." style="width: 100%; height: 60px; background: #1e1e1e; border: 1px solid #404040; color: white; padding: 8px; border-radius: 4px; resize: vertical;"></textarea>
+                    </div>
+                    
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                        <div>
+                            <label style="color: #ccc; display: block; margin-bottom: 4px; font-size: 12px;">Thumbnail URL</label>
+                            <input type="text" placeholder="https://example.com/image.jpg" style="width: 100%; background: #1e1e1e; border: 1px solid #404040; color: white; padding: 8px; border-radius: 4px;">
+                        </div>
+                        <div>
+                            <label style="color: #ccc; display: block; margin-bottom: 4px; font-size: 12px;">Share URL</label>
+                            <input type="text" placeholder="https://example.com/post" style="width: 100%; background: #1e1e1e; border: 1px solid #404040; color: white; padding: 8px; border-radius: 4px;">
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            container.insertAdjacentHTML('beforeend', newItemHTML);
+            updateShareItemIndices();
+            
+            // Update add button visibility
+            const addButton = document.querySelector('button[onclick="addShareItem()"]');
+            if (items.length + 1 >= 3 && addButton) {
+                addButton.style.display = 'none';
+            }
+        }
+
+        function removeShareItem(index) {
+            const container = document.getElementById('shareItemsEditor');
+            if (!container) return;
+
+            const items = Array.from(container.querySelectorAll('.share-item-editor'));
+            if (index >= 0 && index < items.length) {
+                items[index].remove();
+                updateShareItemIndices();
+                
+                // Show add button if we're under limit
+                const addButton = document.querySelector('button[onclick="addShareItem()"]');
+                if (container.children.length < 3 && addButton) {
+                    addButton.style.display = 'inline-block';
+                }
+            }
+        }
+
+        function updateShareItemIndices() {
+            const container = document.getElementById('shareItemsEditor');
+            if (container) {
+                Array.from(container.children).forEach((item, index) => {
+                    const removeBtn = item.querySelector('button[onclick^="removeShareItem"]');
+                    if (removeBtn) removeBtn.setAttribute('onclick', `removeShareItem(${index})`);
+                    
+                    const title = item.querySelector('h6');
+                    if (title) title.textContent = `Share Item ${index + 1}`;
+                });
+            }
+        }
+
+        function getSharingWYSIWYGData() {
+            const weekOf = document.getElementById('shareWeekOf')?.value || '';
+            const giftCardAmount = document.getElementById('shareGiftAmount')?.value || '$25';
+            
+            const container = document.getElementById('shareItemsEditor');
+            const items = [];
+            
+            if (container) {
+                Array.from(container.children).forEach((item, index) => {
+                    const inputs = item.querySelectorAll('input, select, textarea');
+                    const typeSelect = inputs[0];
+                    const platformInput = inputs[1];
+                    const titleInput = inputs[2];
+                    const descTextarea = inputs[3];
+                    const thumbnailInput = inputs[4];
+                    const shareUrlInput = inputs[5];
+                    
+                    if (titleInput?.value.trim()) {
+                        items.push({
+                            id: index + 1,
+                            type: typeSelect?.value || 'Instagram Post',
+                            platform: platformInput?.value || 'Instagram',
+                            title: titleInput.value.trim(),
+                            description: descTextarea?.value || '',
+                            thumbnail: thumbnailInput?.value || `https://via.placeholder.com/300x200/EB008B/FFFFFF?text=${encodeURIComponent(titleInput.value.slice(0, 20))}`,
+                            shareUrl: shareUrlInput?.value || '#'
+                        });
+                    }
+                });
+            }
+            
+            return {
+                weekOf,
+                giftCardAmount,
+                items
+            };
+        }
+
         // Initialize
         document.addEventListener('DOMContentLoaded', async () => {
             // Try auto-login first
             const autoLoggedIn = await checkAutoLogin();
             
-            // Load initial module editor after config is loaded - with delay
+            // Load initial module editor after config is loaded
             if (autoLoggedIn && isLoggedIn) {
-                setTimeout(() => {
-                    loadModuleEditor();
+                setTimeout(async () => {
+                    await loadModuleEditor();
                     loadCurrentPrompt(); // Load current prompt from persistent storage
-                }, 300);
+                }, 100);
             }
         });
     </script>

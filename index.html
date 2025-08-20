@@ -1492,62 +1492,8 @@
 ═══════════════════════════════════════════════════════════════
                   [ SYSTEM v1.0 ONLINE ]
         </div>
-        <div class="desktop-icons">
-            <div class="icon" onclick="openWindow('newBiz')">
-                <div class="icon-image">📊</div>
-                <div class="icon-label">New Biz Pipeline</div>
-            </div>
-            
-            <div class="icon" onclick="openWindow('premieres')">
-                <div class="icon-image">🎬</div>
-                <div class="icon-label">Premiere Dates</div>
-            </div>
-            
-            <div class="icon" onclick="openWindow('challenge')">
-                <div class="icon-image">🎨</div>
-                <div class="icon-label">Challenges</div>
-            </div>
-            
-            <div class="icon" onclick="openWindow('shoutouts')">
-                <div class="icon-image">🎉</div>
-                <div class="icon-label">Shoutouts</div>
-            </div>
-            
-            <div class="icon" onclick="openWindow('articles')">
-                <div class="icon-image">📰</div>
-                <div class="icon-label">Industry Articles</div>
-            </div>
-            
-            <div class="icon" onclick="openWindow('ralphnews')">
-                <div class="icon-image">📢</div>
-                <div class="icon-label">RALPH News</div>
-            </div>
-            
-            <div class="icon" onclick="openWindow('suggestions')">
-                <div class="icon-image">💭</div>
-                <div class="icon-label">Suggestion Box</div>
-            </div>
-            
-            <div class="icon" onclick="openWindow('announcements')">
-                <div class="icon-image">📣</div>
-                <div class="icon-label">Announcements</div>
-            </div>
-            
-            <div class="icon" onclick="openWindow('links')">
-                <div class="icon-image">🔗</div>
-                <div class="icon-label">Helpful Links</div>
-            </div>
-            
-            <div class="icon" onclick="openWindow('innovation')">
-                <div class="icon-image">💡</div>
-                <div class="icon-label">Innovation Updates</div>
-            </div>
-            
-            <div class="icon" onclick="openWindow('resources')">
-                <div class="icon-image">📁</div>
-                <div class="icon-label">Resources</div>
-            </div>
-            
+        <div class="desktop-icons" id="desktop-icons">
+            <!-- Desktop icons will be loaded dynamically from CMS configuration -->
             <div class="icon" onclick="openAdminLogin()">
                 <div class="icon-image">⚙️</div>
                 <div class="icon-label">Intranet Admin</div>
@@ -1752,13 +1698,13 @@
             </div>
         </div>
         
-        <div id="ralphnews" class="window" style="top: 150px; left: 300px;">
+        <div id="ralphNews" class="window" style="top: 150px; left: 300px;">
             <div class="window-header">
                 <div class="window-title">📢 RALPH News Network</div>
                 <div class="window-controls">
-                    <button class="window-button" onclick="minimizeWindow('ralphnews')">_</button>
-                    <button class="window-button" onclick="maximizeWindow('ralphnews')">□</button>
-                    <button class="window-button" onclick="closeWindow('ralphnews')">X</button>
+                    <button class="window-button" onclick="minimizeWindow('ralphNews')">_</button>
+                    <button class="window-button" onclick="maximizeWindow('ralphNews')">□</button>
+                    <button class="window-button" onclick="closeWindow('ralphNews')">X</button>
                 </div>
             </div>
             <div class="window-content">
@@ -2054,6 +2000,301 @@
             <button class="banner-close" onclick="closeBanner()">GOT IT!</button>
         </div>
     </div>
+    
+    <!-- Weekly Share Challenge Popup -->
+    <div id="sharePopup" class="share-popup" style="display: none;">
+        <div class="share-popup-content">
+            <div class="share-header">
+                <h2>📲 3 RALPH THINGS TO SHARE THIS WEEK!</h2>
+                <div class="share-week">Week of <span id="shareWeek">August 20, 2024</span></div>
+                <button class="share-close" onclick="closeSharePopup()">×</button>
+            </div>
+            
+            <div class="share-intro">
+                <p>🎉 Help spread the RALPH love! Share these posts and you'll be entered to win a <strong id="giftCardAmount">$25 gift card</strong>!</p>
+            </div>
+            
+            <div class="share-items" id="shareItems">
+                <!-- Items will be populated dynamically -->
+            </div>
+            
+            <div class="share-footer" id="shareFooter">
+                <div class="share-progress">
+                    <span id="shareProgress">0 of 3 shared</span>
+                </div>
+                <button class="share-submit-btn" id="shareSubmitBtn" onclick="submitShares()" disabled>
+                    🎯 ENTER SWEEPSTAKES
+                </button>
+            </div>
+            
+            <div class="share-success" id="shareSuccess" style="display: none;">
+                <div class="success-message">
+                    <h3>🎉 Thank You!</h3>
+                    <p>You've been entered into this week's sweepstakes!</p>
+                    <p class="comeback-message">Come back next week for another chance to win!</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <style>
+        .share-popup {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 10000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Courier New', monospace;
+        }
+        
+        .share-popup-content {
+            background: linear-gradient(135deg, #2d2d2d 0%, #1a1a1a 100%);
+            border: 3px solid var(--ralph-pink);
+            border-radius: 15px;
+            width: 90%;
+            max-width: 700px;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 10px 30px rgba(235, 0, 139, 0.3);
+            animation: popupSlideIn 0.3s ease-out;
+        }
+        
+        @keyframes popupSlideIn {
+            from { transform: scale(0.8) translateY(-50px); opacity: 0; }
+            to { transform: scale(1) translateY(0); opacity: 1; }
+        }
+        
+        .share-header {
+            background: var(--ralph-pink);
+            color: white;
+            padding: 20px;
+            text-align: center;
+            position: relative;
+            border-radius: 12px 12px 0 0;
+        }
+        
+        .share-header h2 {
+            margin: 0;
+            font-size: 24px;
+            text-shadow: 2px 2px 0px rgba(0,0,0,0.5);
+        }
+        
+        .share-week {
+            font-size: 14px;
+            opacity: 0.9;
+            margin-top: 5px;
+        }
+        
+        .share-close {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        
+        .share-close:hover {
+            color: #ffccdd;
+        }
+        
+        .share-intro {
+            padding: 20px;
+            text-align: center;
+            color: #e0e0e0;
+            background: rgba(235, 0, 139, 0.1);
+        }
+        
+        .share-intro p {
+            margin: 0;
+            font-size: 16px;
+            line-height: 1.5;
+        }
+        
+        .share-items {
+            padding: 0 20px;
+        }
+        
+        .share-item {
+            display: flex;
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px solid #404040;
+            border-radius: 10px;
+            margin: 15px 0;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+        
+        .share-item:hover {
+            border-color: var(--ralph-pink);
+            box-shadow: 0 5px 15px rgba(235, 0, 139, 0.2);
+        }
+        
+        .share-item.completed {
+            border-color: #00ff41;
+            background: rgba(0, 255, 65, 0.1);
+        }
+        
+        .share-thumbnail {
+            width: 120px;
+            height: 90px;
+            object-fit: cover;
+            border-radius: 8px 0 0 8px;
+        }
+        
+        .share-content {
+            flex: 1;
+            padding: 15px;
+            color: white;
+        }
+        
+        .share-content h4 {
+            margin: 0 0 5px 0;
+            color: var(--ralph-pink);
+            font-size: 16px;
+        }
+        
+        .share-type {
+            font-size: 12px;
+            color: #888;
+            text-transform: uppercase;
+            margin-bottom: 8px;
+        }
+        
+        .share-description {
+            font-size: 13px;
+            color: #ccc;
+            line-height: 1.4;
+            margin-bottom: 10px;
+        }
+        
+        .share-actions {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .share-link-btn {
+            background: var(--ralph-pink);
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 12px;
+            text-transform: uppercase;
+            font-weight: bold;
+            transition: background 0.3s;
+        }
+        
+        .share-link-btn:hover {
+            background: #c7007a;
+        }
+        
+        .share-checkbox {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 12px;
+            color: #ccc;
+        }
+        
+        .share-checkbox input {
+            transform: scale(1.2);
+        }
+        
+        .share-footer {
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.3);
+            text-align: center;
+            border-radius: 0 0 12px 12px;
+        }
+        
+        .share-progress {
+            color: #ccc;
+            font-size: 14px;
+            margin-bottom: 15px;
+        }
+        
+        .share-submit-btn {
+            background: linear-gradient(45deg, var(--ralph-pink), #ff1493);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            text-transform: uppercase;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(235, 0, 139, 0.3);
+        }
+        
+        .share-submit-btn:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(235, 0, 139, 0.4);
+        }
+        
+        .share-submit-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+        
+        .share-success {
+            padding: 40px 20px;
+            text-align: center;
+            color: white;
+        }
+        
+        .success-message h3 {
+            color: var(--ralph-pink);
+            font-size: 24px;
+            margin-bottom: 15px;
+        }
+        
+        .success-message p {
+            margin: 10px 0;
+            font-size: 16px;
+        }
+        
+        .comeback-message {
+            color: #00ff41;
+            font-weight: bold;
+            margin-top: 20px !important;
+            text-shadow: 0 0 10px rgba(0, 255, 65, 0.5);
+        }
+        
+        @media (max-width: 768px) {
+            .share-popup-content {
+                width: 95%;
+                max-height: 95vh;
+            }
+            
+            .share-item {
+                flex-direction: column;
+            }
+            
+            .share-thumbnail {
+                width: 100%;
+                height: 150px;
+                border-radius: 8px 8px 0 0;
+            }
+            
+            .share-header h2 {
+                font-size: 20px;
+            }
+        }
+    </style>
     
     <script>
         'use strict';
@@ -3401,6 +3642,156 @@
             showNotification(`${challengeNames[challengeType]} Accepted! 🎉`);
         }
 
+        // Share Challenge Popup Functions
+        let shareState = {
+            completedShares: new Set(),
+            totalItems: 0
+        };
+
+        function openSharePopup() {
+            console.log('📲 Opening share challenge popup...');
+            
+            if (!AppState.config || !AppState.config.modules.sharing) {
+                console.error('Share challenge configuration not found');
+                return;
+            }
+            
+            const shareConfig = AppState.config.modules.sharing.content;
+            
+            // Update popup content
+            document.getElementById('shareWeek').textContent = shareConfig.weekOf;
+            document.getElementById('giftCardAmount').textContent = shareConfig.giftCardAmount;
+            
+            // Populate share items
+            populateShareItems(shareConfig.items);
+            
+            // Show popup
+            document.getElementById('sharePopup').style.display = 'flex';
+            
+            // Reset state
+            shareState.completedShares.clear();
+            shareState.totalItems = shareConfig.items.length;
+            updateShareProgress();
+        }
+
+        function populateShareItems(items) {
+            const container = document.getElementById('shareItems');
+            container.innerHTML = '';
+            
+            items.forEach(item => {
+                const itemElement = document.createElement('div');
+                itemElement.className = 'share-item';
+                itemElement.id = `share-item-${item.id}`;
+                
+                itemElement.innerHTML = `
+                    <img src="${item.thumbnail}" alt="${item.title}" class="share-thumbnail" 
+                         onerror="this.style.background='linear-gradient(45deg, var(--ralph-pink), #ff1493)'; this.alt='${item.type}';">
+                    <div class="share-content">
+                        <div class="share-type">${item.type} • ${item.platform}</div>
+                        <h4>${item.title}</h4>
+                        <div class="share-description">${item.description}</div>
+                        <div class="share-actions">
+                            <button class="share-link-btn" onclick="openShareLink('${item.shareUrl}')">
+                                🔗 Open ${item.platform}
+                            </button>
+                            <div class="share-checkbox">
+                                <input type="checkbox" id="checkbox-${item.id}" onchange="toggleShare(${item.id})">
+                                <label for="checkbox-${item.id}">Shared!</label>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                
+                container.appendChild(itemElement);
+            });
+        }
+
+        function openShareLink(url) {
+            window.open(url, '_blank');
+        }
+
+        function toggleShare(itemId) {
+            const checkbox = document.getElementById(`checkbox-${itemId}`);
+            const itemElement = document.getElementById(`share-item-${itemId}`);
+            
+            if (checkbox.checked) {
+                shareState.completedShares.add(itemId);
+                itemElement.classList.add('completed');
+            } else {
+                shareState.completedShares.delete(itemId);
+                itemElement.classList.remove('completed');
+            }
+            
+            updateShareProgress();
+        }
+
+        function updateShareProgress() {
+            const completed = shareState.completedShares.size;
+            const total = shareState.totalItems;
+            
+            document.getElementById('shareProgress').textContent = `${completed} of ${total} shared`;
+            
+            const submitBtn = document.getElementById('shareSubmitBtn');
+            if (completed === total && total > 0) {
+                submitBtn.disabled = false;
+                submitBtn.textContent = '🎯 ENTER SWEEPSTAKES';
+            } else {
+                submitBtn.disabled = true;
+                submitBtn.textContent = `🎯 SHARE ${total - completed} MORE`;
+            }
+        }
+
+        function submitShares() {
+            if (shareState.completedShares.size !== shareState.totalItems) {
+                return;
+            }
+            
+            // Hide the form and show success message
+            document.getElementById('shareFooter').style.display = 'none';
+            document.getElementById('shareItems').style.display = 'none';
+            document.getElementById('shareSuccess').style.display = 'block';
+            
+            // Add some celebration
+            showNotification('🎉 Thanks for sharing! You\'ve been entered to win!');
+            
+            // Optional: Send data to server for tracking
+            console.log('📊 User completed all shares:', Array.from(shareState.completedShares));
+        }
+
+        function closeSharePopup() {
+            document.getElementById('sharePopup').style.display = 'none';
+            
+            // Reset popup state for next time
+            setTimeout(() => {
+                document.getElementById('shareFooter').style.display = 'block';
+                document.getElementById('shareItems').style.display = 'block';
+                document.getElementById('shareSuccess').style.display = 'none';
+                shareState.completedShares.clear();
+                // Uncheck all checkboxes
+                document.querySelectorAll('.share-checkbox input').forEach(cb => cb.checked = false);
+                // Remove completed styling
+                document.querySelectorAll('.share-item').forEach(item => item.classList.remove('completed'));
+            }, 300);
+        }
+
+        // Auto-show popup on desktop load (can be disabled/modified)
+        function maybeShowSharePopup() {
+            // Only show if sharing module is enabled
+            if (AppState.config && AppState.config.modules.sharing && AppState.config.modules.sharing.enabled) {
+                // Check if user has seen it this week (localStorage)
+                const currentWeek = AppState.config.modules.sharing.content.weekOf;
+                const lastSeenWeek = localStorage.getItem('sharePopupLastSeen');
+                
+                if (lastSeenWeek !== currentWeek) {
+                    // Show popup after a short delay
+                    setTimeout(() => {
+                        openSharePopup();
+                        localStorage.setItem('sharePopupLastSeen', currentWeek);
+                    }, 3000); // Show after 3 seconds
+                }
+            }
+        }
+
         function refreshAllModules() {
             if (!AppState.apiIntegration || !AppState.config) return;
             
@@ -3410,6 +3801,72 @@
                     AppState.apiIntegration.startAutoRefresh(moduleId, moduleConfig);
                 }
             });
+        }
+
+        // Load desktop icons dynamically from CMS configuration
+        function loadDesktopIcons() {
+            console.log('🖥️ Loading desktop icons from configuration...');
+            
+            const container = document.getElementById('desktop-icons');
+            if (!container) {
+                console.error('Desktop icons container not found');
+                return;
+            }
+            
+            if (!AppState.config || !AppState.config.modules) {
+                console.error('Configuration or modules not available');
+                return;
+            }
+            
+            // Keep admin icon but clear other icons
+            const adminIcon = container.querySelector('[onclick="openAdminLogin()"]');
+            container.innerHTML = '';
+            
+            // Add module icons from configuration
+            Object.entries(AppState.config.modules).forEach(([moduleId, moduleConfig]) => {
+                if (moduleConfig.enabled) {
+                    const iconElement = document.createElement('div');
+                    iconElement.className = 'icon';
+                    iconElement.onclick = () => openWindow(moduleId);
+                    
+                    // Create a simplified label (remove extra words)
+                    let label = moduleConfig.title;
+                    label = label.replace(/v\d+\.\d+/g, ''); // Remove version numbers
+                    label = label.replace(/\s+/g, ' ').trim(); // Clean up spaces
+                    
+                    // Simplify some common titles
+                    const labelMap = {
+                        'New Business Pipeline': 'New Biz Pipeline',
+                        'Project Premiere Calendar': 'Premiere Dates', 
+                        'Shoutouts & Celebrations': 'Shoutouts',
+                        'Industry Articles': 'Industry Articles',
+                        'RALPH News Network': 'RALPH News',
+                        'Digital Suggestion Box': 'Suggestion Box',
+                        'System Announcements': 'Announcements',
+                        'Quick Links Directory': 'Helpful Links',
+                        'Innovation Lab Updates': 'Innovation Updates',
+                        'Resource Center': 'Resources'
+                    };
+                    
+                    if (labelMap[label]) {
+                        label = labelMap[label];
+                    }
+                    
+                    iconElement.innerHTML = `
+                        <div class="icon-image">${moduleConfig.icon}</div>
+                        <div class="icon-label">${label}</div>
+                    `;
+                    
+                    container.appendChild(iconElement);
+                }
+            });
+            
+            // Re-add admin icon at the end
+            if (adminIcon) {
+                container.appendChild(adminIcon);
+            }
+            
+            console.log(`✅ Loaded ${Object.keys(AppState.config.modules).filter(id => AppState.config.modules[id].enabled).length} desktop icons`);
         }
 
         // Bring window to front by managing z-index
@@ -4033,8 +4490,11 @@
                 // Chatbot is now handled server-side for security
                 console.log('💬 Chatbot configured - using secure server endpoint');
                 
-                // Load content from CMS
-                loadContentFromCMS();
+                // Load desktop icons from CMS configuration
+                loadDesktopIcons();
+                
+                // Maybe show share popup after boot
+                setTimeout(() => maybeShowSharePopup(), 5000);
             }
             
             // Start boot sequence
@@ -4110,7 +4570,7 @@
                         
                         // Reload content with new configuration
                         console.log('🔄 Reloading content from CMS...');
-                        loadContentFromCMS();
+                        loadDesktopIcons();
                         
                         console.log('✅ Configuration refreshed and applied successfully!');
                         showNotification('✨ Content updated from CMS!');
