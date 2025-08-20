@@ -667,6 +667,116 @@
             font-size: 18px;
         }
         
+        /* Pipeline Layout Styles */
+        .pipeline-container {
+            display: flex;
+            height: 100%;
+            min-width: 800px;
+            padding: 15px;
+            gap: 2px;
+            background: var(--gray-dark);
+        }
+        
+        .pipeline-column {
+            flex: 1;
+            min-width: 180px;
+            display: flex;
+            flex-direction: column;
+            border: 2px inset var(--gray-light);
+            background: var(--window-bg);
+        }
+        
+        .pipeline-header {
+            padding: 8px 10px;
+            text-align: center;
+            font-weight: bold;
+            font-size: 11px;
+            letter-spacing: 0.5px;
+            border-bottom: 2px inset var(--gray-dark);
+        }
+        
+        .pipeline-header h3 {
+            margin: 0;
+            color: var(--black);
+        }
+        
+        .pipeline-header .count {
+            color: var(--gray-dark);
+            font-weight: normal;
+        }
+        
+        .pipeline-items {
+            flex: 1;
+            padding: 8px;
+            overflow-y: auto;
+        }
+        
+        .pipeline-item {
+            background: var(--white);
+            border: 1px outset var(--gray-light);
+            margin-bottom: 8px;
+            padding: 8px;
+            font-size: 11px;
+            line-height: 1.3;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .pipeline-item:hover {
+            border: 1px inset var(--gray-dark);
+            background: #f5f5f5;
+        }
+        
+        .pipeline-item .client-name {
+            font-weight: bold;
+            margin-bottom: 4px;
+            color: var(--black);
+        }
+        
+        .pipeline-item .due-date {
+            color: var(--gray-dark);
+            font-size: 10px;
+            margin-bottom: 4px;
+        }
+        
+        .pipeline-item .office {
+            display: inline-block;
+            background: var(--gray-dark);
+            color: var(--white);
+            padding: 1px 4px;
+            font-size: 9px;
+            font-weight: bold;
+            margin-bottom: 4px;
+        }
+        
+        .pipeline-item .links {
+            display: flex;
+            gap: 4px;
+            margin-top: 4px;
+        }
+        
+        .pipeline-item .link-btn {
+            background: var(--ralph-pink);
+            color: var(--white);
+            border: 1px outset var(--ralph-pink);
+            padding: 2px 6px;
+            font-size: 9px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+        }
+        
+        .pipeline-item .link-btn:hover {
+            border: 1px inset var(--ralph-pink);
+        }
+        
+        /* Column-specific colors */
+        .warm-leads .pipeline-header { background: #ff6b6b; color: white; }
+        .pitches-happening .pipeline-header { background: #ff9f43; color: white; }
+        .pitch-submitted .pipeline-header { background: #feca57; color: black; }
+        .pitch-presented .pipeline-header { background: #48ca9c; color: white; }
+        .pitch-won .pipeline-header { background: #54a0ff; color: white; }
+        
         .module-item {
             background: #f0f0f0;
             border: 2px solid;
@@ -1500,32 +1610,48 @@
                     <button class="window-button" onclick="closeWindow('newBiz')">X</button>
                 </div>
             </div>
-            <div class="window-content">
-                <div class="ascii-art">
-    ╔══════════════════════════════╗
-    ║  RALPH PIPELINE TRACKER 1.0  ║
-    ╚══════════════════════════════╝
-                </div>
-                <div class="module-item">
-                    <h3>ACTIVE PITCHES</h3>
-                    <p>▸ Global Tech Corp - Video Campaign</p>
-                    <div class="progress-bar">
-                        <div class="progress-fill" style="width: 75%;"></div>
+            <div class="window-content" style="padding: 0; overflow-x: auto;">
+                <div class="pipeline-container">
+                    <div class="pipeline-column warm-leads">
+                        <div class="pipeline-header">
+                            <h3>WARM LEADS <span class="count">(0)</span></h3>
+                        </div>
+                        <div class="pipeline-items" id="warmLeads">
+                            <!-- Items will be populated by loadContentFromCMS -->
+                        </div>
                     </div>
-                    <p>▸ Fashion Brand X - Social Strategy</p>
-                    <div class="progress-bar">
-                        <div class="progress-fill" style="width: 45%;"></div>
+                    <div class="pipeline-column pitches-happening">
+                        <div class="pipeline-header">
+                            <h3>PITCHES HAPPENING <span class="count">(0)</span></h3>
+                        </div>
+                        <div class="pipeline-items" id="pitchesHappening">
+                            <!-- Items will be populated by loadContentFromCMS -->
+                        </div>
                     </div>
-                    <p>▸ Auto Company Z - Launch Film</p>
-                    <div class="progress-bar">
-                        <div class="progress-fill" style="width: 90%;"></div>
+                    <div class="pipeline-column pitch-submitted">
+                        <div class="pipeline-header">
+                            <h3>PITCH SUBMITTED <span class="count">(0)</span></h3>
+                        </div>
+                        <div class="pipeline-items" id="pitchSubmitted">
+                            <!-- Items will be populated by loadContentFromCMS -->
+                        </div>
                     </div>
-                </div>
-                <div class="module-item">
-                    <h3>UPCOMING MEETINGS</h3>
-                    <p class="blink">► Tomorrow 2:00 PM - Tech Startup Pitch</p>
-                    <p>► Thursday - Beauty Brand Presentation</p>
-                    <p>► Next Week - Entertainment Client RFP</p>
+                    <div class="pipeline-column pitch-presented">
+                        <div class="pipeline-header">
+                            <h3>PITCH PRESENTED <span class="count">(0)</span></h3>
+                        </div>
+                        <div class="pipeline-items" id="pitchPresented">
+                            <!-- Items will be populated by loadContentFromCMS -->
+                        </div>
+                    </div>
+                    <div class="pipeline-column pitch-won">
+                        <div class="pipeline-header">
+                            <h3>PITCH WON <span class="count">(0)</span></h3>
+                        </div>
+                        <div class="pipeline-items" id="pitchWon">
+                            <!-- Items will be populated by loadContentFromCMS -->
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -1958,7 +2084,30 @@
             touchDevice: false,
             config: null,
             apiIntegration: null,
-            chatbotAI: null
+            chatbotAI: null,
+            intervals: [],  // Track all intervals for cleanup
+            timeouts: [],   // Track all timeouts for cleanup
+            rafIds: []      // Track animation frame IDs
+        };
+        
+        // DOM element cache for better performance
+        const DOMCache = {
+            elements: {},
+            get(id) {
+                if (!this.elements[id]) {
+                    this.elements[id] = document.getElementById(id);
+                }
+                return this.elements[id];
+            },
+            querySelector(selector) {
+                if (!this.elements[selector]) {
+                    this.elements[selector] = document.querySelector(selector);
+                }
+                return this.elements[selector];
+            },
+            clear() {
+                this.elements = {};
+            }
         };
         
         // Utility functions
@@ -2007,7 +2156,7 @@
         }
         
         function closeWindow(windowId) {
-            const windowEl = document.getElementById(windowId);
+            const windowEl = DOMCache.get(windowId);
             if (!windowEl) return;
             
             windowEl.classList.remove('active');
@@ -2017,7 +2166,7 @@
         }
         
         function minimizeWindow(windowId) {
-            const windowEl = document.getElementById(windowId);
+            const windowEl = DOMCache.get(windowId);
             if (!windowEl) return;
             
             windowEl.style.display = 'none';
@@ -2027,7 +2176,7 @@
         }
         
         function maximizeWindow(windowId) {
-            const windowEl = document.getElementById(windowId);
+            const windowEl = DOMCache.get(windowId);
             if (!windowEl) return;
             
             if (AppState.isMobile) {
@@ -2372,14 +2521,17 @@
         // Enhanced chatbot functionality with AI integration
         async function sendChat() {
             console.log('💬 sendChat called');
-            const input = document.getElementById('chatInput');
-            const display = document.getElementById('chatDisplay');
+            const input = DOMCache.get('chatInput');
+            const display = DOMCache.get('chatDisplay');
             if (!input || !display) return;
             
             const message = input.value.trim();
             if (message === '') return;
             
             console.log('📝 Processing message:', message);
+            
+            // Use DocumentFragment for batch DOM updates
+            const fragment = document.createDocumentFragment();
             
             // Remove blinking cursor
             const cursor = display.querySelector('.blink');
@@ -2390,14 +2542,17 @@
             userMsg.style.marginTop = '10px';
             userMsg.style.color = '#00ff00';
             userMsg.innerHTML = `<span style="color: #ffffff;">USER:</span> ${message}`;
-            display.appendChild(userMsg);
+            fragment.appendChild(userMsg);
             
             // Add loading indicator
             const loadingMsg = document.createElement('div');
             loadingMsg.style.marginTop = '10px';
             loadingMsg.style.color = '#00ff00';
             loadingMsg.innerHTML = `<span style="color: #ffff00;">ASSISTANT:</span> <span class="blink">Processing...</span>`;
-            display.appendChild(loadingMsg);
+            fragment.appendChild(loadingMsg);
+            
+            // Batch append to DOM
+            display.appendChild(fragment);
             display.scrollTop = display.scrollHeight;
             
             // Process bot response
@@ -2518,6 +2673,75 @@
         }
 
         // CMS Functions
+        // Load pipeline data and render
+        function loadPipelineData(data) {
+            const stages = ['warmLeads', 'pitchesHappening', 'pitchSubmitted', 'pitchPresented', 'pitchWon'];
+            
+            stages.forEach(stage => {
+                const container = DOMCache.get(stage);
+                if (!container) return;
+                
+                const items = data[stage] || [];
+                
+                // Update count in header
+                const column = container.parentElement;
+                const countSpan = column.querySelector('.count');
+                if (countSpan) {
+                    countSpan.textContent = `(${items.length})`;
+                }
+                
+                // Clear existing items
+                container.innerHTML = '';
+                
+                // Add items
+                items.forEach(item => {
+                    const itemEl = document.createElement('div');
+                    itemEl.className = 'pipeline-item';
+                    
+                    itemEl.innerHTML = `
+                        <div class="client-name">${item.name || 'Untitled Project'}</div>
+                        <div class="office">[${item.office || 'NYC'}]</div>
+                        <div class="due-date">📅 ${item.dueDate ? new Date(item.dueDate).toLocaleDateString() : 'TBD'}</div>
+                        <div class="links">
+                            ${item.deckLink ? `<a href="#" class="link-btn" onclick="openIframeWindow('${item.deckLink}', '${item.name} - Deck', 900, 700)">DECK</a>` : ''}
+                            ${item.briefLink ? `<a href="#" class="link-btn" onclick="openIframeWindow('${item.briefLink}', '${item.name} - Brief', 900, 700)">BRIEF</a>` : ''}
+                        </div>
+                    `;
+                    
+                    container.appendChild(itemEl);
+                });
+            });
+        }
+        
+        // Open document in iframe window
+        function openIframe(url, title) {
+            // Create iframe window
+            const iframeWindow = document.createElement('div');
+            iframeWindow.className = 'window';
+            iframeWindow.style.cssText = `
+                top: 80px; 
+                left: 80px; 
+                width: 800px; 
+                height: 600px; 
+                z-index: ${AppState.zIndex++};
+            `;
+            
+            iframeWindow.innerHTML = `
+                <div class="window-header">
+                    <div class="window-title">📄 ${title}</div>
+                    <div class="window-controls">
+                        <button class="window-button" onclick="this.parentElement.parentElement.parentElement.remove()">X</button>
+                    </div>
+                </div>
+                <div class="window-content" style="padding: 0;">
+                    <iframe src="${url}" style="width: 100%; height: 100%; border: none;" frameborder="0"></iframe>
+                </div>
+            `;
+            
+            document.body.appendChild(iframeWindow);
+            makeDraggable(iframeWindow);
+        }
+
         function loadContentFromCMS() {
             console.log('📄 LOADING CONTENT FROM CMS');
             if (!AppState.config) {
@@ -2569,7 +2793,7 @@
                     
                     // Update specific module content
                     if (moduleId === 'newBiz' && moduleConfig.content) {
-                        updateNewBizContent(windowElement, moduleConfig.content);
+                        loadPipelineData(moduleConfig.content);
                     } else if (moduleId === 'articles' && moduleConfig.content) {
                         updateArticlesContent(windowElement, moduleConfig.content);
                     } else if (moduleId === 'innovation' && moduleConfig.content) {
@@ -2590,47 +2814,78 @@
             const windowContent = windowElement.querySelector('.window-content');
             if (!windowContent) return;
             
-            // Build the active pitches HTML
-            let activePitchesHtml = '';
-            if (content.activePitches) {
-                content.activePitches.forEach(pitch => {
-                    const viewLinkHtml = pitch.viewLink ? 
-                        `<button onclick="openIframeWindow('${pitch.viewLink}', '${pitch.name}', 900, 700)" style="background: #EB008B; color: white; border: none; padding: 4px 8px; margin-left: 10px; cursor: pointer; border-radius: 2px;">[VIEW]</button>` : '';
-                    const downloadLinkHtml = pitch.downloadLink ? 
-                        `<a href="${pitch.downloadLink}" target="_blank" style="color: #00ff00; text-decoration: none; margin-left: 5px;">[DOWNLOAD]</a>` : '';
+            // Pipeline stage definitions
+            const stages = {
+                warmLeads: { name: 'WARM LEADS', color: '#ef4444' },
+                pitchesHappening: { name: 'PITCHES HAPPENING', color: '#f97316' },
+                pitchSubmitted: { name: 'PITCH SUBMITTED', color: '#eab308' },
+                pitchPresented: { name: 'PITCH PRESENTED', color: '#22c55e' },
+                pitchWon: { name: 'PITCH WON', color: '#3b82f6' }
+            };
+            
+            // Build pipeline columns HTML
+            let pipelineHtml = '';
+            Object.entries(stages).forEach(([stageKey, stage]) => {
+                const items = content[stageKey] || [];
+                const count = items.length;
+                
+                let itemsHtml = '';
+                items.forEach(item => {
+                    const deckLinkHtml = item.deckLink ? 
+                        `<button onclick="openIframeWindow('${item.deckLink}', '${item.name} - Deck', 900, 700)" style="background: #EB008B; color: white; border: none; padding: 2px 6px; margin: 2px; cursor: pointer; border-radius: 2px; font-size: 10px;">[DECK]</button>` : '';
+                    const briefLinkHtml = item.briefLink ? 
+                        `<button onclick="openIframeWindow('${item.briefLink}', '${item.name} - Brief', 900, 700)" style="background: #059669; color: white; border: none; padding: 2px 6px; margin: 2px; cursor: pointer; border-radius: 2px; font-size: 10px;">[BRIEF]</button>` : '';
                     
-                    activePitchesHtml += `
-                        <p>▸ ${pitch.name}${viewLinkHtml}${downloadLinkHtml}</p>
-                        <div class="progress-bar">
-                            <div class="progress-fill" style="width: ${pitch.progress}%;"></div>
+                    // Smart data detection in case fields are swapped
+                    let dueDate = '';
+                    let office = '';
+                    
+                    // Check if dueDate looks like a date (contains numbers) or office code
+                    if (item.dueDate && item.dueDate.match(/\d{4}-\d{2}-\d{2}/)) {
+                        dueDate = new Date(item.dueDate).toLocaleDateString();
+                    } else if (item.dueDate && item.dueDate.match(/^(LON|NY|LA|TK)$/)) {
+                        office = `[${item.dueDate}]`; // dueDate field contains office
+                    }
+                    
+                    // Check if office looks like a date or office code
+                    if (item.office && item.office.match(/\d{4}-\d{2}-\d{2}/)) {
+                        dueDate = new Date(item.office).toLocaleDateString(); // office field contains date
+                    } else if (item.office && item.office.match(/^(LON|NY|LA|TK)$/)) {
+                        office = `[${item.office}]`;
+                    }
+                    
+                    itemsHtml += `
+                        <div class="pipeline-item" style="background: rgba(0,0,0,0.3); padding: 8px; margin: 4px 0; border-radius: 4px; font-size: 11px;">
+                            <div style="font-weight: bold; color: white; margin-bottom: 4px;">${item.name}</div>
+                            <div style="color: #b0b0b0; margin-bottom: 4px;">
+                                ${dueDate ? `📅 ${dueDate}` : ''} ${office}
+                            </div>
+                            <div>${deckLinkHtml}${briefLinkHtml}</div>
                         </div>
                     `;
                 });
-            }
+                
+                pipelineHtml += `
+                    <div class="pipeline-column" style="flex: 1; margin: 0 4px; min-height: 200px;">
+                        <div class="pipeline-header" style="background: ${stage.color}; color: white; padding: 8px; text-align: center; font-weight: bold; font-size: 11px; margin-bottom: 8px; border-radius: 4px;">
+                            ${stage.name} <span style="background: rgba(0,0,0,0.3); padding: 2px 6px; border-radius: 10px; margin-left: 4px;">(${count})</span>
+                        </div>
+                        <div class="pipeline-items" style="min-height: 150px;">
+                            ${itemsHtml}
+                        </div>
+                    </div>
+                `;
+            });
             
-            // Build the upcoming meetings HTML
-            let upcomingMeetingsHtml = '';
-            if (content.upcomingMeetings) {
-                content.upcomingMeetings.forEach(meeting => {
-                    const className = meeting.urgent ? 'class="blink"' : '';
-                    upcomingMeetingsHtml += `<p ${className}>► ${meeting.time} - ${meeting.client}</p>`;
-                });
-            }
-            
-            // Update the window content
+            // Update the window content with horizontal layout
             windowContent.innerHTML = `
-                <div class="ascii-art">
+                <div class="ascii-art" style="margin-bottom: 12px;">
     ╔══════════════════════════════╗
     ║  ${content.header || 'RALPH PIPELINE TRACKER 1.0'}  ║
     ╚══════════════════════════════╝
                 </div>
-                <div class="module-item">
-                    <h3>ACTIVE PITCHES</h3>
-                    ${activePitchesHtml}
-                </div>
-                <div class="module-item">
-                    <h3>UPCOMING MEETINGS</h3>
-                    ${upcomingMeetingsHtml}
+                <div class="pipeline-container" style="display: flex; gap: 8px; height: 250px; overflow-x: auto;">
+                    ${pipelineHtml}
                 </div>
             `;
             
@@ -3187,7 +3442,7 @@
             let progress = 0;
             let messageIndex = 0;
             
-            const bootInterval = setInterval(() => {
+            let bootInterval = setInterval(() => {
                 progress += Math.random() * 15;
                 if (progress > 100) progress = 100;
                 
@@ -3479,8 +3734,9 @@
             // Start boot sequence
             bootSequence();
             
-            // Start clock
-            setInterval(updateClock, 1000);
+            // Start clock with tracked interval
+            const clockInterval = setInterval(updateClock, 1000);
+            AppState.intervals.push(clockInterval);
             updateClock();
             
             // Handle responsive design
@@ -3528,7 +3784,7 @@
         async function refreshConfigFromServer() {
             console.log('🔄 CHECKING FOR CONFIG UPDATES FROM SERVER');
             try {
-                const response = await fetch('/api/get-config');
+                const response = await fetch(`/api/get-config?t=${Date.now()}`);
                 console.log('📡 Config fetch response status:', response.status);
                 
                 if (response.ok) {
@@ -3563,8 +3819,19 @@
             }
         }
         
-        // Periodically check for config updates (every 10 seconds for testing)
-        setInterval(refreshConfigFromServer, 10000);
+        // Periodically check for config updates (every 30 seconds for production)
+        const configInterval = setInterval(refreshConfigFromServer, 30000);
+        AppState.intervals.push(configInterval);
+        
+        // Cleanup function for when page unloads
+        window.addEventListener('beforeunload', () => {
+            // Clear all intervals
+            AppState.intervals.forEach(id => clearInterval(id));
+            // Clear all timeouts
+            AppState.timeouts.forEach(id => clearTimeout(id));
+            // Clear all animation frames
+            AppState.rafIds.forEach(id => cancelAnimationFrame(id));
+        });
         
         // Start application when DOM is ready
         if (document.readyState === 'loading') {

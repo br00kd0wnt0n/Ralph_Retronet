@@ -299,10 +299,37 @@
         .btn-primary {
             background: var(--ralph-pink);
             color: white;
+            position: relative;
         }
 
         .btn-primary:hover {
             background: var(--ralph-pink-light);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(235, 0, 139, 0.3);
+        }
+        
+        .btn-primary:active {
+            background: #10b981;
+            transform: translateY(0);
+            box-shadow: 0 2px 6px rgba(16, 185, 129, 0.4);
+        }
+        
+        .btn-primary.success-flash {
+            background: #10b981 !important;
+            animation: successPulse 0.6s ease-out;
+        }
+        
+        @keyframes successPulse {
+            0% { 
+                background: #10b981;
+                box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7);
+            }
+            70% {
+                box-shadow: 0 0 0 10px rgba(16, 185, 129, 0);
+            }
+            100% {
+                box-shadow: 0 0 0 0 rgba(16, 185, 129, 0);
+            }
         }
 
         .btn-secondary {
@@ -326,6 +353,36 @@
             margin-top: 24px;
             padding-top: 24px;
             border-top: 1px solid var(--border-color);
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        
+        .module-status {
+            margin-left: 10px;
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 13px;
+            font-weight: 500;
+            opacity: 0;
+            transition: all 0.3s ease;
+            transform: translateY(-5px);
+        }
+        
+        .module-status.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .module-status.success {
+            background: rgba(16, 185, 129, 0.1);
+            border: 1px solid var(--success);
+            color: var(--success);
+        }
+        
+        .module-status.error {
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid var(--error);
+            color: var(--error);
         }
 
         .module-list {
@@ -673,13 +730,32 @@
                     </div>
 
                     <div class="form-field">
-                        <label>Welcome Message</label>
-                        <textarea id="welcomeMessage">Welcome to RALPH's Super-Intranet!</textarea>
+                        <label>Welcome Message <span style="color: #666; font-size: 12px;">(Initial greeting when chatbot opens)</span></label>
+                        <input type="text" id="welcomeMessage" value="Welcome to RALPH's Super-Intranet!" style="width: 100%; padding: 8px; font-size: 14px;">
+                    </div>
+                    
+                    <div class="form-field">
+                        <label>Help Text <span style="color: #666; font-size: 12px;">("Here's what you can do:" section)</span></label>
+                        <textarea id="helpText" style="min-height: 150px; font-family: 'Courier New', monospace; font-size: 13px;">Here's what you can do:
+► Click any desktop icon to open modules
+► Drag windows by their title bars
+► Minimize, maximize, or close windows
+► Submit suggestions in the Suggestion Box
+► Accept monthly creative challenges
+► Check project pipelines and deadlines
+► Send shoutouts to team members</textarea>
+                        <div style="margin-top: 8px;">
+                            <button type="button" id="updateWelcomeBtn" onclick="updateChatbotContent()" class="btn btn-primary">💾 Update Chatbot Content</button>
+                            <div class="module-status" id="status-chatbot-content" style="display: inline-block; margin-left: 10px;"></div>
+                        </div>
                     </div>
 
-                    <div class="form-field">
-                        <label>Custom System Prompt</label>
-                        <textarea id="systemPrompt" rows="10" placeholder="Enter your custom system prompt...">You are the RALPH Assistant, helping employees with company information and creative projects.</textarea>
+                    <div class="form-field" style="margin-top: 20px; padding-top: 20px; border-top: 1px solid var(--border-color);">
+                        <label>System Prompt <span style="color: #666; font-size: 12px;">(Defines AI personality and knowledge base)</span></label>
+                        <div id="promptLastUpdated" style="margin-bottom: 8px; padding: 6px 10px; background: #2196F3; color: white; border-radius: 4px; font-size: 12px;">
+                            ℹ️ Loading prompt info...
+                        </div>
+                        <textarea id="systemPrompt" rows="15" placeholder="Enter your custom system prompt..." style="font-family: 'Courier New', monospace; font-size: 12px;"></textarea>
                         <div style="margin-top: 8px; display: flex; gap: 8px; align-items: center;">
                             <input type="text" id="promptAuthor" placeholder="Your name" style="width: 120px; padding: 4px; font-size: 12px;">
                             <input type="text" id="promptComment" placeholder="Brief description of changes (optional)" style="flex: 1; padding: 4px; font-size: 12px;">
@@ -709,8 +785,8 @@
                     </div>
 
                     <div class="form-field">
-                        <label>Boot Messages (one per line)</label>
-                        <textarea id="bootMessages" rows="8">Loading system kernel...
+                        <label>Boot Messages <span style="color: #666; font-size: 12px;">(One per line - displays during boot sequence)</span></label>
+                        <textarea id="bootMessages" rows="8" style="min-height: 200px;">Loading system kernel...
 Initializing RALPH protocols...
 Checking security clearance...
 Loading user preferences...
@@ -718,6 +794,10 @@ Mounting network drives...
 Starting creative services...
 Loading project database...
 System ready!</textarea>
+                        <div style="margin-top: 8px;">
+                            <button type="button" id="updateBootBtn" onclick="updateBootMessages()" class="btn btn-primary">💾 Update Boot Messages</button>
+                            <div class="module-status" id="status-boot" style="display: inline-block; margin-left: 10px;"></div>
+                        </div>
                     </div>
                 </div>
 
@@ -818,15 +898,21 @@ System ready!</textarea>
                     enabled: true,
                     content: {
                         header: "RALPH PIPELINE TRACKER 1.0",
-                        activePitches: [
-                            { name: "Global Tech Corp - Video Campaign", progress: 75, viewLink: "", downloadLink: "" },
-                            { name: "Fashion Brand X - Social Strategy", progress: 45, viewLink: "", downloadLink: "" },
-                            { name: "Auto Company Z - Launch Film", progress: 90, viewLink: "", downloadLink: "" }
+                        warmLeads: [
+                            { name: "Tech Startup - Brand Identity", dueDate: "2024-12-30", office: "NY", deckLink: "", briefLink: "" }
                         ],
-                        upcomingMeetings: [
-                            { time: "Tomorrow 2:00 PM", client: "Tech Startup Pitch", urgent: true },
-                            { time: "Thursday", client: "Beauty Brand Presentation", urgent: false },
-                            { time: "Next Week", client: "Entertainment Client RFP", urgent: false }
+                        pitchesHappening: [
+                            { name: "Global Tech Corp - Video Campaign", dueDate: "2024-12-20", office: "LON", deckLink: "", briefLink: "" },
+                            { name: "Fashion Brand X - Social Strategy", dueDate: "2024-12-22", office: "LA", deckLink: "", briefLink: "" }
+                        ],
+                        pitchSubmitted: [
+                            { name: "Auto Company Z - Launch Film", dueDate: "2024-12-25", office: "NY", deckLink: "", briefLink: "" }
+                        ],
+                        pitchPresented: [
+                            { name: "Beauty Brand Presentation", dueDate: "2024-12-18", office: "LA", deckLink: "", briefLink: "" }
+                        ],
+                        pitchWon: [
+                            { name: "Entertainment Client RFP", dueDate: "2024-12-15", office: "TK", deckLink: "", briefLink: "" }
                         ]
                     },
                     apiEndpoint: null
@@ -1068,6 +1154,39 @@ System ready!</textarea>
 
         let currentConfig = {};
         let isLoggedIn = false;
+        
+        // DOM cache for better performance
+        const DOMCache = {
+            elements: {},
+            get(id) {
+                if (!this.elements[id]) {
+                    this.elements[id] = document.getElementById(id);
+                }
+                return this.elements[id];
+            },
+            querySelector(selector) {
+                if (!this.elements[selector]) {
+                    this.elements[selector] = document.querySelector(selector);
+                }
+                return this.elements[selector];
+            },
+            clear() {
+                this.elements = {};
+            }
+        };
+        
+        // Debounce utility for input handlers
+        function debounce(func, wait) {
+            let timeout;
+            return function executedFunction(...args) {
+                const later = () => {
+                    clearTimeout(timeout);
+                    func(...args);
+                };
+                clearTimeout(timeout);
+                timeout = setTimeout(later, wait);
+            };
+        }
 
         // Login functionality
         document.getElementById('loginForm').addEventListener('submit', (e) => {
@@ -1172,6 +1291,7 @@ System ready!</textarea>
             if (currentConfig.chatbot) {
                 document.getElementById('chatbotTitle').value = currentConfig.chatbot.title || '';
                 document.getElementById('welcomeMessage').value = currentConfig.chatbot.welcomeMessage || '';
+                document.getElementById('helpText').value = currentConfig.chatbot.helpText || '';
                 
                 if (currentConfig.chatbot.openai) {
                     document.getElementById('openaiModel').value = currentConfig.chatbot.openai.model || 'gpt-4';
@@ -1272,8 +1392,9 @@ System ready!</textarea>
 
             editorHtml += `
                 <div class="action-bar">
-                    <button class="btn btn-primary" onclick="updateModule('${moduleId}')">💾 Update Module</button>
+                    <button class="btn btn-primary" id="updateBtn-${moduleId}" onclick="updateModule('${moduleId}')">💾 Update Module</button>
                     <button class="btn btn-secondary" onclick="resetModule('${moduleId}')">🔄 Reset to Default</button>
+                    <div class="module-status" id="status-${moduleId}"></div>
                 </div>
             `;
 
@@ -1317,49 +1438,55 @@ System ready!</textarea>
             }
         }
 
-        // New Business Pipeline Editor (renamed from New Biz Pipeline)
+        // New Business Pipeline Editor - Kanban Style
         function getNewBizEditor(content) {
-            const activePitches = content.activePitches || [];
-            const upcomingMeetings = content.upcomingMeetings || [];
+            const stages = {
+                warmLeads: content.warmLeads || [],
+                pitchesHappening: content.pitchesHappening || [],
+                pitchSubmitted: content.pitchSubmitted || [],
+                pitchPresented: content.pitchPresented || [],
+                pitchWon: content.pitchWon || []
+            };
+            const stageLabels = {
+                warmLeads: 'WARM LEADS',
+                pitchesHappening: 'PITCHES HAPPENING', 
+                pitchSubmitted: 'PITCH SUBMITTED',
+                pitchPresented: 'PITCH PRESENTED',
+                pitchWon: 'PITCH WON'
+            };
 
             return `
                 <div style="background: #1e1e1e; padding: 20px; border-radius: 8px; margin: 16px 0;">
-                    <h4 style="color: var(--ralph-pink); margin-bottom: 16px;">📊 Active Pitches</h4>
-                    <div id="activePitches">
-                        ${activePitches.map((pitch, index) => `
-                            <div class="pitch-item draggable-item" draggable="true" style="background: #2d2d2d; padding: 12px; margin-bottom: 8px; border-radius: 6px;">
-                                <div style="display: flex; gap: 12px; align-items: center; margin-bottom: 8px;">
-                                    <span class="drag-handle">⋮⋮</span>
-                                    <button onclick="removePitch(${index})" style="background: #ef4444; color: white; border: none; border-radius: 4px; padding: 4px 8px; cursor: pointer;">✕</button>
-                                    <input type="text" value="${pitch.name}" placeholder="Pitch name" style="flex: 1; background: #1e1e1e; border: 1px solid #404040; color: white; padding: 8px; border-radius: 4px;">
-                                    <input type="number" value="${pitch.progress}" min="0" max="100" placeholder="Progress %" style="width: 80px; background: #1e1e1e; border: 1px solid #404040; color: white; padding: 8px; border-radius: 4px;">
-                                    <span style="color: #b0b0b0;">%</span>
-                                </div>
-                                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-left: 44px;">
-                                    <input type="url" value="${pitch.viewLink || ''}" placeholder="Google Slides View Link" style="background: #1e1e1e; border: 1px solid #404040; color: white; padding: 6px; border-radius: 4px; font-size: 12px;">
-                                    <input type="url" value="${pitch.downloadLink || ''}" placeholder="Brief Download Link" style="background: #1e1e1e; border: 1px solid #404040; color: white; padding: 6px; border-radius: 4px; font-size: 12px;">
-                                </div>
+                    <h4 style="color: var(--ralph-pink); margin-bottom: 16px;">📊 New Business Pipeline - Kanban View</h4>
+                    <p style="color: #b0b0b0; font-size: 12px; margin-bottom: 20px;">Manage your pipeline across all stages from warm leads to won pitches</p>
+                    
+                    ${Object.keys(stages).map(stageKey => `
+                        <div style="margin-bottom: 24px;">
+                            <h5 style="color: var(--ralph-pink); margin-bottom: 12px;">${stageLabels[stageKey]} (${stages[stageKey].length})</h5>
+                            <div id="${stageKey}Items" style="border: 2px dashed #404040; padding: 12px; border-radius: 6px; min-height: 100px;">
+                                ${stages[stageKey].map((item, index) => `
+                                    <div class="pipeline-item-editor" style="background: #2d2d2d; padding: 12px; margin-bottom: 8px; border-radius: 6px; border-left: 4px solid var(--ralph-pink);">
+                                        <div style="display: flex; gap: 8px; align-items: center; margin-bottom: 8px;">
+                                            <button onclick="removePipelineItem('${stageKey}', ${index})" style="background: #ef4444; color: white; border: none; border-radius: 4px; padding: 4px 8px; cursor: pointer; font-size: 10px;">✕</button>
+                                            <input type="text" value="${item.name || ''}" placeholder="Client/Project Name" style="flex: 2; background: #1e1e1e; border: 1px solid #404040; color: white; padding: 6px; border-radius: 4px; font-size: 12px;">
+                                            <select style="background: #1e1e1e; border: 1px solid #404040; color: white; padding: 6px; border-radius: 4px; font-size: 12px;">
+                                                <option value="LON" ${item.office === 'LON' ? 'selected' : ''}>LON</option>
+                                                <option value="NY" ${item.office === 'NY' ? 'selected' : ''}>NY</option>
+                                                <option value="LA" ${item.office === 'LA' ? 'selected' : ''}>LA</option>
+                                                <option value="TK" ${item.office === 'TK' ? 'selected' : ''}>TK</option>
+                                            </select>
+                                            <input type="date" value="${item.dueDate || ''}" style="background: #1e1e1e; border: 1px solid #404040; color: white; padding: 6px; border-radius: 4px; font-size: 12px;">
+                                        </div>
+                                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+                                            <input type="url" value="${item.deckLink || ''}" placeholder="Google Drive Deck Link" style="background: #1e1e1e; border: 1px solid #404040; color: white; padding: 6px; border-radius: 4px; font-size: 11px;">
+                                            <input type="url" value="${item.briefLink || ''}" placeholder="Google Drive Brief Link" style="background: #1e1e1e; border: 1px solid #404040; color: white; padding: 6px; border-radius: 4px; font-size: 11px;">
+                                        </div>
+                                    </div>
+                                `).join('')}
                             </div>
-                        `).join('')}
-                    </div>
-                    <button onclick="addPitch()" class="btn btn-secondary" style="margin-top: 8px;">+ Add Pitch</button>
-
-                    <h4 style="color: var(--ralph-pink); margin: 24px 0 16px;">📅 Upcoming Meetings</h4>
-                    <div id="upcomingMeetings">
-                        ${upcomingMeetings.map((meeting, index) => `
-                            <div class="meeting-item draggable-item" draggable="true" style="background: #2d2d2d; padding: 12px; margin-bottom: 8px; border-radius: 6px; display: flex; gap: 12px; align-items: center;">
-                                <span class="drag-handle">⋮⋮</span>
-                                <button onclick="removeMeeting(${index})" style="background: #ef4444; color: white; border: none; border-radius: 4px; padding: 4px 8px; cursor: pointer;">✕</button>
-                                <input type="text" value="${meeting.time}" placeholder="Time" style="width: 150px; background: #1e1e1e; border: 1px solid #404040; color: white; padding: 8px; border-radius: 4px;">
-                                <input type="text" value="${meeting.client}" placeholder="Client/Description" style="flex: 1; background: #1e1e1e; border: 1px solid #404040; color: white; padding: 8px; border-radius: 4px;">
-                                <label style="display: flex; align-items: center; gap: 8px; color: #b0b0b0;">
-                                    <input type="checkbox" ${meeting.urgent ? 'checked' : ''}>
-                                    Urgent
-                                </label>
-                            </div>
-                        `).join('')}
-                    </div>
-                    <button onclick="addMeeting()" class="btn btn-secondary" style="margin-top: 8px;">+ Add Meeting</button>
+                            <button onclick="addPipelineItem('${stageKey}')" class="btn btn-secondary" style="margin-top: 8px; font-size: 12px;">+ Add to ${stageLabels[stageKey]}</button>
+                        </div>
+                    `).join('')}
                 </div>
             `;
         }
@@ -1864,12 +1991,15 @@ System ready!</textarea>
             currentConfig.modules[moduleId] = updatedModule;
             
             console.log('💾 Saving configuration to server...');
+            // Show local status immediately
+            showModuleStatus(moduleId, 'Saving...', 'success');
+            
             // Save the updated configuration to server
-            saveConfigToServer();
+            saveConfigToServer(moduleId);
         }
 
         // Save configuration to server
-        async function saveConfigToServer() {
+        async function saveConfigToServer(moduleId = null) {
             console.log('🌐 SAVE CONFIG TO SERVER STARTED');
             console.log('📤 Sending config with modules:', Object.keys(currentConfig.modules || {}));
             
@@ -1889,7 +2019,13 @@ System ready!</textarea>
                 
                 if (result.success) {
                     console.log('✅ Configuration saved successfully to server!');
-                    showAlert('Configuration saved successfully! Frontend will update automatically.', 'success');
+                    
+                    // Show local module status if moduleId is provided
+                    if (moduleId) {
+                        showModuleStatus(moduleId, 'Updated successfully!', 'success');
+                    } else {
+                        showAlert('Configuration saved successfully! Frontend will update automatically.', 'success');
+                    }
                     
                     // Update the raw editor to reflect the changes
                     const rawEditor = document.getElementById('rawEditor');
@@ -1901,51 +2037,49 @@ System ready!</textarea>
                     console.log('🎉 UPDATE PROCESS COMPLETED - Changes should appear on frontend within 10 seconds');
                 } else {
                     console.error('❌ Server returned failure:', result.message);
-                    showAlert('Failed to save configuration: ' + result.message, 'error');
+                    if (moduleId) {
+                        showModuleStatus(moduleId, 'Failed to save: ' + result.message, 'error');
+                    } else {
+                        showAlert('Failed to save configuration: ' + result.message, 'error');
+                    }
                 }
             } catch (error) {
                 console.error('💥 Save config error:', error);
-                showAlert('Error saving configuration: ' + error.message, 'error');
+                if (moduleId) {
+                    showModuleStatus(moduleId, 'Error saving: ' + error.message, 'error');
+                } else {
+                    showAlert('Error saving configuration: ' + error.message, 'error');
+                }
             }
         }
 
         // Collect WYSIWYG data for New Business Pipeline
         function getNewBizWYSIWYGData() {
-            const activePitches = [];
-            const activePitchesContainer = document.getElementById('activePitches');
-            if (activePitchesContainer) {
-                Array.from(activePitchesContainer.children).forEach(item => {
-                    const inputs = item.querySelectorAll('input');
-                    if (inputs.length >= 4) {
-                        activePitches.push({
-                            name: inputs[0].value,
-                            progress: parseInt(inputs[1].value) || 0,
-                            viewLink: inputs[2].value,
-                            downloadLink: inputs[3].value
-                        });
-                    }
-                });
-            }
-
-            const upcomingMeetings = [];
-            const meetingsContainer = document.getElementById('upcomingMeetings');
-            if (meetingsContainer) {
-                Array.from(meetingsContainer.children).forEach(item => {
-                    const inputs = item.querySelectorAll('input');
-                    if (inputs.length >= 3) {
-                        upcomingMeetings.push({
-                            time: inputs[0].value,
-                            client: inputs[1].value,
-                            urgent: inputs[2].checked
-                        });
-                    }
-                });
-            }
+            const stages = ['warmLeads', 'pitchesHappening', 'pitchSubmitted', 'pitchPresented', 'pitchWon'];
+            const pipelineData = {};
+            
+            stages.forEach(stage => {
+                pipelineData[stage] = [];
+                const container = document.getElementById(`${stage}Items`);
+                if (container) {
+                    Array.from(container.children).forEach(item => {
+                        const inputs = item.querySelectorAll('input, select');
+                        if (inputs.length >= 5) {
+                            pipelineData[stage].push({
+                                name: inputs[0].value || '',
+                                office: inputs[1].value || '',
+                                dueDate: inputs[2].value || '',
+                                deckLink: inputs[3].value || '',
+                                briefLink: inputs[4].value || ''
+                            });
+                        }
+                    });
+                }
+            });
 
             return {
                 header: "RALPH PIPELINE TRACKER 1.0",
-                activePitches,
-                upcomingMeetings
+                ...pipelineData
             };
         }
 
@@ -2340,6 +2474,7 @@ System ready!</textarea>
                 ...currentConfig.chatbot,
                 title: document.getElementById('chatbotTitle').value,
                 welcomeMessage: document.getElementById('welcomeMessage').value,
+                helpText: document.getElementById('helpText').value,
                 openai: {
                     ...currentConfig.chatbot.openai,
                     enabled: document.getElementById('chatbotToggle').checked,
@@ -2423,6 +2558,8 @@ System ready!</textarea>
                     showAlert(`Prompt saved successfully! Version: ${result.version}`, 'success');
                     document.getElementById('promptComment').value = '';
                     updatePromptStatus();
+                    // Refresh the last updated timestamp
+                    loadPromptLastUpdated();
                 } else {
                     showAlert(result.message || 'Failed to save prompt', 'error');
                 }
@@ -2551,6 +2688,8 @@ System ready!</textarea>
                     showAlert(`Prompt restored to version ${versionId}!`, 'success');
                     document.querySelector('.modal').remove();
                     loadCurrentPrompt();
+                    // Refresh the last updated timestamp
+                    setTimeout(() => loadPromptLastUpdated(), 500);
                 } else {
                     showAlert(result.message || 'Failed to restore prompt', 'error');
                 }
@@ -2568,9 +2707,49 @@ System ready!</textarea>
                 if (result.success) {
                     document.getElementById('systemPrompt').value = result.prompt;
                     updatePromptStatus();
+                    
+                    // Load and display last updated info
+                    loadPromptLastUpdated();
                 }
             } catch (error) {
                 console.error('Error loading current prompt:', error);
+            }
+        }
+        
+        async function loadPromptLastUpdated() {
+            try {
+                const response = await fetch('/api/prompt-history');
+                const result = await response.json();
+                
+                if (result.success && result.history && result.history.length > 0) {
+                    // Get the most recent entry
+                    const latestEntry = result.history[result.history.length - 1];
+                    const date = new Date(latestEntry.timestamp);
+                    
+                    // Format date as "Mar 30 1pm EST" style
+                    const options = {
+                        month: 'short',
+                        day: 'numeric',
+                        hour: 'numeric',
+                        minute: '2-digit',
+                        hour12: true,
+                        timeZoneName: 'short'
+                    };
+                    
+                    const formattedDate = date.toLocaleString('en-US', options);
+                    const lastUpdatedEl = document.getElementById('promptLastUpdated');
+                    
+                    if (lastUpdatedEl) {
+                        lastUpdatedEl.innerHTML = `ℹ️ Last updated: ${formattedDate} by ${latestEntry.author || 'Unknown'}`;
+                    }
+                } else {
+                    const lastUpdatedEl = document.getElementById('promptLastUpdated');
+                    if (lastUpdatedEl) {
+                        lastUpdatedEl.innerHTML = `ℹ️ Using default system prompt`;
+                    }
+                }
+            } catch (error) {
+                console.error('Error loading prompt history:', error);
             }
         }
         
@@ -2596,6 +2775,89 @@ System ready!</textarea>
             setTimeout(() => {
                 alertDiv.remove();
             }, 5000);
+        }
+        
+        // Update chatbot content (welcome message and help text)
+        function updateChatbotContent() {
+            const welcomeMessage = document.getElementById('welcomeMessage').value.trim();
+            const helpText = document.getElementById('helpText').value.trim();
+            
+            if (!welcomeMessage) {
+                showModuleStatus('chatbot-content', 'Welcome message cannot be empty', 'error');
+                return;
+            }
+            
+            if (!helpText) {
+                showModuleStatus('chatbot-content', 'Help text cannot be empty', 'error');
+                return;
+            }
+            
+            // Update the config
+            currentConfig.chatbot = {
+                ...currentConfig.chatbot,
+                welcomeMessage: welcomeMessage,
+                helpText: helpText
+            };
+            
+            // Show immediate feedback
+            showModuleStatus('chatbot-content', 'Saving...', 'success');
+            
+            // Save to server
+            saveConfigToServer('chatbot-content');
+        }
+        
+        // Update boot messages
+        function updateBootMessages() {
+            const bootMessagesText = document.getElementById('bootMessages').value.trim();
+            
+            if (!bootMessagesText) {
+                showModuleStatus('boot', 'Boot messages cannot be empty', 'error');
+                return;
+            }
+            
+            // Split into array and filter empty lines
+            const bootMessages = bootMessagesText.split('\n').filter(msg => msg.trim());
+            
+            if (bootMessages.length === 0) {
+                showModuleStatus('boot', 'Please add at least one boot message', 'error');
+                return;
+            }
+            
+            // Update the config
+            currentConfig.system = {
+                ...currentConfig.system,
+                bootMessages: bootMessages
+            };
+            
+            // Show immediate feedback
+            showModuleStatus('boot', 'Saving...', 'success');
+            
+            // Save to server
+            saveConfigToServer('boot');
+        }
+        
+        // Show local module status message
+        function showModuleStatus(moduleId, message, type) {
+            const statusEl = document.getElementById(`status-${moduleId}`);
+            const buttonEl = document.getElementById(`updateBtn-${moduleId}`);
+            
+            if (statusEl) {
+                statusEl.textContent = message;
+                statusEl.className = `module-status ${type} show`;
+                
+                // Add success flash to button
+                if (type === 'success' && buttonEl) {
+                    buttonEl.classList.add('success-flash');
+                    setTimeout(() => {
+                        buttonEl.classList.remove('success-flash');
+                    }, 600);
+                }
+                
+                // Hide message after 4 seconds
+                setTimeout(() => {
+                    statusEl.classList.remove('show');
+                }, 4000);
+            }
         }
 
         function previewSite() {
@@ -2701,11 +2963,20 @@ System ready!</textarea>
             const containerId = container.id;
             
             switch (containerId) {
-                case 'activePitches':
-                    updatePitchIndices();
+                case 'warmLeadsItems':
+                    updatePipelineIndices('warmLeads');
                     break;
-                case 'upcomingMeetings':
-                    updateMeetingIndices();
+                case 'pitchesHappeningItems':
+                    updatePipelineIndices('pitchesHappening');
+                    break;
+                case 'pitchSubmittedItems':
+                    updatePipelineIndices('pitchSubmitted');
+                    break;
+                case 'pitchPresentedItems':
+                    updatePipelineIndices('pitchPresented');
+                    break;
+                case 'pitchWonItems':
+                    updatePipelineIndices('pitchWon');
                     break;
                 case 'thisMonth':
                     updateThisMonthIndices();
@@ -2765,74 +3036,57 @@ System ready!</textarea>
         }
 
         // WYSIWYG Editor Functions for New Business Pipeline
-        function addPitch() {
-            const container = document.getElementById('activePitches');
+        function addPipelineItem(stage) {
+            const container = document.getElementById(`${stage}Items`);
+            if (!container) return;
+            
             const newIndex = container.children.length;
-            const newPitchHtml = `
-                <div class="pitch-item draggable-item" draggable="true" style="background: #2d2d2d; padding: 12px; margin-bottom: 8px; border-radius: 6px;">
-                    <div style="display: flex; gap: 12px; align-items: center; margin-bottom: 8px;">
-                        <span class="drag-handle">⋮⋮</span>
-                        <button onclick="removePitch(${newIndex})" style="background: #ef4444; color: white; border: none; border-radius: 4px; padding: 4px 8px; cursor: pointer;">✕</button>
-                        <input type="text" value="" placeholder="Pitch name" style="flex: 1; background: #1e1e1e; border: 1px solid #404040; color: white; padding: 8px; border-radius: 4px;">
-                        <input type="number" value="0" min="0" max="100" placeholder="Progress %" style="width: 80px; background: #1e1e1e; border: 1px solid #404040; color: white; padding: 8px; border-radius: 4px;">
-                        <span style="color: #b0b0b0;">%</span>
+            const newItemHtml = `
+                <div class="pipeline-item" style="background: #2d2d2d; padding: 12px; margin-bottom: 8px; border-radius: 6px;">
+                    <div style="display: flex; gap: 8px; align-items: center; margin-bottom: 8px;">
+                        <button onclick="removePipelineItem('${stage}', ${newIndex})" style="background: #ef4444; color: white; border: none; border-radius: 4px; padding: 4px 8px; cursor: pointer; font-size: 12px;">✕</button>
+                        <input type="text" placeholder="Client/Project Name" style="flex: 1; background: #1e1e1e; border: 1px solid #404040; color: white; padding: 6px; border-radius: 4px; font-size: 12px;">
                     </div>
-                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-left: 44px;">
-                        <input type="url" value="" placeholder="Google Slides View Link" style="background: #1e1e1e; border: 1px solid #404040; color: white; padding: 6px; border-radius: 4px; font-size: 12px;">
-                        <input type="url" value="" placeholder="Brief Download Link" style="background: #1e1e1e; border: 1px solid #404040; color: white; padding: 6px; border-radius: 4px; font-size: 12px;">
+                    <div style="display: grid; grid-template-columns: 1fr auto; gap: 8px; margin-bottom: 8px;">
+                        <input type="date" placeholder="Due Date" style="background: #1e1e1e; border: 1px solid #404040; color: white; padding: 6px; border-radius: 4px; font-size: 12px;">
+                        <select style="background: #1e1e1e; border: 1px solid #404040; color: white; padding: 6px; border-radius: 4px; font-size: 12px; width: 80px;">
+                            <option value="">Office</option>
+                            <option value="LON">LON</option>
+                            <option value="NY">NY</option>
+                            <option value="LA">LA</option>
+                            <option value="TK">TK</option>
+                        </select>
+                    </div>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+                        <input type="url" placeholder="Deck Link (Google Drive)" style="background: #1e1e1e; border: 1px solid #404040; color: white; padding: 6px; border-radius: 4px; font-size: 12px;">
+                        <input type="url" placeholder="Brief Link (Google Drive)" style="background: #1e1e1e; border: 1px solid #404040; color: white; padding: 6px; border-radius: 4px; font-size: 12px;">
                     </div>
                 </div>
             `;
-            container.insertAdjacentHTML('beforeend', newPitchHtml);
-            updatePitchIndices();
-            initializeDragAndDrop();
+            container.insertAdjacentHTML('beforeend', newItemHtml);
+            updatePipelineIndices(stage);
         }
 
-        function removePitch(index) {
-            const container = document.getElementById('activePitches');
-            container.children[index].remove();
-            updatePitchIndices();
+        function removePipelineItem(stage, index) {
+            const container = document.getElementById(`${stage}Items`);
+            if (container && container.children[index]) {
+                container.children[index].remove();
+                updatePipelineIndices(stage);
+            }
         }
 
-        function updatePitchIndices() {
-            const container = document.getElementById('activePitches');
+        function updatePipelineIndices(stage) {
+            const container = document.getElementById(`${stage}Items`);
+            if (!container) return;
+            
             Array.from(container.children).forEach((item, index) => {
                 const removeBtn = item.querySelector('button');
-                removeBtn.setAttribute('onclick', `removePitch(${index})`);
+                if (removeBtn) {
+                    removeBtn.setAttribute('onclick', `removePipelineItem('${stage}', ${index})`);
+                }
             });
         }
 
-        function addMeeting() {
-            const container = document.getElementById('upcomingMeetings');
-            const newIndex = container.children.length;
-            const newMeetingHtml = `
-                <div class="meeting-item" style="background: #2d2d2d; padding: 12px; margin-bottom: 8px; border-radius: 6px; display: flex; gap: 12px; align-items: center;">
-                    <button onclick="removeMeeting(${newIndex})" style="background: #ef4444; color: white; border: none; border-radius: 4px; padding: 4px 8px; cursor: pointer;">✕</button>
-                    <input type="text" value="" placeholder="Time" style="width: 150px; background: #1e1e1e; border: 1px solid #404040; color: white; padding: 8px; border-radius: 4px;">
-                    <input type="text" value="" placeholder="Client/Description" style="flex: 1; background: #1e1e1e; border: 1px solid #404040; color: white; padding: 8px; border-radius: 4px;">
-                    <label style="display: flex; align-items: center; gap: 8px; color: #b0b0b0;">
-                        <input type="checkbox">
-                        Urgent
-                    </label>
-                </div>
-            `;
-            container.insertAdjacentHTML('beforeend', newMeetingHtml);
-            updateMeetingIndices();
-        }
-
-        function removeMeeting(index) {
-            const container = document.getElementById('upcomingMeetings');
-            container.children[index].remove();
-            updateMeetingIndices();
-        }
-
-        function updateMeetingIndices() {
-            const container = document.getElementById('upcomingMeetings');
-            Array.from(container.children).forEach((item, index) => {
-                const removeBtn = item.querySelector('button');
-                removeBtn.setAttribute('onclick', `removeMeeting(${index})`);
-            });
-        }
 
         // WYSIWYG Editor Functions for Premieres Calendar
         function addThisMonth() {

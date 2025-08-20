@@ -30,10 +30,12 @@ const CMS_CONFIG = {
         "welcomeMessage": "Welcome to RALPH Super-Intranet!",
         "helpText": "Here's what you can do:\n► Click any desktop icon to open modules\n► Drag windows by their title bars\n► Minimize, maximize, or close windows\n► Submit suggestions in the Suggestion Box\n► Accept monthly creative challenges\n► Check project pipelines and deadlines\n► Send shoutouts to team members",
         "openai": {
-            "enabled": true,
-            "model": "gpt-3.5-turbo",
+            "enabled": false,
+            "apiKey": "",
+            "model": "gpt-4",
             "temperature": 0.7,
             "maxTokens": 150,
+            "systemPrompt": "You are the RALPH company assistant. You help employees with:\n- Company policies and procedures\n- Project information and deadlines\n- Technical support\n- Creative inspiration\n- Team collaboration\nAlways maintain a friendly, professional tone and embody RALPH's creative spirit.",
             "fallbackResponses": [
                 "Processing request...",
                 "That's interesting! Tell me more.",
@@ -51,41 +53,91 @@ const CMS_CONFIG = {
             "enabled": true,
             "content": {
                 "header": "RALPH PIPELINE TRACKER 1.0",
-                "activePitches": [
+                "warmLeads": [
+                    {
+                        "name": "Waze",
+                        "dueDate": "LON",
+                        "office": "2024-12-30",
+                        "deckLink": "",
+                        "briefLink": ""
+                    },
+                    {
+                        "name": "BeReal",
+                        "dueDate": "2025-08-21",
+                        "office": "NY",
+                        "deckLink": "https://docs.google.com/presentation/d/1VHzjDvXklQQbiWdrBr7W_6A0xSrV9Sr0jsNZKt7hgsc/edit?slide=id.g36e66b67ba9_0_222#slide=id.g36e66b67ba9_0_222",
+                        "briefLink": ""
+                    },
+                    {
+                        "name": "Puma",
+                        "dueDate": "",
+                        "office": "LA",
+                        "deckLink": "",
+                        "briefLink": ""
+                    }
+                ],
+                "pitchesHappening": [
                     {
                         "name": "Global Tech Corp - Video Campaign",
-                        "progress": 75,
-                        "viewLink": "https://ralph-visual-canvas-production.up.railway.app/",
-                        "downloadLink": ""
+                        "dueDate": "LON",
+                        "office": "2024-12-20",
+                        "deckLink": "",
+                        "briefLink": ""
                     },
                     {
                         "name": "Fashion Brand X - Social Strategy",
-                        "progress": 45,
-                        "viewLink": "",
-                        "downloadLink": ""
-                    },
-                    {
-                        "name": "Auto Company Z - Launch Film",
-                        "progress": 90,
-                        "viewLink": "",
-                        "downloadLink": ""
+                        "dueDate": "LA",
+                        "office": "2024-12-22",
+                        "deckLink": "",
+                        "briefLink": ""
                     }
                 ],
-                "upcomingMeetings": [
+                "pitchSubmitted": [
                     {
-                        "time": "Tomorrow 2:00 PM",
-                        "client": "Tech Startup Pitch",
-                        "urgent": true
+                        "name": "Love is Blind - S9",
+                        "dueDate": "LA",
+                        "office": "2024-12-25",
+                        "deckLink": "",
+                        "briefLink": ""
+                    }
+                ],
+                "pitchPresented": [
+                    {
+                        "name": "Habit Burger",
+                        "dueDate": "LA",
+                        "office": "2024-12-18",
+                        "deckLink": "",
+                        "briefLink": ""
                     },
                     {
-                        "time": "Thursday",
-                        "client": "Beauty Brand Presentation",
-                        "urgent": false
+                        "name": "Cat in the Hat",
+                        "dueDate": "",
+                        "office": "LA",
+                        "deckLink": "",
+                        "briefLink": ""
                     },
                     {
-                        "time": "Next Week",
-                        "client": "Entertainment Client RFP",
-                        "urgent": false
+                        "name": "NatGeo - Pole to Pole",
+                        "dueDate": "",
+                        "office": "TK",
+                        "deckLink": "",
+                        "briefLink": ""
+                    }
+                ],
+                "pitchWon": [
+                    {
+                        "name": "BLIZZARD",
+                        "dueDate": "LA",
+                        "office": "2024-12-15",
+                        "deckLink": "",
+                        "briefLink": ""
+                    },
+                    {
+                        "name": "NatGeo - Limitless",
+                        "dueDate": "",
+                        "office": "LA",
+                        "deckLink": "",
+                        "briefLink": ""
                     }
                 ]
             },
