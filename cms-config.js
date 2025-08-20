@@ -28,7 +28,7 @@ const CMS_CONFIG = {
         "enabled": true,
         "title": "RALPH Assistant v1.0",
         "welcomeMessage": "Welcome to RALPH Super-Intranet!",
-        "helpText": "Here's what you can do:\n► Click any desktop icon to open modules\n► Drag windows by their title bars\n► Minimize, maximize, or close windows\n► Submit suggestions in the Suggestion Box\n► Accept monthly creative challenges\n► Check project pipelines and deadlines\n► Send shoutouts to team members",
+        "helpText": "Here's what you can do:\n► Click any desktop icon to open modules\n► Drag windows by their title bars\n► Minimize, maximize, or close windows\n► Submit suggestions in the Suggestion Box\n► Accept challenges\n► Check project pipelines and deadlines\n► Send shoutouts to team members",
         "openai": {
             "enabled": false,
             "apiKey": "",
@@ -55,23 +55,9 @@ const CMS_CONFIG = {
                 "header": "RALPH PIPELINE TRACKER 1.0",
                 "warmLeads": [
                     {
-                        "name": "Waze",
-                        "dueDate": "LON",
-                        "office": "2024-12-30",
-                        "deckLink": "",
-                        "briefLink": ""
-                    },
-                    {
-                        "name": "BeReal",
-                        "dueDate": "2025-08-21",
+                        "name": "Tech Startup - Brand Identity",
+                        "dueDate": "2024-12-30",
                         "office": "NY",
-                        "deckLink": "https://docs.google.com/presentation/d/1VHzjDvXklQQbiWdrBr7W_6A0xSrV9Sr0jsNZKt7hgsc/edit?slide=id.g36e66b67ba9_0_222#slide=id.g36e66b67ba9_0_222",
-                        "briefLink": ""
-                    },
-                    {
-                        "name": "Puma",
-                        "dueDate": "",
-                        "office": "LA",
                         "deckLink": "",
                         "briefLink": ""
                     }
@@ -79,63 +65,42 @@ const CMS_CONFIG = {
                 "pitchesHappening": [
                     {
                         "name": "Global Tech Corp - Video Campaign",
-                        "dueDate": "LON",
-                        "office": "2024-12-20",
+                        "dueDate": "2024-12-20",
+                        "office": "LON",
                         "deckLink": "",
                         "briefLink": ""
                     },
                     {
                         "name": "Fashion Brand X - Social Strategy",
-                        "dueDate": "LA",
-                        "office": "2024-12-22",
+                        "dueDate": "2024-12-22",
+                        "office": "LA",
                         "deckLink": "",
                         "briefLink": ""
                     }
                 ],
                 "pitchSubmitted": [
                     {
-                        "name": "Love is Blind - S9",
-                        "dueDate": "LA",
-                        "office": "2024-12-25",
+                        "name": "Auto Company Z - Launch Film",
+                        "dueDate": "2024-12-25",
+                        "office": "NY",
                         "deckLink": "",
                         "briefLink": ""
                     }
                 ],
                 "pitchPresented": [
                     {
-                        "name": "Habit Burger",
-                        "dueDate": "LA",
-                        "office": "2024-12-18",
-                        "deckLink": "",
-                        "briefLink": ""
-                    },
-                    {
-                        "name": "Cat in the Hat",
-                        "dueDate": "",
+                        "name": "Beauty Brand Presentation",
+                        "dueDate": "2024-12-18",
                         "office": "LA",
-                        "deckLink": "",
-                        "briefLink": ""
-                    },
-                    {
-                        "name": "NatGeo - Pole to Pole",
-                        "dueDate": "",
-                        "office": "TK",
                         "deckLink": "",
                         "briefLink": ""
                     }
                 ],
                 "pitchWon": [
                     {
-                        "name": "BLIZZARD",
-                        "dueDate": "LA",
-                        "office": "2024-12-15",
-                        "deckLink": "",
-                        "briefLink": ""
-                    },
-                    {
-                        "name": "NatGeo - Limitless",
-                        "dueDate": "",
-                        "office": "LA",
+                        "name": "Entertainment Client RFP",
+                        "dueDate": "2024-12-15",
+                        "office": "TK",
                         "deckLink": "",
                         "briefLink": ""
                     }
@@ -186,19 +151,33 @@ const CMS_CONFIG = {
             "apiEndpoint": null
         },
         "challenge": {
-            "title": "Monthly Creative Challenge",
+            "title": "Challenges",
             "icon": "🎨",
             "enabled": true,
             "content": {
-                "currentChallenge": {
-                    "month": "DECEMBER",
-                    "theme": "Retro Future",
-                    "description": "Create a 30-second concept using only 8-bit graphics and chiptune music!",
-                    "prize": "🏆 Golden Pixel Award + Extra PTO Day"
+                "creative": {
+                    "title": "The Worst LinkedIn Posts Possible",
+                    "objective": "We’re launching a LinkedIn series where we intentionally post the most cringe-worthy, try-hard, overly personal/professional mashup content possible—think inspirational overshares, humblebrags that miss the mark, and life milestones awkwardly tied to corporate jargon.",
+                    "tone": "- Overly earnest\n- Uncomfortably personal while pretending it’s professional\n- Full of cliché LinkedIn speak (“thrilled to announce,” “honored to be part of…”)\n- Often uses tenuous metaphors between personal events and business wins\n- Bonus points for corporate buzzwords and self-congratulatory hashtags",
+                    "examples": "- “Just was part of the biggest merger of my life — I got married.”\n- “After months of negotiations, I’m proud to say my toddler and I have signed a bedtime agreement.”\n- “Closed a major deal today — adopted a cat. The ROI on cuddles is immeasurable.”",
+                    "deliverables": "- Keep them short (1–3 sentences)\n- Must be plausible enough that you could *actually* see it on LinkedIn, but bad enough to make you wince",
+                    "deadline": "Send them to Gareth by September 30."
                 },
-                "lastWinner": {
-                    "name": "Sarah M.",
-                    "concept": "Neon Dreams"
+                "social": {
+                    "title": "Reinvigorate Our Instagram",
+                    "objective": "We want to breathe new life into our Instagram presence — with fresh, fun, scroll-stopping Reels that show who we are and what we can do. Think of this as an open creative challenge: what would you make if you could post anything?",
+                    "tone": "- Playful, unexpected, and creative.\n- Feels like *us* — not generic stock content.\n- Fits into the kind of content you’d actually stop and watch.",
+                    "examples": "- Keep it short, visual, and engaging.\n- No need to overthink — quick, low-lift ideas welcome.\n- Bonus points if you think it could help us win new business or show off our skills to potential clients.",
+                    "deliverables": "Submit a Reel ",
+                    "deadline": "Send to Tom via Slack by September 30. "
+                },
+                "newBusiness": {
+                    "title": "New Business Referral Incentive",
+                    "objective": "Help us grow our client roster by tapping into your network. If you connect us with a brand that becomes a paying client, we’ll say thank you with $1,000 once their first payment clears.\n\n- An easy way to make $1,000.\n- Helps us land exciting new clients and projects.\n- Expands our network in industries we love working with.",
+                    "tone": "Our sweet spot is entertainment brands and entertainment-adjacent brands — think:\n\n- Film, TV, streaming\n- Music, gaming, live events\n- Food & beverage with a pop culture tie\n- Sports, lifestyle, and fashion brands",
+                    "examples": "1. Introduce us to a decision-maker (marketing lead, brand manager, etc.).\n2. If they sign on and the first check clears, you get $1,000.\n3. The business must be new to us (not already in talks).",
+                    "deliverables": "Send your lead or intro to Gareth via Slack or email along with any relevant background or contact info.",
+                    "deadline": "Anytime!"
                 }
             },
             "apiEndpoint": null
@@ -210,40 +189,28 @@ const CMS_CONFIG = {
             "content": {
                 "birthdays": [
                     {
-                        "date": "Today",
-                        "person": "Mike R. from Production",
+                        "date": "Aug 29",
+                        "person": "Brook",
                         "highlight": true
-                    },
-                    {
-                        "date": "Dec 18",
-                        "person": "Jennifer L. from Creative"
-                    },
-                    {
-                        "date": "Dec 22",
-                        "person": "Alex T. from Strategy"
                     }
                 ],
                 "anniversaries": [
                     {
                         "years": 5,
-                        "person": "David K."
+                        "person": "Ronda"
                     },
                     {
                         "years": 3,
-                        "person": "Lisa M."
+                        "person": "Gareth"
                     },
                     {
                         "years": 1,
-                        "person": "Team Expansion Crew!"
+                        "person": "Brook"
                     }
                 ],
                 "shoutouts": [
                     {
-                        "message": "Huge thanks to the edit team for crushing it on the Tech Corp project!",
-                        "from": "Management"
-                    },
-                    {
-                        "message": "Props to IT for the smooth system upgrade!",
+                        "message": "Great job, Ellie!\n\nKeeping spirits high, sneaking in for extra pets, and bringing big energy (and even bigger tail wags) to the office every single day—proof that great ideas aren’t the only thing running around here.",
                         "from": "Everyone"
                     }
                 ]

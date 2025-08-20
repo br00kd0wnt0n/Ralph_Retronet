@@ -1505,7 +1505,7 @@
             
             <div class="icon" onclick="openWindow('challenge')">
                 <div class="icon-image">🎨</div>
-                <div class="icon-label">Creative Challenge</div>
+                <div class="icon-label">Challenges</div>
             </div>
             
             <div class="icon" onclick="openWindow('shoutouts')">
@@ -1580,7 +1580,7 @@
                         ► Drag windows by their title bars<br>
                         ► Minimize, maximize, or close windows<br>
                         ► Submit suggestions in the Suggestion Box<br>
-                        ► Accept monthly creative challenges<br>
+                        ► Accept challenges<br>
                         ► Check project pipelines and deadlines<br>
                         ► Send shoutouts to team members
                     </div>
@@ -1683,32 +1683,15 @@
         
         <div id="challenge" class="window" style="top: 150px; left: 150px;">
             <div class="window-header">
-                <div class="window-title">🎨 Monthly Creative Challenge</div>
+                <div class="window-title">🎨 Challenges</div>
                 <div class="window-controls">
                     <button class="window-button" onclick="minimizeWindow('challenge')">_</button>
                     <button class="window-button" onclick="maximizeWindow('challenge')">□</button>
                     <button class="window-button" onclick="closeWindow('challenge')">X</button>
                 </div>
             </div>
-            <div class="window-content">
-                <div class="ascii-art">
-     _____ _____ _____ _____ _____ 
-    |     | __  |   __|  _  |_   _|
-    |   --|    -|   __|     | | |  
-    |_____|__|__|_____|__|__| |_|  
-                </div>
-                <div class="module-item">
-                    <h3>DECEMBER CHALLENGE</h3>
-                    <p><strong>Theme:</strong> "Retro Future"</p>
-                    <p>Create a 30-second concept using only 8-bit graphics and chiptune music!</p>
-                    <p><strong>Prize:</strong> 🏆 Golden Pixel Award + Extra PTO Day</p>
-                    <button class="pixel-button" onclick="showNotification('Challenge Accepted!')">ACCEPT CHALLENGE</button>
-                </div>
-                <div class="module-item">
-                    <h3>LAST MONTH'S WINNER</h3>
-                    <p>🥇 Sarah M. - "Neon Dreams" Concept</p>
-                    <button class="pixel-button">VIEW SUBMISSION</button>
-                </div>
+            <div class="window-content" id="challenge-content">
+                <!-- Navigation state will be managed here -->
             </div>
         </div>
         
@@ -2794,6 +2777,18 @@
                     // Update specific module content
                     if (moduleId === 'newBiz' && moduleConfig.content) {
                         loadPipelineData(moduleConfig.content);
+                    } else if (moduleId === 'challenge' && moduleConfig.content) {
+                        updateChallengeContent(windowElement, moduleConfig.content);
+                    } else if (moduleId === 'shoutouts' && moduleConfig.content) {
+                        updateShoutoutsContent(windowElement, moduleConfig.content);
+                    } else if (moduleId === 'premieres' && moduleConfig.content) {
+                        updatePremieresContent(windowElement, moduleConfig.content);
+                    } else if (moduleId === 'ralphNews' && moduleConfig.content) {
+                        updateRalphNewsContent(windowElement, moduleConfig.content);
+                    } else if (moduleId === 'suggestions' && moduleConfig.content) {
+                        updateSuggestionsContent(windowElement, moduleConfig.content);
+                    } else if (moduleId === 'announcements' && moduleConfig.content) {
+                        updateAnnouncementsContent(windowElement, moduleConfig.content);
                     } else if (moduleId === 'articles' && moduleConfig.content) {
                         updateArticlesContent(windowElement, moduleConfig.content);
                     } else if (moduleId === 'innovation' && moduleConfig.content) {
@@ -3093,6 +3088,317 @@
             `;
             
             console.log('✅ Quick Links content updated successfully');
+        }
+
+        // Challenge navigation system
+        let challengeState = {
+            currentView: 'menu', // 'menu', 'creative', 'social', 'newBusiness'
+            challengeData: null
+        };
+
+        function updateChallengeContent(windowElement, content) {
+            console.log('🔄 Updating Challenge content:', content);
+            
+            challengeState.challengeData = content;
+            showChallengeMenu();
+        }
+
+        function updateShoutoutsContent(windowElement, content) {
+            console.log('🔄 Updating Shoutouts content:', content);
+            
+            const contentDiv = windowElement.querySelector('.window-content');
+            if (!contentDiv) return;
+            
+            // Format birthdays
+            let birthdaysHTML = '';
+            if (content.birthdays && content.birthdays.length > 0) {
+                content.birthdays.forEach(birthday => {
+                    const classes = birthday.highlight ? 'blink' : '';
+                    birthdaysHTML += `<p class="${classes}">► ${birthday.date} - ${birthday.person}${birthday.highlight ? '!' : ''}</p>`;
+                });
+            } else {
+                birthdaysHTML = '<p>No birthdays this month</p>';
+            }
+            
+            // Format anniversaries
+            let anniversariesHTML = '';
+            if (content.anniversaries && content.anniversaries.length > 0) {
+                content.anniversaries.forEach(anniversary => {
+                    anniversariesHTML += `<p>⭐ ${anniversary.years} Year${anniversary.years !== 1 ? 's' : ''} - ${anniversary.person}</p>`;
+                });
+            } else {
+                anniversariesHTML = '<p>No work anniversaries</p>';
+            }
+            
+            // Format shoutouts
+            let shoutoutsHTML = '';
+            if (content.shoutouts && content.shoutouts.length > 0) {
+                content.shoutouts.forEach(shoutout => {
+                    // Format multi-line messages
+                    const formattedMessage = shoutout.message.replace(/\n/g, '<br>');
+                    shoutoutsHTML += `<p>"${formattedMessage}" - ${shoutout.from}</p>`;
+                });
+            } else {
+                shoutoutsHTML = '<p>No recent shoutouts</p>';
+            }
+            
+            contentDiv.innerHTML = `
+                <div class="module-item">
+                    <h3>BIRTHDAYS THIS MONTH 🎂</h3>
+                    ${birthdaysHTML}
+                </div>
+                <div class="module-item">
+                    <h3>WORK ANNIVERSARIES 🎊</h3>
+                    ${anniversariesHTML}
+                </div>
+                <div class="module-item">
+                    <h3>SHOUTOUTS 📢</h3>
+                    ${shoutoutsHTML}
+                    <button class="pixel-button" onclick="showNotification('Shoutout sent!')">SEND SHOUTOUT</button>
+                </div>
+            `;
+        }
+
+        function updatePremieresContent(windowElement, content) {
+            console.log('🔄 Updating Premieres content:', content);
+            
+            const contentDiv = windowElement.querySelector('.window-content');
+            if (!contentDiv) return;
+            
+            let thisMonthHTML = '';
+            if (content.thisMonth && content.thisMonth.length > 0) {
+                content.thisMonth.forEach(premiere => {
+                    const linkHTML = premiere.liveLink ? `<a href="${premiere.liveLink}" target="_blank" style="color: var(--ralph-pink);">WATCH</a>` : '';
+                    thisMonthHTML += `<p>► ${premiere.date} - ${premiere.project} ${linkHTML}</p>`;
+                });
+            } else {
+                thisMonthHTML = '<p>No premieres this month</p>';
+            }
+            
+            let nextMonthHTML = '';
+            if (content.nextMonth && content.nextMonth.length > 0) {
+                content.nextMonth.forEach(premiere => {
+                    const linkHTML = premiere.liveLink ? `<a href="${premiere.liveLink}" target="_blank" style="color: var(--ralph-pink);">WATCH</a>` : '';
+                    nextMonthHTML += `<p>► ${premiere.date} - ${premiere.project} ${linkHTML}</p>`;
+                });
+            } else {
+                nextMonthHTML = '<p>No upcoming premieres</p>';
+            }
+            
+            contentDiv.innerHTML = `
+                <div class="module-item">
+                    <h3>THIS MONTH 📅</h3>
+                    ${thisMonthHTML}
+                </div>
+                <div class="module-item">
+                    <h3>COMING UP NEXT 📆</h3>
+                    ${nextMonthHTML}
+                </div>
+            `;
+        }
+
+        function updateRalphNewsContent(windowElement, content) {
+            console.log('🔄 Updating RALPH News content:', content);
+            
+            const contentDiv = windowElement.querySelector('.window-content');
+            if (!contentDiv) return;
+            
+            let breakingHTML = '';
+            if (content.breaking && content.breaking.length > 0) {
+                content.breaking.forEach(news => {
+                    const liveClass = news.live ? 'blink' : '';
+                    const liveText = news.live ? ' [LIVE]' : '';
+                    breakingHTML += `<p class="${liveClass}">📰 ${news.headline}${liveText}</p>`;
+                });
+            } else {
+                breakingHTML = '<p>No breaking news</p>';
+            }
+            
+            let updatesHTML = '';
+            if (content.updates && content.updates.length > 0) {
+                content.updates.forEach(update => {
+                    updatesHTML += `<p>► ${update}</p>`;
+                });
+            } else {
+                updatesHTML = '<p>No recent updates</p>';
+            }
+            
+            contentDiv.innerHTML = `
+                <div class="module-item">
+                    <h3>BREAKING NEWS 🔥</h3>
+                    ${breakingHTML}
+                </div>
+                <div class="module-item">
+                    <h3>COMPANY UPDATES 📢</h3>
+                    ${updatesHTML}
+                </div>
+            `;
+        }
+
+        function updateSuggestionsContent(windowElement, content) {
+            console.log('🔄 Updating Suggestions content:', content);
+            
+            const contentDiv = windowElement.querySelector('.window-content');
+            if (!contentDiv) return;
+            
+            let suggestionsHTML = '';
+            if (content.recentSuggestions && content.recentSuggestions.length > 0) {
+                content.recentSuggestions.forEach(suggestion => {
+                    const statusColor = {
+                        'APPROVED': '#00ff00',
+                        'IN REVIEW': '#ffff00',
+                        'CONSIDERING': '#ff9900',
+                        'REJECTED': '#ff0000'
+                    }[suggestion.status] || '#ffffff';
+                    
+                    suggestionsHTML += `<p>💡 ${suggestion.idea} <span style="color: ${statusColor};">[${suggestion.status}]</span></p>`;
+                });
+            } else {
+                suggestionsHTML = '<p>No recent suggestions</p>';
+            }
+            
+            contentDiv.innerHTML = `
+                <div class="module-item">
+                    <h3>RECENT SUGGESTIONS 📝</h3>
+                    ${suggestionsHTML}
+                </div>
+                <div class="module-item">
+                    <textarea placeholder="Enter your suggestion..." style="width: 100%; height: 80px; background: #000; color: #fff; border: 1px solid #404040; padding: 8px; font-family: 'Courier New', monospace;"></textarea>
+                    <button class="pixel-button" onclick="showNotification('Suggestion submitted!')" style="margin-top: 10px;">SUBMIT SUGGESTION</button>
+                </div>
+            `;
+        }
+
+        function updateAnnouncementsContent(windowElement, content) {
+            console.log('🔄 Updating Announcements content:', content);
+            
+            const contentDiv = windowElement.querySelector('.window-content');
+            if (!contentDiv) return;
+            
+            let importantHTML = '';
+            if (content.important && content.important.length > 0) {
+                content.important.forEach(announcement => {
+                    importantHTML += `<p class="blink">🚨 ${announcement}</p>`;
+                });
+            } else {
+                importantHTML = '<p>No important announcements</p>';
+            }
+            
+            let generalHTML = '';
+            if (content.general && content.general.length > 0) {
+                content.general.forEach(announcement => {
+                    generalHTML += `<p>► ${announcement}</p>`;
+                });
+            } else {
+                generalHTML = '<p>No general announcements</p>';
+            }
+            
+            contentDiv.innerHTML = `
+                <div class="module-item">
+                    <h3>IMPORTANT NOTICES ⚠️</h3>
+                    ${importantHTML}
+                </div>
+                <div class="module-item">
+                    <h3>GENERAL ANNOUNCEMENTS 📢</h3>
+                    ${generalHTML}
+                </div>
+            `;
+        }
+
+        function showChallengeMenu() {
+            const container = document.getElementById('challenge-content');
+            if (!container) return;
+
+            challengeState.currentView = 'menu';
+            
+            container.innerHTML = `
+                <div class="module-item">
+                    <h3>CHALLENGE CATEGORIES</h3>
+                    <p>Choose your challenge type:</p>
+                    <div style="display: flex; flex-direction: column; gap: 12px; margin: 20px 0;">
+                        <button class="pixel-button" onclick="showChallengePost('creative')" style="padding: 12px 20px;">
+                            🎨 CREATIVE CHALLENGE
+                        </button>
+                        <button class="pixel-button" onclick="showChallengePost('social')" style="padding: 12px 20px;">
+                            📱 SOCIAL CHALLENGE
+                        </button>
+                        <button class="pixel-button" onclick="showChallengePost('newBusiness')" style="padding: 12px 20px;">
+                            💼 NEW BUSINESS CHALLENGE
+                        </button>
+                    </div>
+                </div>
+            `;
+        }
+
+        function showChallengePost(challengeType) {
+            const container = document.getElementById('challenge-content');
+            if (!container || !challengeState.challengeData) return;
+
+            const challenge = challengeState.challengeData[challengeType];
+            if (!challenge) return;
+
+            challengeState.currentView = challengeType;
+
+            // Helper function to format multi-line text
+            function formatText(text) {
+                return text.replace(/\\n/g, '<br>').replace(/\n/g, '<br>');
+            }
+
+            container.innerHTML = `
+                <div class="blog-post" style="padding: 20px; max-height: 400px; overflow-y: auto; max-width: 600px; margin: 0 auto;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                        <button class="pixel-button" onclick="showChallengeMenu()" style="padding: 8px 16px;">← BACK</button>
+                        <h2 style="color: var(--ralph-pink); margin: 0; font-size: 18px; text-align: center; flex: 1;">
+                            ${challenge.title}
+                        </h2>
+                        <div style="width: 80px;"></div>
+                    </div>
+                    
+                    <div class="blog-content" style="color: #ffffff; line-height: 1.7; font-size: 15px; background: rgba(0,0,0,0.3); padding: 15px; border-radius: 4px;">
+                        <div style="margin-bottom: 20px;">
+                            <h3 style="color: #00ff41; margin-bottom: 10px; font-size: 16px;">📋 OBJECTIVE</h3>
+                            <p style="color: #e8e8e8;">${formatText(challenge.objective)}</p>
+                        </div>
+                        
+                        <div style="margin-bottom: 20px;">
+                            <h3 style="color: #00ff41; margin-bottom: 10px; font-size: 16px;">🎭 TONE & STYLE</h3>
+                            <div style="color: #e8e8e8;">${formatText(challenge.tone)}</div>
+                        </div>
+                        
+                        <div style="margin-bottom: 20px;">
+                            <h3 style="color: #00ff41; margin-bottom: 10px; font-size: 16px;">💡 EXAMPLES</h3>
+                            <div style="color: #e8e8e8;">${formatText(challenge.examples)}</div>
+                        </div>
+                        
+                        <div style="margin-bottom: 20px;">
+                            <h3 style="color: #00ff41; margin-bottom: 10px; font-size: 16px;">📦 DELIVERABLES</h3>
+                            <div style="color: #e8e8e8;">${formatText(challenge.deliverables)}</div>
+                        </div>
+                        
+                        <div style="margin-bottom: 30px;">
+                            <h3 style="color: #ff6b6b; margin-bottom: 10px; font-size: 16px;">⏰ DEADLINE</h3>
+                            <div style="color: #e8e8e8;">${formatText(challenge.deadline)}</div>
+                        </div>
+                    </div>
+                    
+                    <div style="text-align: center; border-top: 1px solid #404040; padding-top: 20px; margin-top: 20px;">
+                        <button class="pixel-button" onclick="acceptChallenge('${challengeType}')" 
+                                style="background: var(--ralph-pink); color: white; padding: 15px 30px; font-size: 16px; font-weight: bold;">
+                            🚀 ACCEPT CHALLENGE
+                        </button>
+                    </div>
+                </div>
+            `;
+        }
+
+        function acceptChallenge(challengeType) {
+            const challengeNames = {
+                creative: 'Creative Challenge',
+                social: 'Social Challenge', 
+                newBusiness: 'New Business Challenge'
+            };
+            
+            showNotification(`${challengeNames[challengeType]} Accepted! 🎉`);
         }
 
         function refreshAllModules() {

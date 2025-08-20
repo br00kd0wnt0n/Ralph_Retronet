@@ -11,7 +11,7 @@ A retro 90s-style company intranet dashboard with an 8-bit aesthetic and RALPH's
 - **Multiple Dashboard Modules:**
   - New Business Pipeline
   - Project Premiere Dates
-  - Monthly Creative Challenge
+  - Challenges
   - Shoutouts & Birthdays
   - Industry Articles
   - RALPH News

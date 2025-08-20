@@ -682,7 +682,7 @@
                         <select id="moduleSelect" onchange="loadModuleEditor()">
                             <option value="newBiz">📊 New Business Pipeline</option>
                             <option value="premieres">🎬 Premiere Calendar</option>
-                            <option value="challenge">🎨 Creative Challenge</option>
+                            <option value="challenge">🎨 Challenges</option>
                             <option value="shoutouts">🎉 Shoutouts & Celebrations</option>
                             <option value="articles">📰 Industry Articles</option>
                             <option value="ralphNews">📢 RALPH News</option>
@@ -741,7 +741,7 @@
 ► Drag windows by their title bars
 ► Minimize, maximize, or close windows
 ► Submit suggestions in the Suggestion Box
-► Accept monthly creative challenges
+► Accept challenges
 ► Check project pipelines and deadlines
 ► Send shoutouts to team members</textarea>
                         <div style="margin-top: 8px;">
@@ -873,7 +873,7 @@ System ready!</textarea>
                 enabled: true,
                 title: "RALPH Assistant v1.0",
                 welcomeMessage: "Welcome to RALPH Super-Intranet!",
-                helpText: `Here's what you can do:\n► Click any desktop icon to open modules\n► Drag windows by their title bars\n► Minimize, maximize, or close windows\n► Submit suggestions in the Suggestion Box\n► Accept monthly creative challenges\n► Check project pipelines and deadlines\n► Send shoutouts to team members`,
+                helpText: `Here's what you can do:\n► Click any desktop icon to open modules\n► Drag windows by their title bars\n► Minimize, maximize, or close windows\n► Submit suggestions in the Suggestion Box\n► Accept challenges\n► Check project pipelines and deadlines\n► Send shoutouts to team members`,
                 openai: {
                     enabled: false,
                     apiKey: "",
@@ -936,7 +936,7 @@ System ready!</textarea>
                     apiEndpoint: null
                 },
                 challenge: {
-                    title: "Monthly Creative Challenge",
+                    title: "Challenges",
                     icon: "🎨",
                     enabled: true,
                     content: {
@@ -1604,46 +1604,50 @@ System ready!</textarea>
 
         // Creative Challenge Editor
         function getChallengeEditor(content) {
-            const currentChallenge = content.currentChallenge || {};
-            const lastWinner = content.lastWinner || {};
+            const creative = content.creative || {};
+            const social = content.social || {};
+            const newBusiness = content.newBusiness || {};
+
+            function getChallengeSection(type, challenge, icon, label) {
+                return `
+                    <div style="background: #2d2d2d; padding: 16px; border-radius: 6px; margin-bottom: 20px;">
+                        <h5 style="color: var(--ralph-pink); margin-bottom: 12px;">${icon} ${label} Challenge</h5>
+                        <div style="margin-bottom: 12px;">
+                            <label style="color: #b0b0b0; margin-bottom: 4px; display: block;">Title</label>
+                            <input type="text" id="${type}Title" value="${challenge.title || ''}" placeholder="Challenge Title" style="width: 100%; background: #1e1e1e; border: 1px solid #404040; color: white; padding: 8px; border-radius: 4px;">
+                        </div>
+                        <div style="margin-bottom: 12px;">
+                            <label style="color: #b0b0b0; margin-bottom: 4px; display: block;">Objective</label>
+                            <textarea id="${type}Objective" placeholder="What's the goal of this challenge?" style="width: 100%; background: #1e1e1e; border: 1px solid #404040; color: white; padding: 8px; border-radius: 4px; min-height: 80px; resize: vertical;">${challenge.objective || ''}</textarea>
+                        </div>
+                        <div style="margin-bottom: 12px;">
+                            <label style="color: #b0b0b0; margin-bottom: 4px; display: block;">Tone & Style</label>
+                            <textarea id="${type}Tone" placeholder="How should submissions feel? (use \\n for line breaks)" style="width: 100%; background: #1e1e1e; border: 1px solid #404040; color: white; padding: 8px; border-radius: 4px; min-height: 80px; resize: vertical;">${challenge.tone || ''}</textarea>
+                        </div>
+                        <div style="margin-bottom: 12px;">
+                            <label style="color: #b0b0b0; margin-bottom: 4px; display: block;">Examples</label>
+                            <textarea id="${type}Examples" placeholder="Provide specific examples (use \\n for line breaks)" style="width: 100%; background: #1e1e1e; border: 1px solid #404040; color: white; padding: 8px; border-radius: 4px; min-height: 80px; resize: vertical;">${challenge.examples || ''}</textarea>
+                        </div>
+                        <div style="margin-bottom: 12px;">
+                            <label style="color: #b0b0b0; margin-bottom: 4px; display: block;">Deliverables</label>
+                            <textarea id="${type}Deliverables" placeholder="What should people submit? (use \\n for line breaks)" style="width: 100%; background: #1e1e1e; border: 1px solid #404040; color: white; padding: 8px; border-radius: 4px; min-height: 60px; resize: vertical;">${challenge.deliverables || ''}</textarea>
+                        </div>
+                        <div>
+                            <label style="color: #b0b0b0; margin-bottom: 4px; display: block;">Deadline</label>
+                            <input type="text" id="${type}Deadline" value="${challenge.deadline || ''}" placeholder="When and where to submit" style="width: 100%; background: #1e1e1e; border: 1px solid #404040; color: white; padding: 8px; border-radius: 4px;">
+                        </div>
+                    </div>
+                `;
+            }
 
             return `
                 <div style="background: #1e1e1e; padding: 20px; border-radius: 8px; margin: 16px 0;">
-                    <h4 style="color: var(--ralph-pink); margin-bottom: 16px;">🎨 Current Challenge</h4>
-                    <div style="background: #2d2d2d; padding: 16px; border-radius: 6px; margin-bottom: 16px;">
-                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px;">
-                            <div>
-                                <label style="color: #b0b0b0; margin-bottom: 4px; display: block;">Month</label>
-                                <input type="text" id="challengeMonth" value="${currentChallenge.month || ''}" placeholder="DECEMBER" style="width: 100%; background: #1e1e1e; border: 1px solid #404040; color: white; padding: 8px; border-radius: 4px;">
-                            </div>
-                            <div>
-                                <label style="color: #b0b0b0; margin-bottom: 4px; display: block;">Theme</label>
-                                <input type="text" id="challengeTheme" value="${currentChallenge.theme || ''}" placeholder="Retro Future" style="width: 100%; background: #1e1e1e; border: 1px solid #404040; color: white; padding: 8px; border-radius: 4px;">
-                            </div>
-                        </div>
-                        <div style="margin-bottom: 12px;">
-                            <label style="color: #b0b0b0; margin-bottom: 4px; display: block;">Description</label>
-                            <textarea id="challengeDescription" placeholder="Create a 30-second concept using only 8-bit graphics..." style="width: 100%; background: #1e1e1e; border: 1px solid #404040; color: white; padding: 8px; border-radius: 4px; min-height: 60px; resize: vertical;">${currentChallenge.description || ''}</textarea>
-                        </div>
-                        <div>
-                            <label style="color: #b0b0b0; margin-bottom: 4px; display: block;">Prize</label>
-                            <input type="text" id="challengePrize" value="${currentChallenge.prize || ''}" placeholder="🏆 Golden Pixel Award + Extra PTO Day" style="width: 100%; background: #1e1e1e; border: 1px solid #404040; color: white; padding: 8px; border-radius: 4px;">
-                        </div>
-                    </div>
-
-                    <h4 style="color: var(--ralph-pink); margin-bottom: 16px;">🏆 Last Winner</h4>
-                    <div style="background: #2d2d2d; padding: 16px; border-radius: 6px;">
-                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
-                            <div>
-                                <label style="color: #b0b0b0; margin-bottom: 4px; display: block;">Winner Name</label>
-                                <input type="text" id="lastWinnerName" value="${lastWinner.name || ''}" placeholder="Sarah M." style="width: 100%; background: #1e1e1e; border: 1px solid #404040; color: white; padding: 8px; border-radius: 4px;">
-                            </div>
-                            <div>
-                                <label style="color: #b0b0b0; margin-bottom: 4px; display: block;">Winning Concept</label>
-                                <input type="text" id="lastWinnerConcept" value="${lastWinner.concept || ''}" placeholder="Neon Dreams" style="width: 100%; background: #1e1e1e; border: 1px solid #404040; color: white; padding: 8px; border-radius: 4px;">
-                            </div>
-                        </div>
-                    </div>
+                    <h4 style="color: var(--ralph-pink); margin-bottom: 16px;">🎨 Blog-Style Challenge Editor</h4>
+                    <p style="color: #b0b0b0; font-size: 12px; margin-bottom: 20px;">Manage three challenge types with detailed blog-style content</p>
+                    
+                    ${getChallengeSection('creative', creative, '🎨', 'Creative')}
+                    ${getChallengeSection('social', social, '📱', 'Social')}
+                    ${getChallengeSection('newBusiness', newBusiness, '💼', 'New Business')}
                 </div>
             `;
         }
@@ -2176,17 +2180,21 @@ System ready!</textarea>
 
         // Collect WYSIWYG data for Creative Challenge
         function getChallengeWYSIWYGData() {
+            function getChallengeData(type) {
+                return {
+                    title: document.getElementById(`${type}Title`)?.value || '',
+                    objective: document.getElementById(`${type}Objective`)?.value || '',
+                    tone: document.getElementById(`${type}Tone`)?.value || '',
+                    examples: document.getElementById(`${type}Examples`)?.value || '',
+                    deliverables: document.getElementById(`${type}Deliverables`)?.value || '',
+                    deadline: document.getElementById(`${type}Deadline`)?.value || ''
+                };
+            }
+
             return {
-                currentChallenge: {
-                    month: document.getElementById('challengeMonth')?.value || '',
-                    theme: document.getElementById('challengeTheme')?.value || '',
-                    description: document.getElementById('challengeDescription')?.value || '',
-                    prize: document.getElementById('challengePrize')?.value || ''
-                },
-                lastWinner: {
-                    name: document.getElementById('lastWinnerName')?.value || '',
-                    concept: document.getElementById('lastWinnerConcept')?.value || ''
-                }
+                creative: getChallengeData('creative'),
+                social: getChallengeData('social'),
+                newBusiness: getChallengeData('newBusiness')
             };
         }
 
