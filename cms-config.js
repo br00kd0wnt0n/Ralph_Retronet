@@ -8,7 +8,7 @@ const CMS_CONFIG = {
     "system": {
         "version": "1.0",
         "companyName": "RALPH",
-        "primaryColor": "#EB008B",
+        "primaryColor": "#eb008b",
         "bootMessages": [
             "Loading system kernel...",
             "Initializing RALPH protocols...",
@@ -403,7 +403,7 @@ const CMS_CONFIG = {
             "apiEndpoint": null
         },
         "music": {
-            "title": "Music Library Manager",
+            "title": "Music Library",
             "icon": "🎵",
             "enabled": false,
             "content": {

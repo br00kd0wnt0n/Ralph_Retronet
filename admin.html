@@ -648,10 +648,6 @@
             <div class="admin-sidebar">
                 <div class="sidebar-section">
                     <h3>Content Management</h3>
-                    <div class="sidebar-item active" onclick="showPanel('dashboard')">
-                        <span class="icon">📊</span>
-                        <span>Dashboard</span>
-                    </div>
                     
                     <!-- Expandable Modules Section -->
                     <div class="sidebar-modules">
@@ -742,66 +738,8 @@
             </div>
 
             <div class="main-panel">
-                <!-- Dashboard Panel -->
-                <div id="dashboard" class="panel-section active">
-                    <div class="section-header">
-                        <h2>Dashboard</h2>
-                        <p>Overview of your RALPH intranet system</p>
-                    </div>
-                    
-                    <div class="module-list">
-                        <div class="module-card">
-                            <h4>📊 New Business Pipeline</h4>
-                            <p>Manage active pitches and meetings</p>
-                            <div class="module-toggle">
-                                <label class="switch">
-                                    <input type="checkbox" checked>
-                                    <span class="slider"></span>
-                                </label>
-                                <span>Enabled</span>
-                            </div>
-                        </div>
-
-                        <div class="module-card">
-                            <h4>🎬 Premiere Calendar</h4>
-                            <p>Track project launch dates</p>
-                            <div class="module-toggle">
-                                <label class="switch">
-                                    <input type="checkbox" checked>
-                                    <span class="slider"></span>
-                                </label>
-                                <span>Enabled</span>
-                            </div>
-                        </div>
-
-                        <div class="module-card">
-                            <h4>🤖 AI Chatbot</h4>
-                            <p>AI-powered assistant integration</p>
-                            <div class="module-toggle">
-                                <label class="switch">
-                                    <input type="checkbox" id="chatbotToggle">
-                                    <span class="slider"></span>
-                                </label>
-                                <span>OpenAI Integration</span>
-                            </div>
-                        </div>
-
-                        <div class="module-card">
-                            <h4>🔄 Auto-Refresh</h4>
-                            <p>Real-time content updates</p>
-                            <div class="module-toggle">
-                                <label class="switch">
-                                    <input type="checkbox" checked>
-                                    <span class="slider"></span>
-                                </label>
-                                <span>Active</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
                 <!-- Modules Panel -->
-                <div id="modules" class="panel-section">
+                <div id="modules" class="panel-section active">
                     <div class="section-header">
                         <h2 id="moduleTitle">Module Editor</h2>
                         <p id="moduleDescription">Select a module from the sidebar to edit its content</p>
@@ -1329,10 +1267,7 @@ System ready!</textarea>
             console.log('Login - loading config from server...');
             await loadCurrentConfig();
             
-            // Initialize module editor after config is loaded
-            setTimeout(() => {
-                loadModuleEditor();
-            }, 100);
+            // Config is loaded, modules panel will show the default message
         }
 
         function logout() {
@@ -1461,28 +1396,41 @@ System ready!</textarea>
         function populateFields() {
             // System settings
             if (currentConfig.system) {
-                document.getElementById('companyName').value = currentConfig.system.companyName || '';
-                document.getElementById('primaryColor').value = currentConfig.system.primaryColor || '#EB008B';
-                document.getElementById('bootMessages').value = currentConfig.system.bootMessages?.join('\n') || '';
+                const companyName = document.getElementById('companyName');
+                const primaryColor = document.getElementById('primaryColor');
+                const bootMessages = document.getElementById('bootMessages');
+                
+                if (companyName) companyName.value = currentConfig.system.companyName || '';
+                if (primaryColor) primaryColor.value = currentConfig.system.primaryColor || '#EB008B';
+                if (bootMessages) bootMessages.value = currentConfig.system.bootMessages?.join('\n') || '';
             }
 
             // Chatbot settings
             if (currentConfig.chatbot) {
-                document.getElementById('chatbotTitle').value = currentConfig.chatbot.title || '';
-                document.getElementById('welcomeMessage').value = currentConfig.chatbot.welcomeMessage || '';
-                document.getElementById('helpText').value = currentConfig.chatbot.helpText || '';
+                const chatbotTitle = document.getElementById('chatbotTitle');
+                const welcomeMessage = document.getElementById('welcomeMessage');
+                const helpText = document.getElementById('helpText');
+                const openaiModel = document.getElementById('openaiModel');
                 
-                if (currentConfig.chatbot.openai) {
-                    document.getElementById('openaiModel').value = currentConfig.chatbot.openai.model || 'gpt-4';
-                    document.getElementById('chatbotToggle').checked = currentConfig.chatbot.openai.enabled || false;
+                if (chatbotTitle) chatbotTitle.value = currentConfig.chatbot.title || '';
+                if (welcomeMessage) welcomeMessage.value = currentConfig.chatbot.welcomeMessage || '';
+                if (helpText) helpText.value = currentConfig.chatbot.helpText || '';
+                
+                if (currentConfig.chatbot.openai && openaiModel) {
+                    openaiModel.value = currentConfig.chatbot.openai.model || 'gpt-4';
+                    // Note: chatbotToggle was removed with the dashboard
                 }
             }
 
             // API settings
             if (currentConfig.api) {
-                document.getElementById('apiBaseUrl').value = currentConfig.api.baseUrl || '';
-                document.getElementById('refreshInterval').value = currentConfig.api.refreshInterval || 60000;
-                document.getElementById('apiHeaders').value = JSON.stringify(currentConfig.api.headers || {}, null, 2);
+                const apiBaseUrl = document.getElementById('apiBaseUrl');
+                const refreshInterval = document.getElementById('refreshInterval');
+                const apiHeaders = document.getElementById('apiHeaders');
+                
+                if (apiBaseUrl) apiBaseUrl.value = currentConfig.api.baseUrl || '';
+                if (refreshInterval) refreshInterval.value = currentConfig.api.refreshInterval || 60000;
+                if (apiHeaders) apiHeaders.value = JSON.stringify(currentConfig.api.headers || {}, null, 2);
             }
         }
 
@@ -1540,14 +1488,10 @@ System ready!</textarea>
                 moduleTitleEl.textContent = `${module.icon} ${module.title}`;
             }
             if (moduleDescEl) {
-                moduleDescEl.textContent = `Configure settings and content for ${module.title}`;
+                moduleDescEl.textContent = 'Configure module settings and content';
             }
 
             let editorHtml = `
-                <div class="section-header">
-                    <h3>${module.icon} ${module.title}</h3>
-                </div>
-                
                 <div class="form-row">
                     <div class="form-field">
                         <label>Module Title</label>
@@ -1797,10 +1741,14 @@ System ready!</textarea>
             const social = content.social || {};
             const newBusiness = content.newBusiness || {};
 
-            function getChallengeSection(type, challenge, icon, label) {
+            function getChallengeSection(type, challenge, icon, defaultLabel) {
                 return `
                     <div style="background: #2d2d2d; padding: 16px; border-radius: 6px; margin-bottom: 20px;">
-                        <h5 style="color: var(--ralph-pink); margin-bottom: 12px;">${icon} ${label} Challenge</h5>
+                        <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 12px;">
+                            <h5 style="color: var(--ralph-pink); margin: 0;">${icon}</h5>
+                            <input type="text" id="${type}Label" value="${challenge.label || defaultLabel}" placeholder="Section Label" style="flex: 1; background: #1e1e1e; border: 1px solid #404040; color: var(--ralph-pink); padding: 6px 10px; border-radius: 4px; font-weight: bold;">
+                            <span style="color: #888;">Challenge</span>
+                        </div>
                         <div style="margin-bottom: 12px;">
                             <label style="color: #b0b0b0; margin-bottom: 4px; display: block;">Title</label>
                             <input type="text" id="${type}Title" value="${challenge.title || ''}" placeholder="Challenge Title" style="width: 100%; background: #1e1e1e; border: 1px solid #404040; color: white; padding: 8px; border-radius: 4px;">
@@ -2373,6 +2321,7 @@ System ready!</textarea>
         function getChallengeWYSIWYGData() {
             function getChallengeData(type) {
                 return {
+                    label: document.getElementById(`${type}Label`)?.value || '',
                     title: document.getElementById(`${type}Title`)?.value || '',
                     objective: document.getElementById(`${type}Objective`)?.value || '',
                     tone: document.getElementById(`${type}Tone`)?.value || '',
@@ -3075,7 +3024,7 @@ System ready!</textarea>
                     
                     if (result.valid) {
                         // Auto-login successful
-                        login();
+                        await login();
                         return true;
                     }
                 } catch (error) {
@@ -3900,10 +3849,9 @@ System ready!</textarea>
             // Try auto-login first
             const autoLoggedIn = await checkAutoLogin();
             
-            // Load initial module editor after config is loaded
+            // Load prompt if auto-logged in
             if (autoLoggedIn && isLoggedIn) {
-                setTimeout(async () => {
-                    await loadModuleEditor();
+                setTimeout(() => {
                     loadCurrentPrompt(); // Load current prompt from persistent storage
                 }, 100);
             }

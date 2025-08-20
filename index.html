@@ -3558,13 +3558,13 @@
                     <p>Choose your challenge type:</p>
                     <div style="display: flex; flex-direction: column; gap: 12px; margin: 20px 0;">
                         <button class="pixel-button" onclick="showChallengePost('creative')" style="padding: 12px 20px;">
-                            🎨 CREATIVE CHALLENGE
+                            🎨 ${(challengeState.challengeData && challengeState.challengeData.creative && challengeState.challengeData.creative.label) || 'CREATIVE'} CHALLENGE
                         </button>
                         <button class="pixel-button" onclick="showChallengePost('social')" style="padding: 12px 20px;">
-                            📱 SOCIAL CHALLENGE
+                            📱 ${(challengeState.challengeData && challengeState.challengeData.social && challengeState.challengeData.social.label) || 'SOCIAL'} CHALLENGE
                         </button>
                         <button class="pixel-button" onclick="showChallengePost('newBusiness')" style="padding: 12px 20px;">
-                            💼 NEW BUSINESS CHALLENGE
+                            💼 ${(challengeState.challengeData && challengeState.challengeData.newBusiness && challengeState.challengeData.newBusiness.label) || 'NEW BUSINESS'} CHALLENGE
                         </button>
                     </div>
                 </div>
@@ -3830,9 +3830,11 @@
                     iconElement.onclick = () => openWindow(moduleId);
                     
                     // Create a simplified label (remove extra words)
-                    let label = moduleConfig.title;
-                    label = label.replace(/v\d+\.\d+/g, ''); // Remove version numbers
-                    label = label.replace(/\s+/g, ' ').trim(); // Clean up spaces
+                    let label = moduleConfig.title || moduleId; // Fallback to moduleId if no title
+                    if (typeof label === 'string') {
+                        label = label.replace(/v\d+\.\d+/g, ''); // Remove version numbers
+                        label = label.replace(/\s+/g, ' ').trim(); // Clean up spaces
+                    }
                     
                     // Simplify some common titles
                     const labelMap = {
@@ -4272,10 +4274,7 @@
             isPlaying: false,
             currentTrack: 0,
             volume: 0.7,
-            playlist: [
-                { title: 'Kawaii Kitsune', artist: 'Kevin MacLeod', file: 'music/kawaii-kitsune-kevin-macleod-main-version-7984-04-02.mp3' },
-                { title: 'Mirthaflare', artist: 'Ian Aisling', file: 'music/mirthaflare-ian-aisling-main-version-22101-02-36.mp3' }
-            ]
+            playlist: [] // Will be loaded from CMS config
         };
         
         function toggleMusicPlayer() {
@@ -4299,6 +4298,18 @@
         }
         
         function initializeMusicPlayer() {
+            // Load playlist from CMS config if not already loaded
+            if (musicPlayer.playlist.length === 0 && AppState.config && AppState.config.modules && AppState.config.modules.music) {
+                const musicModule = AppState.config.modules.music;
+                if (musicModule.content && musicModule.content.tracks) {
+                    musicPlayer.playlist = musicModule.content.tracks.map(track => ({
+                        title: track.title,
+                        artist: track.artist,
+                        file: track.file
+                    }));
+                }
+            }
+            
             if (!musicPlayer.audio) {
                 musicPlayer.audio = new Audio();
                 musicPlayer.audio.volume = musicPlayer.volume;
@@ -4310,7 +4321,9 @@
                 });
                 musicPlayer.audio.addEventListener('canplay', () => {
                     const track = musicPlayer.playlist[musicPlayer.currentTrack];
-                    document.getElementById('trackInfo').textContent = `${track.artist} - ${track.title}`;
+                    if (track) {
+                        document.getElementById('trackInfo').textContent = `${track.artist} - ${track.title}`;
+                    }
                 });
                 musicPlayer.audio.addEventListener('error', () => {
                     document.getElementById('trackInfo').textContent = 'Error loading track';
