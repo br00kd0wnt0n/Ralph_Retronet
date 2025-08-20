@@ -2377,6 +2377,9 @@
                 AppState.windows[windowId] = { draggable: null };
                 makeDraggable(windowEl);
             }
+            
+            // Load content for this specific module from CMS
+            loadModuleContentFromCMS(windowId);
         }
         
         function closeWindow(windowId) {
@@ -2964,6 +2967,54 @@
             
             document.body.appendChild(iframeWindow);
             makeDraggable(iframeWindow);
+        }
+
+        function loadModuleContentFromCMS(moduleId) {
+            console.log(`📄 LOADING CONTENT FROM CMS FOR MODULE: ${moduleId}`);
+            if (!AppState.config || !AppState.config.modules) {
+                console.log('⚠️ No config available, skipping content load');
+                return;
+            }
+            
+            const moduleConfig = AppState.config.modules[moduleId];
+            if (!moduleConfig || !moduleConfig.enabled) {
+                console.log(`⚠️ Module ${moduleId} not found or disabled`);
+                return;
+            }
+            
+            const windowElement = document.getElementById(moduleId);
+            if (windowElement) {
+                const title = windowElement.querySelector('.window-title');
+                if (title) {
+                    title.textContent = `${moduleConfig.icon} ${moduleConfig.title}`;
+                }
+                
+                // Update specific module content
+                if (moduleId === 'newBiz' && moduleConfig.content) {
+                    console.log('📊 Loading New Business Pipeline content');
+                    loadPipelineData(moduleConfig.content);
+                } else if (moduleId === 'challenge' && moduleConfig.content) {
+                    updateChallengeContent(windowElement, moduleConfig.content);
+                } else if (moduleId === 'shoutouts' && moduleConfig.content) {
+                    updateShoutoutsContent(windowElement, moduleConfig.content);
+                } else if (moduleId === 'premieres' && moduleConfig.content) {
+                    updatePremieresContent(windowElement, moduleConfig.content);
+                } else if (moduleId === 'ralphNews' && moduleConfig.content) {
+                    updateRalphNewsContent(windowElement, moduleConfig.content);
+                } else if (moduleId === 'suggestions' && moduleConfig.content) {
+                    updateSuggestionsContent(windowElement, moduleConfig.content);
+                } else if (moduleId === 'announcements' && moduleConfig.content) {
+                    updateAnnouncementsContent(windowElement, moduleConfig.content);
+                } else if (moduleId === 'articles' && moduleConfig.content) {
+                    updateArticlesContent(windowElement, moduleConfig.content);
+                } else if (moduleId === 'innovation' && moduleConfig.content) {
+                    updateInnovationContent(windowElement, moduleConfig.content);
+                } else if (moduleId === 'resources' && moduleConfig.content) {
+                    updateResourcesContent(windowElement, moduleConfig.content);
+                } else if (moduleId === 'links' && moduleConfig.content) {
+                    updateLinksContent(windowElement, moduleConfig.content);
+                }
+            }
         }
 
         function loadContentFromCMS() {
@@ -3836,23 +3887,7 @@
                         label = label.replace(/\s+/g, ' ').trim(); // Clean up spaces
                     }
                     
-                    // Simplify some common titles
-                    const labelMap = {
-                        'New Business Pipeline': 'New Biz Pipeline',
-                        'Project Premiere Calendar': 'Premiere Dates', 
-                        'Shoutouts & Celebrations': 'Shoutouts',
-                        'Industry Articles': 'Industry Articles',
-                        'RALPH News Network': 'RALPH News',
-                        'Digital Suggestion Box': 'Suggestion Box',
-                        'System Announcements': 'Announcements',
-                        'Quick Links Directory': 'Helpful Links',
-                        'Innovation Lab Updates': 'Innovation Updates',
-                        'Resource Center': 'Resources'
-                    };
-                    
-                    if (labelMap[label]) {
-                        label = labelMap[label];
-                    }
+                    // Use the exact title from CMS - no more hardcoded overrides
                     
                     iconElement.innerHTML = `
                         <div class="icon-image">${moduleConfig.icon}</div>
