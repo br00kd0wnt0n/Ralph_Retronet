@@ -2555,23 +2555,31 @@ System ready!</textarea>
 
         // Collect WYSIWYG data for Music
         function getMusicWYSIWYGData() {
+            console.log('🎵 ADMIN: Getting music WYSIWYG data...');
             const tracks = [];
             const tracksContainer = document.getElementById('musicTracks');
+            console.log('🎵 ADMIN: Tracks container found:', !!tracksContainer);
+            console.log('🎵 ADMIN: Container children count:', tracksContainer?.children.length || 0);
+            
             if (tracksContainer) {
                 Array.from(tracksContainer.children).forEach((item, index) => {
                     const inputs = item.querySelectorAll('input');
+                    console.log(`🎵 ADMIN: Track ${index} inputs found:`, inputs.length);
                     if (inputs.length >= 5) {
-                        tracks.push({
+                        const track = {
                             id: index + 1,
                             title: inputs[2].value || `Track ${index + 1}`,
                             artist: inputs[3].value || 'Unknown Artist',
                             file: inputs[5].value || '',
                             duration: inputs[4].value || '0:00',
                             uploadDate: new Date().toISOString().split('T')[0]
-                        });
+                        };
+                        console.log(`🎵 ADMIN: Track ${index} data:`, track);
+                        tracks.push(track);
                     }
                 });
             }
+            console.log('🎵 ADMIN: Final tracks array:', tracks);
 
             // Calculate total duration (rough estimate)
             let totalSeconds = 0;
