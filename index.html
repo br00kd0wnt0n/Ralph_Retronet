@@ -4419,7 +4419,7 @@
             
             // Add module icons from configuration
             Object.entries(AppState.config.modules).forEach(([moduleId, moduleConfig]) => {
-                if (moduleConfig.enabled) {
+                if (moduleConfig.enabled && moduleId !== 'music') {
                     const iconElement = document.createElement('div');
                     iconElement.className = 'icon';
                     iconElement.onclick = () => openWindow(moduleId);
