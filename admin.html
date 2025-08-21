@@ -741,7 +741,7 @@
                 <!-- Modules Panel -->
                 <div id="modules" class="panel-section active">
                     <div class="section-header">
-                        <h2 id="moduleTitle">Module Editor</h2>
+                        <h2 id="moduleTitleHeader">Module Editor</h2>
                         <p id="moduleDescription">Select a module from the sidebar to edit its content</p>
                     </div>
 
@@ -835,6 +835,13 @@
                         <div class="form-field">
                             <label>Primary Color</label>
                             <input type="color" id="primaryColor" value="#EB008B">
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-field">
+                            <label>Ralph.World URL</label>
+                            <input type="url" id="ralphWorldUrl" value="https://ralph.world" placeholder="https://ralph.world">
                         </div>
                     </div>
 
@@ -1403,6 +1410,9 @@ System ready!</textarea>
                 if (companyName) companyName.value = currentConfig.system.companyName || '';
                 if (primaryColor) primaryColor.value = currentConfig.system.primaryColor || '#EB008B';
                 if (bootMessages) bootMessages.value = currentConfig.system.bootMessages?.join('\n') || '';
+                
+                const ralphWorldUrl = document.getElementById('ralphWorldUrl');
+                if (ralphWorldUrl) ralphWorldUrl.value = currentConfig.system.ralphWorldUrl || 'https://ralph.world';
             }
 
             // Chatbot settings
@@ -1482,7 +1492,7 @@ System ready!</textarea>
             console.log('Loading editor for module:', module.title);
             
             // Update the header to show current module
-            const moduleTitleEl = document.getElementById('moduleTitle');
+            const moduleTitleEl = document.getElementById('moduleTitleHeader');
             const moduleDescEl = document.getElementById('moduleDescription');
             if (moduleTitleEl) {
                 moduleTitleEl.textContent = `${module.icon} ${module.title}`;
@@ -1495,7 +1505,7 @@ System ready!</textarea>
                 <div class="form-row">
                     <div class="form-field">
                         <label>Module Title</label>
-                        <input type="text" id="moduleTitle" value="${module.title}">
+                        <input type="text" id="moduleTitle" value="${module.title || ''}">
                     </div>
                     <div class="form-field">
                         <label>Module Icon</label>
@@ -2614,7 +2624,8 @@ System ready!</textarea>
                 ...currentConfig.system,
                 companyName: document.getElementById('companyName').value,
                 primaryColor: document.getElementById('primaryColor').value,
-                bootMessages: document.getElementById('bootMessages').value.split('\n').filter(msg => msg.trim())
+                bootMessages: document.getElementById('bootMessages').value.split('\n').filter(msg => msg.trim()),
+                ralphWorldUrl: document.getElementById('ralphWorldUrl').value
             };
 
             // Update chatbot settings

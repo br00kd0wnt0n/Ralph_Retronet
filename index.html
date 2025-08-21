@@ -19,7 +19,7 @@
     <script src="./cms-config.js" onerror="console.error('Failed to load cms-config.js')"></script>
     <script src="./api-integration.js" onerror="console.error('Failed to load api-integration.js')"></script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=VT323&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Courier+Prime:ital,wght@0,400;0,700;1,400&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap');
         
         :root {
             --ralph-pink: #EB008B;
@@ -54,7 +54,8 @@
         }
         
         body {
-            font-family: 'VT323', monospace;
+            font-family: 'Space Mono', 'Courier Prime', monospace;
+            font-size: 14px;
             background: var(--ralph-pink);
             background-image: 
                 repeating-linear-gradient(
@@ -83,11 +84,11 @@
             position: absolute;
             top: 20px;
             left: 20px;
-            font-size: 14px;
-            line-height: 0.6;
+            font-size: 12px;
+            line-height: 1.0;
             color: rgba(255, 255, 255, 0.3);
             white-space: pre;
-            font-family: 'VT323', monospace;
+            font-family: 'Courier Prime', monospace;
             pointer-events: none;
             text-shadow: 2px 2px 0 rgba(0, 0, 0, 0.2);
             z-index: 0;
@@ -125,6 +126,59 @@
             box-shadow: inset -1px -1px var(--black), inset 1px 1px #dfdfdf;
         }
         
+        /* Start Menu Styles */
+        .start-menu {
+            position: absolute;
+            bottom: 42px;
+            left: 0;
+            width: 250px;
+            background: var(--gray-light);
+            border: 2px solid;
+            border-color: var(--white) var(--black) var(--black) var(--white);
+            box-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+            z-index: 10000;
+        }
+        
+        .start-menu-header {
+            background: linear-gradient(90deg, var(--ralph-pink) 0%, #ff1493 100%);
+            color: white;
+            padding: 10px;
+            font-size: 14px;
+            font-family: 'Space Mono', monospace;
+            font-weight: bold;
+            border-bottom: 2px solid var(--black);
+        }
+        
+        .start-menu-items {
+            background: white;
+        }
+        
+        .start-menu-item {
+            padding: 8px 10px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            font-size: 13px;
+            font-family: 'Space Mono', monospace;
+            transition: background 0.2s;
+        }
+        
+        .start-menu-item:hover {
+            background: var(--ralph-pink);
+            color: white;
+        }
+        
+        .start-menu-icon {
+            margin-right: 10px;
+            font-size: 16px;
+        }
+        
+        .start-menu-separator {
+            height: 1px;
+            background: var(--gray-dark);
+            margin: 4px 10px;
+        }
+        
         .start-button {
             background: var(--gray-light);
             border: 2px solid;
@@ -156,7 +210,7 @@
             transition: all 0.1s;
             min-width: 40px;
             position: absolute;
-            right: 90px;
+            right: 120px;
             top: 50%;
             transform: translateY(-50%);
         }
@@ -588,11 +642,137 @@
         }
         
         .icon-label {
-            font-size: 14px;
+            font-size: 12px;
+            font-family: 'Space Mono', monospace;
+            font-weight: 400;
             color: var(--white);
-            text-shadow: 1px 1px 0 var(--black);
+            text-shadow: 1px 1px 2px var(--black);
             word-break: break-word;
-            line-height: 1.2;
+            line-height: 1.3;
+            text-align: center;
+        }
+        
+        /* New content indicator */
+        .icon-new-indicator {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            width: 16px;
+            height: 16px;
+            background: var(--terminal-yellow);
+            border: 2px solid var(--black);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+            font-weight: bold;
+            color: var(--black);
+            animation: pulse 2s infinite;
+            z-index: 10;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+        }
+        
+        /* ASCII Art Animation Styles */
+        .ascii-intro {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 25vw;
+            height: auto;
+            z-index: -1;
+            background: transparent;
+            color: rgba(255, 255, 255, 0.7);
+            font-family: 'Courier Prime', monospace;
+            font-size: 8px;
+            line-height: 1;
+            white-space: pre;
+            text-align: left;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .ascii-intro.show {
+            opacity: 1;
+        }
+
+        /* RNN Logo Styling */
+        .rnn-logo {
+            font-family: 'Space Mono', monospace;
+            font-weight: 900;
+            font-size: 18px;
+            color: var(--ralph-pink);
+            text-shadow: 1px 1px 0px rgba(0,0,0,0.3);
+            letter-spacing: -1px;
+            display: inline-block;
+        }
+
+        /* What's New Window Styles */
+        .whats-new-header {
+            background: linear-gradient(135deg, var(--ralph-pink) 0%, #ff1493 100%);
+            color: white;
+            padding: 20px;
+            text-align: center;
+            border-bottom: 3px solid var(--black);
+        }
+        
+        .whats-new-date {
+            font-size: 12px;
+            opacity: 0.9;
+            margin-top: 5px;
+        }
+        
+        .whats-new-section {
+            background: white;
+            border: 2px solid;
+            border-color: var(--gray-dark) var(--white) var(--white) var(--gray-dark);
+            margin: 10px;
+            padding: 15px;
+        }
+        
+        .whats-new-section h3 {
+            color: var(--ralph-pink);
+            font-size: 16px;
+            font-family: 'Space Mono', monospace;
+            font-weight: 700;
+            margin-bottom: 10px;
+            padding-bottom: 5px;
+            border-bottom: 2px dotted var(--ralph-pink);
+        }
+        
+        .whats-new-item {
+            padding: 8px;
+            margin: 5px 0;
+            background: #f9f9f9;
+            border-left: 3px solid var(--ralph-pink);
+            font-size: 13px;
+            line-height: 1.4;
+            transition: background 0.2s;
+        }
+        
+        .whats-new-item:hover {
+            background: #f0f0f0;
+            cursor: pointer;
+        }
+        
+        .whats-new-badge {
+            display: inline-block;
+            background: var(--terminal-yellow);
+            color: var(--black);
+            padding: 2px 6px;
+            font-size: 10px;
+            font-weight: bold;
+            margin-left: 8px;
+            border-radius: 3px;
         }
         
         .window {
@@ -626,10 +806,13 @@
         .window-title {
             flex: 1;
             padding: 0 8px;
-            font-weight: bold;
+            font-family: 'Space Mono', monospace;
+            font-weight: 700;
+            font-size: 14px;
             overflow: hidden;
             text-overflow: ellipsis;
             white-space: nowrap;
+            line-height: 1.2;
         }
         
         .window-controls {
@@ -664,7 +847,10 @@
             height: calc(100% - 40px);
             overflow-y: auto;
             overflow-x: hidden;
-            font-size: 18px;
+            font-size: 14px;
+            font-family: 'Space Mono', monospace;
+            font-weight: 400;
+            line-height: 1.5;
         }
         
         /* Pipeline Layout Styles */
@@ -787,10 +973,13 @@
         
         .module-item h3 {
             color: var(--ralph-pink);
-            font-size: 20px;
+            font-size: 16px;
+            font-family: 'Space Mono', monospace;
+            font-weight: 700;
             margin-bottom: 8px;
             border-bottom: 2px dotted var(--ralph-pink);
             padding-bottom: 4px;
+            line-height: 1.3;
         }
         
         .progress-bar {
@@ -818,12 +1007,14 @@
             background: var(--gray-light);
             border: 2px solid;
             border-color: var(--white) var(--gray-dark) var(--gray-dark) var(--white);
-            padding: 8px 16px;
-            font-family: 'VT323', monospace;
-            font-size: 18px;
+            padding: 6px 12px;
+            font-family: 'Space Mono', monospace;
+            font-size: 14px;
+            font-weight: 400;
             cursor: pointer;
             margin: 4px;
             touch-action: manipulation;
+            line-height: 1.2;
         }
         
         .pixel-button:hover, .pixel-button:active {
@@ -847,6 +1038,7 @@
         .ascii-art {
             font-size: 12px;
             line-height: 1;
+            font-family: 'Courier Prime', monospace;
             color: var(--ralph-pink);
             white-space: pre;
             margin: 8px 0;
@@ -856,11 +1048,13 @@
             background: var(--white);
             border: 2px solid;
             border-color: var(--gray-dark) var(--white) var(--white) var(--gray-dark);
-            padding: 4px;
-            font-family: 'VT323', monospace;
-            font-size: 18px;
+            padding: 6px;
+            font-family: 'Space Mono', monospace;
+            font-size: 14px;
+            font-weight: 400;
             width: 100%;
             margin: 4px 0;
+            line-height: 1.4;
         }
         
         .scanlines::before {
@@ -892,15 +1086,18 @@
         .notification {
             position: fixed;
             top: 20px;
-            right: 20px;
+            left: 20px;
             background: var(--terminal-yellow);
             border: 2px solid var(--black);
             padding: 12px;
             box-shadow: 4px 4px 0 rgba(0,0,0,0.5);
-            font-size: 18px;
+            font-size: 14px;
+            font-family: 'Space Mono', monospace;
+            font-weight: 400;
             z-index: 9998;
             display: none;
             max-width: 300px;
+            line-height: 1.4;
         }
         
         .notification.show {
@@ -952,9 +1149,12 @@
         
         .boot-text {
             color: var(--terminal-green);
-            font-size: 18px;
+            font-size: 16px;
+            font-family: 'Space Mono', monospace;
+            font-weight: 400;
             margin-bottom: 20px;
             text-align: center;
+            line-height: 1.4;
         }
         
         .loading-bar-container {
@@ -993,11 +1193,14 @@
             margin-top: 30px;
             height: 100px;
             overflow: hidden;
-            font-size: 14px;
+            font-size: 13px;
+            font-family: 'Space Mono', monospace;
+            font-weight: 400;
             color: var(--terminal-green);
             text-align: left;
             width: 90%;
             max-width: 500px;
+            line-height: 1.4;
         }
         
         .boot-message {
@@ -1089,21 +1292,21 @@
             }
             
             .window-content {
-                font-size: 16px;
+                font-size: 13px;
                 padding: 8px;
             }
             
             .module-item h3 {
-                font-size: 18px;
+                font-size: 15px;
             }
             
             .pixel-button {
-                font-size: 16px;
+                font-size: 13px;
                 padding: 10px 12px;
             }
             
             .notification {
-                right: 10px;
+                left: 10px;
                 top: 10px;
                 font-size: 14px;
                 max-width: calc(100vw - 40px);
@@ -1128,7 +1331,7 @@
             }
             
             input[type="text"], textarea {
-                font-size: 16px;
+                font-size: 14px;
                 padding: 8px;
             }
             
@@ -1373,62 +1576,48 @@
 <body>
     <div class="boot-screen" id="bootScreen">
         <div class="boot-logo" id="bootLogo">
-############################################################################################################################## 
-############################################################################################################################## 
-############################################################################################################################## 
-########################################################      ################################################################ 
-######################################################  #####   ############################################################## 
-##################################################### #########  ############################################################# 
-#################################################### #### # #### ############################################################# 
-#################################################### ### ####### ############################################################# 
-################################################### #### ### ###  ############################################################ 
-################################################### #### ### ###  ############################################################ 
-################################################### #### ### ###  ############################################################ 
-################################################### #### ### ### ############################################################# 
-################################################### ### #### ### #####################################  ###################### 
-################################################### ### #### ### #####################################    #################### 
-################################################### ### #### ### ##################################### ## #################### 
-################################################### ### ###  ### ##################################### ### ################### 
-################################################### ### ### #### ##################################### ### ################### 
-################################################### ### ### ### ###################################### ### ################### 
-################################################### ### ### ### ###################################### ### ################### 
-################################################### ###  ## ### ###################################### ### ################### 
-################################################### #### ## ### ###################################### ### ################### 
-###################        ######################## #### ## ## ####################################### ### ################### 
-#################      ############################ #### ## ## ########   ########         ########### ### ################### 
-###############  ##  ##############     ############ ### ##### ######## #   ####  ##    ##  ######### #### ################### 
-#############  ##  ###########            ########## ### # ### ######## ### ###  #  #### ### ######## ### #################### 
-############  ##  ##########      ################## ######## ######## #### ##  # ###### #### ####### ### ######### ########## 
-#      #### ###  #########  ##  ########  ########## ######## ######## #### #  # ####### #### ###### #### ####          ###### 
-## #### ## #### ######### ### ########  # ########### ####### ######## ###### # ######## #### ###### ###  ###  ##   ###  ##### 
-### ####  #### #########  ## ######### ##  ########## ###### ######### ######## ######## #### ##### #### ##  ##  ## ####  #### 
-### ######### ########## ### ######### ### ########## ###### ######### ####### ######### #### ##### ######  #  ##### ### ##### 
-#### ######## ########## ### ######### ### ########## ##### ########## ####### ######## ##### ####  ##### ##  ###### ### ##### 
-####  ####### ########## ### ######### #### ######### ##### ########## ###### ######### #### ##### ########  ###### ### ###### 
-##### ####### ########## ### ######### ####  ######## ##### ######### ####### ######## ####  ##### ####### ####### #### ###### 
-###### ################# ### ######## ######  ######  ###### #######  ####### ####### ####  ##### ####### #######  ### ####### 
-###### ###### ##########  ### ######  ##   ###  ###  ########   #    ########  ##### ####  ###### ###### ######## #### ####### 
-####### ##### ########### ####       ## ##   ###  ####    #####################     ###  ####### ###### ######## #### ######## 
-#######  #### ############ ###########  ####   #####   ##   ######   #####    ######   ######### #####  ######## #### ######## 
-######## #### #############  #######   ########      ######       ### ### ###        ##########  ####  ######### #### ######## 
-######### ###  ##############        ################################ ### #####################  #### ########## #### ######## 
-######### #### ###################################################### ### ######################      ########## ####  ####### 
-########## #### #################################################### #### #########################  ############  ### ####### 
-##########  ###  ################################################### #### ########################################   ##  ##### 
-###########  ### ################################################### #### ##########################################      #### 
-#############     ################################################## #### #############################################    ### 
-#################################################################### #### #################################################### 
-################################################################### #### ##################################################### 
-################################################################### #### ##################################################### 
-################################################################### #### ##################################################### 
-################################################################### #### ##################################################### 
-################################################################### #### ##################################################### 
-##################################################################  #### ##################################################### 
-##################################################################  #### ##################################################### 
-###################################################################   #  ##################################################### 
-#####################################################################   ###################################################### 
-############################################################################################################################## 
-##############################################################################################################################
+                                                                                                    
+                                                                                                    
+                                            ███████                                                 
+                                           █████████                                                
+                                          ███████████                                               
+                                          █████ █████                                               
+                                         █████  █████                                               
+                                         █████  █████                                               
+                                         █████  █████                                               
+                                         █████  █████                           ███                 
+                                         █████  ████                            ████                
+                                         █████  ████                            ████                
+                                         █████  ████                            ████                
+                                         █████ █████                            ████                
+                                         █████ ████                             ████                
+                  █████                  █████ ████                             ████                
+               ██████                    █████ ████     ███     ████████       █████                
+             ██████        ███████        █████████     █████  ██████████      █████                
+            █████       ███████           █████████     █████ ████   █████     █████                
+   █████  ██████      █████     ███       ████████      █████████    ██████   █████   ████████      
+    ███████████      █████      ███       ████████      ████████     ██████   █████  ██████████     
+     █████████       ████      ████        ███████      ███████      ██████   ██████████  █████     
+     █████████      █████      █████       ██████       ███████      █████   ██████████   █████     
+      ████████      █████      ██████      █████       ███████      ██████   ████████    █████      
+      ███████       █████      ███████    ███████     ████████     ██████   ████████     █████      
+       ██████        █████    █████████████████████████████████   ██████    ███████     █████       
+        ██████       █████████████ ████████████████████████████████████    ███████      █████       
+        ██████        ███████████    ███████  ███████████████████████      ██████      ██████       
+         █████          ███████                        █████               ██████      ██████       
+         ██████                                       █████                 ████        █████       
+          █████                                       █████                             ██████      
+           █████                                      █████                               ██████    
+            ████                                      █████                                  ████   
+                                                     ██████                                         
+                                                     █████                                          
+                                                     █████                                          
+                                                     █████                                          
+                                                     █████                                          
+                                                     █████                                          
+                                                      ████                                          
+                                                                                                    
+                                                                                                    
         </div>
         <div class="boot-text">INITIALIZING SUPER-INTRANET SYSTEM v1.0</div>
         <div class="loading-bar-container">
@@ -1439,7 +1628,8 @@
     </div>
     
     <div class="desktop scanlines crt-flicker" style="display: none;" id="desktop">
-        <div class="desktop-ascii" id="desktopAscii">
+        <!-- ASCII art removed for cleaner interface -->
+        <div class="desktop-ascii" id="desktopAscii" style="display: none;">
 ############################################################################################                       
 ############################################################################################                       
 ############################################################################################                       
@@ -1494,14 +1684,29 @@
         </div>
         <div class="desktop-icons" id="desktop-icons">
             <!-- Desktop icons will be loaded dynamically from CMS configuration -->
-            <div class="icon" onclick="openAdminLogin()">
-                <div class="icon-image">⚙️</div>
-                <div class="icon-label">Intranet Admin</div>
+            <div class="icon" onclick="openRalphWorld()">
+                <div class="icon-image">🌍</div>
+                <div class="icon-label">Ralph.World</div>
             </div>
         </div>
         
         <!-- Windows -->
-        <div id="chatbot" class="window active" style="bottom: 60px; left: 45%; top: auto; width: 450px; height: 400px;">
+        <!-- What's New Window -->
+        <div id="whatsNew" class="window" style="width: 600px; height: calc(100vh - 120px); top: 60px; left: 20px;">
+            <div class="window-header">
+                <div class="window-title">Hey Brook! Here's what's new at RALPH</div>
+                <div class="window-controls">
+                    <button class="window-button" onclick="minimizeWindow('whatsNew')">_</button>
+                    <button class="window-button" onclick="maximizeWindow('whatsNew')">□</button>
+                    <button class="window-button" onclick="closeWindow('whatsNew')">X</button>
+                </div>
+            </div>
+            <div class="window-content" id="whatsNewContent" style="padding: 0; background: linear-gradient(135deg, #ffffff 0%, #f0f0f0 100%); overflow-y: auto;">
+                <!-- Content will be dynamically loaded here -->
+            </div>
+        </div>
+        
+        <div id="chatbot" class="window" style="bottom: 60px; left: 45%; top: auto; width: 450px; height: 400px;">
             <div class="window-header">
                 <div class="window-title">💬 RALPH Assistant v1.0</div>
                 <div class="window-controls">
@@ -1511,7 +1716,7 @@
                 </div>
             </div>
             <div class="window-content" style="display: flex; flex-direction: column; padding: 8px;">
-                <div id="chatDisplay" style="flex: 1; background: #000; color: #00ff00; padding: 10px; font-family: 'VT323', monospace; font-size: 16px; overflow-y: auto; margin-bottom: 8px; border: 2px solid; border-color: #808080 #ffffff #ffffff #808080;">
+                <div id="chatDisplay" style="flex: 1; background: #000; color: #00ff00; padding: 10px; font-family: 'Space Mono', monospace; font-size: 14px; line-height: 1.5; overflow-y: auto; margin-bottom: 8px; border: 2px solid; border-color: #808080 #ffffff #ffffff #808080;">
                     <div style="color: #EB008B;">=======================================</div>
                     <div style="color: #EB008B;">RALPH ASSISTANT v1.0 - INITIALIZED</div>
                     <div style="color: #EB008B;">=======================================</div>
@@ -1541,7 +1746,7 @@
                     </div>
                 </div>
                 <div style="display: flex; gap: 4px;">
-                    <input type="text" id="chatInput" placeholder="Type your message here..." style="flex: 1; background: #000; color: #00ff00; border: 2px solid #00ff00; font-family: 'VT323', monospace; font-size: 16px; padding: 6px;">
+                    <input type="text" id="chatInput" placeholder="Type your message here..." style="flex: 1; background: #000; color: #00ff00; border: 2px solid #00ff00; font-family: 'Space Mono', monospace; font-size: 14px; padding: 6px; line-height: 1.4;">
                     <button class="pixel-button" onclick="sendChat()" style="margin: 0; padding: 6px 12px;">SEND</button>
                 </div>
             </div>
@@ -1873,10 +2078,35 @@
         
         
         <div class="taskbar">
-            <button class="start-button" onclick="handleStartButton()">
+            <button class="start-button" onclick="toggleStartMenu()">
                 <span class="ralph-logo"></span>
                 START
             </button>
+            <!-- Start Menu -->
+            <div id="startMenu" class="start-menu" style="display: none;">
+                <div class="start-menu-header">
+                    <span style="font-weight: bold; color: var(--ralph-pink);">🏢 RALPH INTRANET</span>
+                </div>
+                <div class="start-menu-items">
+                    <div class="start-menu-item" onclick="showWhatsNew(); toggleStartMenu();">
+                        <span class="start-menu-icon">🎉</span>
+                        <span>What's New</span>
+                    </div>
+                    <div class="start-menu-item" onclick="openWindow('chatbot'); toggleStartMenu();">
+                        <span class="start-menu-icon">💬</span>
+                        <span>RALPH Assistant</span>
+                    </div>
+                    <div class="start-menu-separator"></div>
+                    <div class="start-menu-item" onclick="openAdminLogin(); toggleStartMenu();">
+                        <span class="start-menu-icon">⚙️</span>
+                        <span>Admin Panel</span>
+                    </div>
+                    <div class="start-menu-item" onclick="location.reload();">
+                        <span class="start-menu-icon">🔄</span>
+                        <span>Restart</span>
+                    </div>
+                </div>
+            </div>
             <div class="clock" id="clock">
                 12:00 PM
                 <div class="timezone-panel">
@@ -1967,11 +2197,11 @@
                 <form id="adminLoginForm" style="display: flex; flex-direction: column; gap: 16px;">
                     <div>
                         <label style="display: block; margin-bottom: 4px; font-weight: bold;">USERNAME:</label>
-                        <input type="text" id="adminUsername" value="ralph" style="width: 100%; padding: 8px; background: #000; color: #00ff00; border: 2px solid #808080; font-family: 'VT323', monospace; font-size: 16px;">
+                        <input type="text" id="adminUsername" value="ralph" style="width: 100%; padding: 8px; background: #000; color: #00ff00; border: 2px solid #808080; font-family: 'Space Mono', monospace; font-size: 14px; line-height: 1.4;">
                     </div>
                     <div>
                         <label style="display: block; margin-bottom: 4px; font-weight: bold;">PASSWORD:</label>
-                        <input type="password" id="adminPassword" value="admin123" style="width: 100%; padding: 8px; background: #000; color: #00ff00; border: 2px solid #808080; font-family: 'VT323', monospace; font-size: 16px;">
+                        <input type="password" id="adminPassword" value="admin123" style="width: 100%; padding: 8px; background: #000; color: #00ff00; border: 2px solid #808080; font-family: 'Space Mono', monospace; font-size: 14px; line-height: 1.4;">
                     </div>
                     <div style="display: flex; gap: 8px; margin-top: 16px;">
                         <button type="submit" class="pixel-button" style="flex: 1;">ACCESS CMS</button>
@@ -2356,6 +2586,92 @@
         };
         
         // Window management
+        // Constrain window within viewport
+        function constrainWindowToViewport(windowElement) {
+            if (!windowElement) return;
+            
+            const rect = windowElement.getBoundingClientRect();
+            const viewportWidth = window.innerWidth;
+            const viewportHeight = window.innerHeight;
+            const taskbarHeight = 40;
+            const availableHeight = viewportHeight - taskbarHeight;
+            
+            // Check if window has a transform (like the admin window)
+            const hasTransform = windowElement.style.transform && windowElement.style.transform.includes('translate');
+            
+            if (hasTransform) {
+                // For windows with transforms, we need to work with their actual position
+                let left = rect.left;
+                let top = rect.top;
+                let width = rect.width;
+                let height = rect.height;
+                
+                // Check if window is outside viewport and remove transform if needed
+                if (left < 0 || top < 60 || left + width > viewportWidth || top + height > availableHeight) {
+                    // Remove transform and position normally
+                    windowElement.style.transform = 'none';
+                    windowElement.style.left = Math.max(20, Math.min(viewportWidth - width - 20, 100)) + 'px';
+                    windowElement.style.top = Math.max(60, Math.min(availableHeight - height - 20, 100)) + 'px';
+                }
+            } else {
+                // Normal positioning for windows without transforms
+                let left = parseInt(windowElement.style.left) || rect.left;
+                let top = parseInt(windowElement.style.top) || rect.top;
+                let width = rect.width;
+                let height = rect.height;
+                
+                // Ensure window doesn't go outside right edge
+                if (left + width > viewportWidth) {
+                    left = Math.max(0, viewportWidth - width - 20);
+                }
+                
+                // Ensure window doesn't go outside left edge
+                if (left < 0) {
+                    left = 20;
+                }
+                
+                // Ensure window doesn't go outside bottom edge (account for taskbar)
+                if (top + height > availableHeight) {
+                    top = Math.max(60, availableHeight - height - 20);
+                }
+                
+                // Ensure window doesn't go outside top edge
+                if (top < 60) {
+                    top = 60;
+                }
+                
+                // Apply constrained position
+                windowElement.style.left = `${left}px`;
+                windowElement.style.top = `${top}px`;
+            }
+        }
+        
+        // Open a window beside another window
+        function openWindowBeside(windowId, referenceWindowId) {
+            const referenceWindow = document.getElementById(referenceWindowId);
+            if (referenceWindow) {
+                const rect = referenceWindow.getBoundingClientRect();
+                const newLeft = rect.right + 20; // Position 20px to the right
+                const newTop = rect.top;
+                
+                // First open the window
+                openWindow(windowId);
+                
+                // Then position it beside the reference window
+                const targetWindow = document.getElementById(windowId);
+                if (targetWindow) {
+                    targetWindow.style.left = `${newLeft}px`;
+                    targetWindow.style.top = `${newTop}px`;
+                    
+                    // Ensure it stays within viewport
+                    constrainWindowToViewport(targetWindow);
+                }
+            } else {
+                // Fallback to normal open if reference window not found
+                openWindow(windowId);
+            }
+        }
+        
         function openWindow(windowId) {
             const windowEl = document.getElementById(windowId);
             if (!windowEl) return;
@@ -2373,6 +2689,9 @@
             windowEl.style.zIndex = ++AppState.zIndex;
             AppState.activeWindow = windowId;
             
+            // Ensure window stays within viewport
+            constrainWindowToViewport(windowEl);
+            
             if (!AppState.windows[windowId]) {
                 AppState.windows[windowId] = { draggable: null };
                 makeDraggable(windowEl);
@@ -2380,6 +2699,12 @@
             
             // Load content for this specific module from CMS
             loadModuleContentFromCMS(windowId);
+            
+            // Mark module as viewed (remove new indicator)
+            markModuleViewed(windowId);
+            
+            // Ensure window stays within viewport
+            setTimeout(() => constrainWindowToViewport(windowEl), 100);
         }
         
         function closeWindow(windowId) {
@@ -2735,15 +3060,28 @@
         }
         
         // START button functionality
-        function handleStartButton() {
-            const chatbotWindow = document.getElementById('chatbot');
-            if (chatbotWindow && !chatbotWindow.classList.contains('active')) {
-                openWindow('chatbot');
-                showNotification('RALPH Assistant activated!');
-            } else {
-                showNotification('Assistant already running!');
+        // Toggle START menu
+        function toggleStartMenu() {
+            const startMenu = document.getElementById('startMenu');
+            if (startMenu) {
+                if (startMenu.style.display === 'none' || startMenu.style.display === '') {
+                    startMenu.style.display = 'block';
+                } else {
+                    startMenu.style.display = 'none';
+                }
             }
         }
+        
+        // Close start menu when clicking elsewhere
+        document.addEventListener('click', function(e) {
+            const startMenu = document.getElementById('startMenu');
+            const startButton = e.target.closest('.start-button');
+            const startMenuItem = e.target.closest('.start-menu-item');
+            
+            if (!startButton && !startMenuItem && startMenu) {
+                startMenu.style.display = 'none';
+            }
+        });
 
         // Enhanced chatbot functionality with AI integration
         async function sendChat() {
@@ -3119,9 +3457,9 @@
                 let itemsHtml = '';
                 items.forEach(item => {
                     const deckLinkHtml = item.deckLink ? 
-                        `<button onclick="openIframeWindow('${item.deckLink}', '${item.name} - Deck', 900, 700)" style="background: #EB008B; color: white; border: none; padding: 2px 6px; margin: 2px; cursor: pointer; border-radius: 2px; font-size: 10px;">[DECK]</button>` : '';
+                        `<button onclick="openIframeWindow('${item.deckLink}', '${item.name} - Deck', 900, 700)" style="background: #EB008B; color: white; border: none; padding: 4px 8px; margin: 2px; cursor: pointer; border-radius: 2px; font-size: 12px; font-family: 'Space Mono', monospace;">[DECK]</button>` : '';
                     const briefLinkHtml = item.briefLink ? 
-                        `<button onclick="openIframeWindow('${item.briefLink}', '${item.name} - Brief', 900, 700)" style="background: #059669; color: white; border: none; padding: 2px 6px; margin: 2px; cursor: pointer; border-radius: 2px; font-size: 10px;">[BRIEF]</button>` : '';
+                        `<button onclick="openIframeWindow('${item.briefLink}', '${item.name} - Brief', 900, 700)" style="background: #059669; color: white; border: none; padding: 4px 8px; margin: 2px; cursor: pointer; border-radius: 2px; font-size: 12px; font-family: 'Space Mono', monospace;">[BRIEF]</button>` : '';
                     
                     // Smart data detection in case fields are swapped
                     let dueDate = '';
@@ -3193,7 +3531,7 @@
                     const title = typeof article === 'string' ? article : (article.title || '');
                     const url = typeof article === 'object' ? (article.url || '') : '';
                     const linkHtml = url ? 
-                        ` <button onclick="openIframeWindow('${url}', '${title}', 800, 600)" style="background: #EB008B; color: white; border: none; padding: 2px 6px; cursor: pointer; border-radius: 2px; font-size: 12px;">[OPEN]</button>` : '';
+                        ` <button onclick="openIframeWindow('${url}', '${title}', 800, 600)" style="background: #EB008B; color: white; border: none; padding: 4px 8px; cursor: pointer; border-radius: 2px; font-size: 12px; font-family: 'Space Mono', monospace;">[OPEN]</button>` : '';
                     
                     trendingHtml += `<p>📈 ${title}${linkHtml}</p>`;
                 });
@@ -3204,7 +3542,7 @@
             if (content.mustReads) {
                 content.mustReads.forEach(item => {
                     const linkHtml = item.url ? 
-                        ` <button onclick="openIframeWindow('${item.url}', '${item.title}', 800, 600)" style="background: #EB008B; color: white; border: none; padding: 2px 6px; cursor: pointer; border-radius: 2px; font-size: 12px;">[OPEN]</button>` : '';
+                        ` <button onclick="openIframeWindow('${item.url}', '${item.title}', 800, 600)" style="background: #EB008B; color: white; border: none; padding: 4px 8px; cursor: pointer; border-radius: 2px; font-size: 12px; font-family: 'Space Mono', monospace;">[OPEN]</button>` : '';
                     mustReadsHtml += `<p>📖 ${item.source}: ${item.title}${linkHtml}</p>`;
                 });
             }
@@ -3236,7 +3574,7 @@
             if (content.experiments) {
                 content.experiments.forEach(experiment => {
                     const linkHtml = experiment.url ? 
-                        ` <button onclick="openIframeWindow('${experiment.url}', '${experiment.name}', 1000, 700)" style="background: #EB008B; color: white; border: none; padding: 2px 6px; cursor: pointer; border-radius: 2px; font-size: 12px;">[VIEW]</button>` : '';
+                        ` <button onclick="openIframeWindow('${experiment.url}', '${experiment.name}', 1000, 700)" style="background: #EB008B; color: white; border: none; padding: 4px 8px; cursor: pointer; border-radius: 2px; font-size: 12px; font-family: 'Space Mono', monospace;">[VIEW]</button>` : '';
                     
                     experimentsHtml += `
                         <p>🔬 ${experiment.name}${linkHtml}</p>
@@ -3283,7 +3621,7 @@
                     const name = typeof doc === 'string' ? doc : (doc.name || '');
                     const url = typeof doc === 'object' ? (doc.url || '') : '';
                     const linkHtml = url ? 
-                        ` <button onclick="openIframeWindow('${url}', '${name}', 800, 600)" style="background: #00ff00; color: black; border: none; padding: 2px 6px; cursor: pointer; border-radius: 2px; font-size: 12px;">[DOWNLOAD]</button>` : '';
+                        ` <button onclick="openIframeWindow('${url}', '${name}', 800, 600)" style="background: #00ff00; color: black; border: none; padding: 4px 8px; cursor: pointer; border-radius: 2px; font-size: 12px; font-family: 'Space Mono', monospace;">[DOWNLOAD]</button>` : '';
                     
                     documentsHtml += `<p>📄 ${name}${linkHtml}</p>`;
                 });
@@ -3296,7 +3634,7 @@
                     const name = typeof template === 'string' ? template : (template.name || '');
                     const url = typeof template === 'object' ? (template.url || '') : '';
                     const linkHtml = url ? 
-                        ` <button onclick="openIframeWindow('${url}', '${name}', 800, 600)" style="background: #00ff00; color: black; border: none; padding: 2px 6px; cursor: pointer; border-radius: 2px; font-size: 12px;">[DOWNLOAD]</button>` : '';
+                        ` <button onclick="openIframeWindow('${url}', '${name}', 800, 600)" style="background: #00ff00; color: black; border: none; padding: 4px 8px; cursor: pointer; border-radius: 2px; font-size: 12px; font-family: 'Space Mono', monospace;">[DOWNLOAD]</button>` : '';
                     
                     templatesHtml += `<p>📋 ${name}${linkHtml}</p>`;
                 });
@@ -3309,7 +3647,7 @@
                     const name = typeof course === 'string' ? course : (course.name || '');
                     const url = typeof course === 'object' ? (course.url || '') : '';
                     const linkHtml = url ? 
-                        ` <button onclick="openIframeWindow('${url}', '${name}', 800, 600)" style="background: #00ff00; color: black; border: none; padding: 2px 6px; cursor: pointer; border-radius: 2px; font-size: 12px;">[START]</button>` : '';
+                        ` <button onclick="openIframeWindow('${url}', '${name}', 800, 600)" style="background: #00ff00; color: black; border: none; padding: 4px 8px; cursor: pointer; border-radius: 2px; font-size: 12px; font-family: 'Space Mono', monospace;">[START]</button>` : '';
                     
                     trainingHtml += `<p>🎓 ${name}${linkHtml}</p>`;
                 });
@@ -3555,7 +3893,7 @@
                     ${suggestionsHTML}
                 </div>
                 <div class="module-item">
-                    <textarea placeholder="Enter your suggestion..." style="width: 100%; height: 80px; background: #000; color: #fff; border: 1px solid #404040; padding: 8px; font-family: 'Courier New', monospace;"></textarea>
+                    <textarea placeholder="Enter your suggestion..." style="width: 100%; height: 80px; background: #000; color: #fff; border: 1px solid #404040; padding: 8px; font-family: 'Space Mono', monospace; font-size: 14px; line-height: 1.4;"></textarea>
                     <button class="pixel-button" onclick="showNotification('Suggestion submitted!')" style="margin-top: 10px;">SUBMIT SUGGESTION</button>
                 </div>
             `;
@@ -3646,7 +3984,7 @@
                         <div style="width: 80px;"></div>
                     </div>
                     
-                    <div class="blog-content" style="color: #ffffff; line-height: 1.7; font-size: 15px; background: rgba(0,0,0,0.3); padding: 15px; border-radius: 4px;">
+                    <div class="blog-content" style="color: #ffffff; line-height: 1.6; font-size: 14px; font-family: 'Space Mono', monospace; background: rgba(0,0,0,0.3); padding: 15px; border-radius: 4px;">
                         <div style="margin-bottom: 20px;">
                             <h3 style="color: #00ff41; margin-bottom: 10px; font-size: 16px;">📋 OBJECTIVE</h3>
                             <p style="color: #e8e8e8;">${formatText(challenge.objective)}</p>
@@ -3826,20 +4164,197 @@
         }
 
         // Auto-show popup on desktop load (can be disabled/modified)
-        function maybeShowSharePopup() {
-            // Only show if sharing module is enabled
-            if (AppState.config && AppState.config.modules.sharing && AppState.config.modules.sharing.enabled) {
-                // Check if user has seen it this week (localStorage)
-                const currentWeek = AppState.config.modules.sharing.content.weekOf;
-                const lastSeenWeek = localStorage.getItem('sharePopupLastSeen');
-                
-                if (lastSeenWeek !== currentWeek) {
-                    // Show popup after a short delay
-                    setTimeout(() => {
-                        openSharePopup();
-                        localStorage.setItem('sharePopupLastSeen', currentWeek);
-                    }, 3000); // Show after 3 seconds
+        // Track which modules have been viewed
+        const viewedModules = JSON.parse(localStorage.getItem('viewedModules') || '{}');
+        
+        // Check if module has new content since last view
+        function hasNewContent(moduleId) {
+            const lastViewed = viewedModules[moduleId] || 0;
+            const now = Date.now();
+            // Consider content "new" if not viewed in last 24 hours
+            return (now - lastViewed) > (24 * 60 * 60 * 1000);
+        }
+        
+        // Mark module as viewed
+        function markModuleViewed(moduleId) {
+            viewedModules[moduleId] = Date.now();
+            localStorage.setItem('viewedModules', JSON.stringify(viewedModules));
+            // Remove new indicator
+            const icon = document.querySelector(`[data-module="${moduleId}"] .icon-new-indicator`);
+            if (icon) {
+                icon.remove();
+            }
+        }
+        
+        // Generate What's New content
+        function generateWhatsNewContent() {
+            if (!AppState.config || !AppState.config.modules) return '';
+            
+            const today = new Date().toLocaleDateString('en-US', { 
+                weekday: 'long', 
+                year: 'numeric', 
+                month: 'long', 
+                day: 'numeric' 
+            });
+            
+            let html = `
+                <div class="whats-new-header">
+                    <h2 style="margin: 0; font-size: 24px; font-weight: bold;">Hey Brook! Here's what's new at RALPH</h2>
+                    <div class="whats-new-date">${today}</div>
+                </div>
+            `;
+            
+            // Collect updates from various modules
+            const updates = [];
+            
+            // New Business Pipeline updates
+            if (AppState.config.modules.newBiz?.enabled && AppState.config.modules.newBiz.content) {
+                const pipeline = AppState.config.modules.newBiz.content;
+                if (pipeline.warmLeads?.length > 0) {
+                    updates.push({
+                        module: 'New Business',
+                        icon: '📊',
+                        items: [`${pipeline.warmLeads.length} warm leads in pipeline`],
+                        moduleId: 'newBiz'
+                    });
                 }
+            }
+            
+            // Upcoming Premieres
+            if (AppState.config.modules.premieres?.enabled && AppState.config.modules.premieres.content) {
+                const premieres = AppState.config.modules.premieres.content;
+                if (premieres.thisMonth?.length > 0) {
+                    updates.push({
+                        module: 'Premieres',
+                        icon: '🎬',
+                        items: premieres.thisMonth.slice(0, 2).map(p => `${p.date}: ${p.project}`),
+                        moduleId: 'premieres'
+                    });
+                }
+            }
+            
+            // Current Challenge
+            if (AppState.config.modules.challenge?.enabled && AppState.config.modules.challenge.content) {
+                const challenge = AppState.config.modules.challenge.content.currentChallenge;
+                if (challenge) {
+                    updates.push({
+                        module: 'Creative Challenge',
+                        icon: '🎨',
+                        items: [`${challenge.month} Challenge: ${challenge.theme}`],
+                        badge: 'NEW',
+                        moduleId: 'challenge'
+                    });
+                }
+            }
+            
+            // Birthdays & Celebrations
+            if (AppState.config.modules.shoutouts?.enabled && AppState.config.modules.shoutouts.content) {
+                const shoutouts = AppState.config.modules.shoutouts.content;
+                const birthdayToday = shoutouts.birthdays?.find(b => b.highlight);
+                if (birthdayToday) {
+                    updates.push({
+                        module: 'Celebrations',
+                        icon: '🎉',
+                        items: [`🎂 ${birthdayToday.person}'s birthday today!`],
+                        badge: 'TODAY',
+                        moduleId: 'shoutouts'
+                    });
+                }
+            }
+            
+            // RALPH News
+            if (AppState.config.modules.ralphNews?.enabled && AppState.config.modules.ralphNews.content) {
+                const news = AppState.config.modules.ralphNews.content;
+                const liveNews = news.breaking?.filter(n => n.live);
+                if (liveNews?.length > 0) {
+                    updates.push({
+                        module: 'Breaking News',
+                        icon: '📢',
+                        items: liveNews.map(n => n.headline),
+                        badge: 'LIVE',
+                        moduleId: 'ralphNews'
+                    });
+                }
+            }
+            
+            // System Announcements
+            if (AppState.config.modules.announcements?.enabled && AppState.config.modules.announcements.content) {
+                const announcements = AppState.config.modules.announcements.content;
+                if (announcements.important?.length > 0) {
+                    updates.push({
+                        module: 'Important',
+                        icon: '📣',
+                        items: announcements.important.slice(0, 2),
+                        badge: 'URGENT',
+                        moduleId: 'announcements'
+                    });
+                }
+            }
+            
+            // Build the HTML
+            if (updates.length > 0) {
+                updates.forEach(update => {
+                    html += `
+                        <div class="whats-new-section">
+                            <h3>${update.icon} ${update.module}
+                                ${update.badge ? `<span class="whats-new-badge">${update.badge}</span>` : ''}
+                            </h3>
+                    `;
+                    
+                    update.items.forEach(item => {
+                        html += `
+                            <div class="whats-new-item" onclick="openWindowBeside('${update.moduleId}', 'whatsNew');">
+                                ► ${item}
+                            </div>
+                        `;
+                    });
+                    
+                    html += '</div>';
+                });
+            } else {
+                html += `
+                    <div class="whats-new-section">
+                        <h3>📋 No New Updates</h3>
+                        <div class="whats-new-item">
+                            Check back later for the latest updates from around RALPH!
+                        </div>
+                    </div>
+                `;
+            }
+            
+            // Add quick stats
+            html += `
+                <div class="whats-new-section" style="background: linear-gradient(135deg, #f9f9f9 0%, #e9e9e9 100%);">
+                    <h3>📈 Quick Stats</h3>
+                    <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px;">
+                        <div class="whats-new-item" style="text-align: center;">
+                            <strong>${Object.keys(AppState.config.modules).filter(m => AppState.config.modules[m].enabled).length}</strong><br>
+                            Active Modules
+                        </div>
+                        <div class="whats-new-item" style="text-align: center;">
+                            <strong>${updates.length}</strong><br>
+                            New Updates
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            return html;
+        }
+        
+        // Show What's New window
+        function showWhatsNew() {
+            const whatsNewContent = document.getElementById('whatsNewContent');
+            if (whatsNewContent) {
+                whatsNewContent.innerHTML = generateWhatsNewContent();
+            }
+            openWindow('whatsNew');
+            
+            // Make draggable
+            const whatsNewWindow = document.getElementById('whatsNew');
+            if (whatsNewWindow && !AppState.windows.whatsNew) {
+                AppState.windows.whatsNew = { draggable: null };
+                makeDraggable(whatsNewWindow);
             }
         }
 
@@ -3869,8 +4384,8 @@
                 return;
             }
             
-            // Keep admin icon but clear other icons
-            const adminIcon = container.querySelector('[onclick="openAdminLogin()"]');
+            // Keep Ralph.World icon but clear other icons
+            const ralphWorldIcon = container.querySelector('[onclick="openRalphWorld()"]');
             container.innerHTML = '';
             
             // Add module icons from configuration
@@ -3890,20 +4405,438 @@
                     // Use the exact title from CMS - no more hardcoded overrides
                     
                     iconElement.innerHTML = `
-                        <div class="icon-image">${moduleConfig.icon}</div>
+                        <div class="icon-image" style="position: relative;">
+                            ${moduleConfig.icon}
+                            ${hasNewContent(moduleId) ? '<div class="icon-new-indicator">!</div>' : ''}
+                        </div>
                         <div class="icon-label">${label}</div>
                     `;
+                    
+                    // Set data attribute for tracking
+                    iconElement.setAttribute('data-module', moduleId);
                     
                     container.appendChild(iconElement);
                 }
             });
             
-            // Re-add admin icon at the end
-            if (adminIcon) {
-                container.appendChild(adminIcon);
+            // Re-add Ralph.World icon at the end
+            if (ralphWorldIcon) {
+                container.appendChild(ralphWorldIcon);
             }
             
             console.log(`✅ Loaded ${Object.keys(AppState.config.modules).filter(id => AppState.config.modules[id].enabled).length} desktop icons`);
+        }
+
+        // ASCII Art Animation
+        function showAsciiIntro() {
+            const frames = [
+                `                                                                                                    
+                                                                                                    
+                                                                                                    
+                                                                                                    
+                                                                                                    
+                                                                                                    
+                                                                                                    
+                                                                                                    
+                                                                                                    
+                                                                                                    
+                                                                                                    
+                                            ███████                                                 
+                                           █████████                                                
+                                           ████ █████                                               
+                                           ████ ████                      █                         
+                                           ████ ████                      ███                       
+                                           ████ ████                      ████                      
+                                           █████████                      ████                      
+                      █████                ████████    ██     █████       ████                      
+                   █████      ███████      ████████    ████ ████ ████    ████                       
+             █████████     ████    ███      ██████    ████████   █████  █████ ████████              
+              ███████     ████     ████     ██████    ███████    █████  ████████  ████              
+              ███████     ████     █████    █████     ██████    █████  ███████   █████              
+               ██████      ████  ████████████████████████████ ██████  ██████    █████               
+                █████       ████████   ██████  ██████████████████     █████     ████                
+                 █████                               ████             ████      █████               
+                  █████                              ████                         █████             
+                                                     ████                                           
+                                                    █████                                           
+                                                    █████                                           
+                                                    ████                                            
+                                                                                                    
+                                                                                                    
+                                                                                                    
+                                                                                                    
+                                                                                                    
+                                                                                                    
+                                                                                                    
+                                                                                                    
+                                                                                                    
+                                                                                                    
+                                                                                                    `,
+                `                                                                                                    
+                                                                                                    
+                                                                                                    
+                                                                                                    
+                                                                                                    
+                                                                                                    
+                                                                                                    
+                                                                                                    
+                                                                                                    
+                                                                                                    
+                                            ███████                                                 
+                                           █████████                                                
+                                           ████ █████                                               
+                                          █████ █████                                               
+                                          █████ ████                      ███                       
+                                          █████ ████                      ████                      
+                                          ██████████                      █████                     
+                         ██                █████████                      █████                     
+                     █████                 ████████    ███   ████████     ████                      
+                  █████     █████████      ████████    ████ ████  ████   █████    ██                
+            ██████████    █████    ███     ███████    ████████    █████  ██████████████             
+             ████████    █████     ███      ██████    ███████    █████  █████████  ████             
+              ██████     █████    █████     █████     ██████     █████  ███████   █████             
+              ██████      ████   ████████████████████████████  █████   ███████   █████              
+               █████       █████████  ████████████████████████████     █████    █████               
+                █████        █████                   █████            █████     █████               
+                 █████                               █████               █       ██████             
+                  █████                              █████                          ████            
+                                                     ████                                           
+                                                    █████                                           
+                                                    █████                                           
+                                                    █████                                           
+                                                                                                    
+                                                                                                    
+                                                                                                    
+                                                                                                    
+                                                                                                    
+                                                                                                    
+                                                                                                    
+                                                                                                    
+                                                                                                    
+                                                                                                    `,
+                `                                                                                                    
+                                                                                                    
+                                                                                                    
+                                                                                                    
+                                                                                                    
+                                                                                                    
+                                                                                                    
+                                                                                                    
+                                                                                                    
+                                            ███████                                                 
+                                           █████████                                                
+                                          █████ █████                                               
+                                          █████ █████                                               
+                                          █████ █████                      ██                       
+                                          █████ ████                       ████                     
+                                          █████ ████                       ████                     
+                                          ██████████                       ████                     
+                       ████               █████████                        ████                     
+                    █████                 █████████    ████  ████████     █████                     
+           ██     ████      ███████        ████████    █████████  █████   █████   ███               
+           ██████████     ████    ████     ███████    ████████    █████  █████ █████████            
+            ████████     ████     ████     ███████    ███████     █████  █████████  ████            
+             ██████      ████     █████     █████     ███████    █████  ████████   ████             
+             ██████      ████    ███████   ███████   ████████   █████   ███████   █████             
+              █████       ██████████ ██████████████████████████████    ██████    █████              
+               █████       ████████     ████    ████ █████  ████       █████     █████              
+                █████                                █████              ███       █████             
+                 █████                               █████                         █████            
+                   ██                                █████                              █           
+                                                    ██████                                          
+                                                    █████                                           
+                                                    █████                                           
+                                                     ████                                           
+                                                                                                    
+                                                                                                    
+                                                                                                    
+                                                                                                    
+                                                                                                    
+                                                                                                    
+                                                                                                    
+                                                                                                    
+                                                                                                    `,
+                `                                                                                                    
+                                                                                                    
+                                                                                                    
+                                                                                                    
+                                                                                                    
+                                                                                                    
+                                                                                                    
+                                                                                                    
+                                             █████                                                  
+                                           █████████                                                
+                                           ████ ████                                                
+                                          █████ ████                                                
+                                          █████ ████                                                
+                                          ████  ████                        ██                      
+                                          ████  ████                        ███                     
+                                          ████  ████                        ███                     
+                                          █████ ███                         ███                     
+                      █████               █████████              █          ███                     
+                   █████        ████       ████████    ████  █████████     ████                     
+          ███    ████      █████           ███████     ████ ███    ████    ████    ███              
+          ██████████     ████     ███      ███████     ███████     ████   ████  █████████           
+           ████████      ███      ████      █████      ██████     █████   ████████   ████           
+            ███████     ████      ████      █████     ███████     ████   ████████   ████            
+             █████       ████    ███████   ███████    ███████    ████   ███████    █████            
+             ██████      ███████████ ███████████████████████████████    ██████    █████             
+              █████       █████████    ██████  ███████████ ███████     ██████     █████             
+               ████          ███                      ████              ████      █████             
+                ████                                 █████                         █████            
+                 ████                                █████                            ████          
+                                                     █████                                          
+                                                     ████                                           
+                                                    █████                                           
+                                                    █████                                           
+                                                     ████                                           
+                                                                                                    
+                                                                                                    
+                                                                                                    
+                                                                                                    
+                                                                                                    
+                                                                                                    
+                                                                                                    
+                                                                                                    `,
+                `                                                                                                    
+                                                                                                    
+                                                                                                    
+                                                                                                    
+                                                                                                    
+                                                                                                    
+                                                                                                    
+                                             █████                                                  
+                                           █████████                                                
+                                           ████ ████                                                
+                                          █████ ████                                                
+                                          █████ ████                                                
+                                          ████  ████                        ███                     
+                                          ████  ████                        ████                    
+                                          ████  ████                        ████                    
+                                          ████  ████                        ████                    
+                                          █████████                         ████                    
+                    █████                 █████████             ████        ████                    
+                  █████       ██████       ████████    ████  ██████████     ████                    
+         ███    █████     █████            ███████     ████ ████   ████    █████   ████             
+         ██████████      ████     ███      ███████     ███████     █████   ████  ████████           
+          ████████      ████     ████       █████      ███████     ████   █████████  █████          
+           ███████      ████     █████      █████      ██████     █████   ███████    ████           
+            ██████      ████     ██████    ██████     ███████    █████   ███████    ████            
+            ██████       ████   ██████████████████████████████ ██████    ██████    █████            
+             █████       ██████████   ███████ █████████████████████     ██████     ████             
+              █████        ██████                     ████              █████      ████             
+               ████                                   ████                ██       █████            
+               █████                                 █████                           █████          
+                                                     █████                                          
+                                                     █████                                          
+                                                     ████                                           
+                                                    █████                                           
+                                                    █████                                           
+                                                      ███                                           
+                                                                                                    
+                                                                                                    
+                                                                                                    
+                                                                                                    
+                                                                                                    
+                                                                                                    
+                                                                                                    `,
+                `                                                                                                    
+                                                                                                    
+                                                                                                    
+                                                                                                    
+                                                                                                    
+                                                                                                    
+                                             █████                                                  
+                                            ████████                                                
+                                           ████ ████                                                
+                                          █████ ████                                                
+                                          ████  ████                                                
+                                          ████  ████                                                
+                                          ████  ████                         ███                    
+                                          ████  ████                         ████                   
+                                          ████  ████                         ████                   
+                                          ████  ███                          ████                   
+                      ████                ████ ████                          ████                   
+                   █████                  ████ ████     ██     ███████      █████                   
+                 █████       ███████      █████████    █████ ██████████     ████                    
+        ████   █████      ████             ███████     █████████   █████    ████   ██████           
+         ██████████     ████     ████      ███████     ████████    █████   █████ █████████          
+         █████████     ████      ████      ███████     ███████     █████   ████ ████  █████         
+          ███████      ████      █████      █████      ██████     ██████  ████████    ████          
+           ██████      ████      █████     ██████     ███████     █████   ███████    ████           
+           ██████       ████    ██████████████████████████████  ██████   ███████    █████           
+            █████       ███████████  ████████ ██████████████████████     ██████     ████            
+             █████        ████████      ███     ████  █████  ████       ██████     █████            
+             █████                                    ████               ████       █████           
+              █████                                   ████                           █████          
+               █████                                  ████                             █████        
+                                                     █████                                          
+                                                     █████                                          
+                                                     █████                                          
+                                                     █████                                          
+                                                     ████                                           
+                                                      ███                                           
+                                                                                                    
+                                                                                                    
+                                                                                                    
+                                                                                                    
+                                                                                                    
+                                                                                                    `,
+                `                                                                                                    
+                                                                                                    
+                                                                                                    
+                                                                                                    
+                                                                                                    
+                                             █████                                                  
+                                           ████████                                                 
+                                           █████████                                                
+                                          █████ ████                                                
+                                          ████  ████                                                
+                                          ████  ████                                                
+                                          ████  ████                         ███                    
+                                          ████  ████                         ████                   
+                                          ████  ████                          ███                   
+                                          ████  ████                          ████                  
+                                          ████ ████                          █████                  
+                     ████                 ████ ████                          █████                  
+                  █████                   ████ ████    ████    ███████       ████                   
+                █████       ████████      █████████    █████ █████ █████     ████                   
+       ████   █████      █████             ███████     █████████    ████    █████   ██████          
+        ██████████     █████     ███       ███████     ████████     █████   ████  █████████         
+        █████████      ████      ████      ███████     ███████     █████   ██████████  █████        
+         ████████      ████      ████      ██████      ███████     █████   ████████    ████         
+          ██████       ████      █████     ██████     ███████     █████   ████████    ████          
+          ██████       ████     ████████  █████████  █████████   █████    ███████    █████          
+           █████        ███████████ █████████████████████████████████    ██████      ████           
+            █████        █████████    ██████   ████████████ ██████       ██████     █████           
+            █████          █████                      █████              █████      █████           
+             █████                                    ████                 ██        █████          
+              █████                                   ████                             █████        
+                ███                                  █████                                ███       
+                                                     █████                                          
+                                                     █████                                          
+                                                     █████                                          
+                                                     █████                                          
+                                                     ████                                           
+                                                      ███                                           
+                                                                                                    
+                                                                                                    
+                                                                                                    
+                                                                                                    
+                                                                                                    `,
+                `                                                                                                    
+                                                                                                    
+                                                                                                    
+                                                                                                    
+                                              ███                                                   
+                                           ████████                                                 
+                                           █████████                                                
+                                          █████ ████                                                
+                                          ████  ████                                                
+                                          ████  ████                                                
+                                         █████  ████                           █                    
+                                         █████  ████                          ███                   
+                                         █████  ████                          ████                  
+                                          ████  ████                          ████                  
+                                          ████  ████                          ████                  
+                                          ████ ████                           ████                  
+                   ██████                 ████ ████               ██          ████                  
+                ██████                    ████ ████     ███    ████████       ████                  
+               █████      █████████       █████████    █████  ████  ████     █████                  
+      ████   █████      █████     █        ███████     █████ ███    █████    █████   ██████         
+       ██████████      ████      ███       ███████     ████████     █████   █████ ██████████        
+       █████████      █████     ████       ███████     ███████      █████   ██████████  █████       
+        ████████      ████      █████      ██████      ███████     ██████  █████████   █████        
+         ███████      ████      ██████     ██████      ███████     █████   ████████    ████         
+         ██████       █████     ███████   ████████   █████████    █████   ████████    █████         
+          ██████       ███████████████████████████████████████████████    ██████     █████          
+           █████        ██████████   ████████ ██████████████████████     ██████      █████          
+           █████         ███████                      █████              ██████      █████          
+            █████                                     █████                ███       ██████         
+             █████                                    █████                           ██████        
+             ██████                                   ████                               █████      
+                                                     █████                                          
+                                                     █████                                          
+                                                     █████                                          
+                                                     █████                                          
+                                                     █████                                          
+                                                     ████                                           
+                                                       ██                                           
+                                                                                                    
+                                                                                                    
+                                                                                                    
+                                                                                                    `,
+                `                                                                                                    
+                                                                                                    
+                                            ███████                                                 
+                                           █████████                                                
+                                          ███████████                                               
+                                          █████ █████                                               
+                                         █████  █████                                               
+                                         █████  █████                                               
+                                         █████  █████                                               
+                                         █████  █████                           ███                 
+                                         █████  ████                            ████                
+                                         █████  ████                            ████                
+                                         █████  ████                            ████                
+                                         █████ █████                            ████                
+                                         █████ ████                             ████                
+                  █████                  █████ ████                             ████                
+               ██████                    █████ ████     ███     ████████       █████                
+             ██████        ███████        █████████     █████  ██████████      █████                
+            █████       ███████           █████████     █████ ████   █████     █████                
+   █████  ██████      █████     ███       ████████      █████████    ██████   █████   ████████      
+    ███████████      █████      ███       ████████      ████████     ██████   █████  ██████████     
+     █████████       ████      ████        ███████      ███████      ██████   ██████████  █████     
+     █████████      █████      █████       ██████       ███████      █████   ██████████   █████     
+      ████████      █████      ██████      █████       ███████      ██████   ████████    █████      
+      ███████       █████      ███████    ███████     ████████     ██████   ████████     █████      
+       ██████        █████    █████████████████████████████████   ██████    ███████     █████       
+        ██████       █████████████ ████████████████████████████████████    ███████      █████       
+        ██████        ███████████    ███████  ███████████████████████      ██████      ██████       
+         █████          ███████                        █████               ██████      ██████       
+         ██████                                       █████                 ████        █████       
+          █████                                       █████                             ██████      
+           █████                                      █████                               ██████    
+            ████                                      █████                                  ████   
+                                                     ██████                                         
+                                                     █████                                          
+                                                     █████                                          
+                                                     █████                                          
+                                                     █████                                          
+                                                     █████                                          
+                                                      ████                                          
+                                                                                                    
+                                                                                                    `
+            ];
+
+            const asciiElement = document.createElement('div');
+            asciiElement.className = 'ascii-intro';
+            asciiElement.textContent = frames[0];
+            document.body.appendChild(asciiElement);
+
+            let currentFrame = 0;
+            
+            // Show first frame
+            setTimeout(() => {
+                asciiElement.classList.add('show');
+            }, 500);
+
+            // Animate through frames (four times as fast as original)
+            const frameInterval = setInterval(() => {
+                currentFrame++;
+                if (currentFrame < frames.length) {
+                    asciiElement.textContent = frames[currentFrame];
+                } else {
+                    // Animation complete, keep final frame static with no fade out
+                    clearInterval(frameInterval);
+                    
+                    // Show What's New window after animation completes
+                    setTimeout(() => {
+                        showWhatsNew();
+                    }, 1000);
+                }
+            }, 200);
         }
 
         // Bring window to front by managing z-index
@@ -3975,6 +4908,9 @@
             // Add to desktop
             document.body.appendChild(windowElement);
             
+            // Ensure window fits within viewport
+            constrainWindowToViewport(windowElement);
+            
             console.log('🔍 Element added to DOM:', {
                 elementId: windowId,
                 elementExists: !!document.getElementById(windowId),
@@ -4008,6 +4944,17 @@
         }
 
         // Admin login functionality
+        function openRalphWorld() {
+            console.log('🌍 Opening Ralph.World...');
+            console.log('📊 AppState.config:', AppState.config);
+            console.log('⚙️ System config:', AppState.config?.system);
+            
+            const url = AppState.config?.system?.ralphWorldUrl || 'https://ralph.world';
+            console.log('🔗 Using URL:', url);
+            
+            openIframeWindow(url, 'Ralph.World - Company Website', 1000, 700);
+        }
+        
         function openAdminLogin() {
             openWindow('adminLogin');
             // Focus on username field
@@ -4205,10 +5152,10 @@
             const desktopAscii = document.querySelector('.desktop-ascii');
             if (!desktopAscii) return;
             
-            // Start animation with 2 second duration
+            // Start animation with 1 second duration (twice as fast)
             setTimeout(() => {
                 desktopAscii.classList.add('animating');
-                randomAnimateAscii(desktopAscii, 2000);
+                randomAnimateAscii(desktopAscii, 1000);
             }, 1000); // Small delay to let boot complete first
         }
 
@@ -4265,8 +5212,10 @@
                         bootScreen.classList.add('hide');
                         desktop.style.display = 'block';
                         
-                        // Start desktop ASCII random animation
-                        startDesktopAsciiAnimation();
+                        // Show ASCII intro sequence
+                        showAsciiIntro();
+                        
+                        // Old desktop ASCII animation disabled
                         
                         
                         // Make chatbot window draggable
@@ -4279,10 +5228,7 @@
                             showNotification('RALPH INTRANET SYSTEM 1.0 - READY');
                         }, 500);
                         
-                        // Show welcome banner after 3 seconds
-                        setTimeout(() => {
-                            showWelcomeBanner();
-                        }, 3000);
+                        // Welcome banner auto-popup removed per user request
                     }, 1000);
                 }
             }, 300);
@@ -4541,8 +5487,7 @@
                 // Load desktop icons from CMS configuration
                 loadDesktopIcons();
                 
-                // Maybe show share popup after boot
-                setTimeout(() => maybeShowSharePopup(), 5000);
+                // Auto-popup removed per user request
             }
             
             // Start boot sequence

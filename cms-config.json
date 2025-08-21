@@ -3,6 +3,7 @@
     "version": "1.0",
     "companyName": "RALPH",
     "primaryColor": "#eb008b",
+    "ralphWorldUrl": "https://ralph-world-frontend.vercel.app/",
     "bootMessages": [
       "Loading system kernel...",
       "Initializing RALPH protocols...",
@@ -21,7 +22,7 @@
   "chatbot": {
     "enabled": true,
     "title": "RALPH Assistant v1.0",
-    "welcomeMessage": "Welcome to RALPH Super-Intranet!",
+    "welcomeMessage": "Welcome to RALPH's Super-Intranet!",
     "helpText": "Here's what you can do:\n► Click any desktop icon to open modules\n► Drag windows by their title bars\n► Minimize, maximize, or close windows\n► Submit suggestions in the Suggestion Box\n► Accept challenges\n► Check project pipelines and deadlines\n► Send shoutouts to team members",
     "openai": {
       "enabled": false,
@@ -42,7 +43,7 @@
   },
   "modules": {
     "newBiz": {
-      "title": "New Business Pipeline v2.0",
+      "title": "New Biz Pipe",
       "icon": "📊",
       "enabled": true,
       "content": {
@@ -103,7 +104,7 @@
       "apiEndpoint": null
     },
     "premieres": {
-      "title": "Project Premiere Calendar",
+      "title": "Premiere Calendar",
       "icon": "🎬",
       "enabled": true,
       "content": {
@@ -163,7 +164,7 @@
       "apiEndpoint": null
     },
     "shoutouts": {
-      "title": "Shoutouts & Celebrations",
+      "title": "Shoutouts",
       "icon": "🎉",
       "enabled": true,
       "content": {
@@ -175,11 +176,13 @@
           },
           {
             "date": "Dec 18",
-            "person": "Jennifer L. from Creative"
+            "person": "Jennifer L. from Creative",
+            "highlight": false
           },
           {
             "date": "Dec 22",
-            "person": "Alex T. from Strategy"
+            "person": "Alex T. from Strategy",
+            "highlight": false
           }
         ],
         "anniversaries": [
@@ -237,8 +240,8 @@
       "apiEndpoint": null
     },
     "ralphNews": {
-      "title": "RALPH News Network",
-      "icon": "📢",
+      "title": "Ralph News Network",
+      "icon": "<span class=\"rnn-logo\">RNN</span>",
       "enabled": true,
       "content": {
         "breaking": [
@@ -264,7 +267,7 @@
       "apiEndpoint": null
     },
     "suggestions": {
-      "title": "Digital Suggestion Box",
+      "title": "Suggestion Box",
       "icon": "💭",
       "enabled": true,
       "content": {
@@ -287,7 +290,7 @@
       "submitEndpoint": null
     },
     "announcements": {
-      "title": "System Announcements",
+      "title": "Announcements",
       "icon": "📣",
       "enabled": true,
       "content": {
@@ -304,7 +307,7 @@
       "apiEndpoint": null
     },
     "links": {
-      "title": "Quick Links Directory",
+      "title": "Quick Links",
       "icon": "🔗",
       "enabled": true,
       "content": {
@@ -344,7 +347,7 @@
       "apiEndpoint": null
     },
     "innovation": {
-      "title": "Innovation Lab Updates",
+      "title": "Innovation Updates",
       "icon": "💡",
       "enabled": true,
       "content": {
@@ -373,61 +376,72 @@
       "apiEndpoint": null
     },
     "resources": {
-      "title": "Resource Center",
+      "title": "Resources",
       "icon": "📁",
       "enabled": true,
       "content": {
         "documents": [
-          "Brand Guidelines v3.2",
-          "Employee Handbook 2024",
-          "Creative Best Practices",
-          "Client Onboarding Guide"
+          {
+            "name": "Brand Guidelines v3.2",
+            "url": ""
+          },
+          {
+            "name": "Employee Handbook 2024",
+            "url": ""
+          },
+          {
+            "name": "Creative Best Practices",
+            "url": ""
+          },
+          {
+            "name": "Client Onboarding Guide",
+            "url": ""
+          }
         ],
         "templates": [
-          "Presentation Template",
-          "Project Brief Template",
-          "Invoice Template"
+          {
+            "name": "Presentation Template",
+            "url": ""
+          },
+          {
+            "name": "Project Brief Template",
+            "url": ""
+          },
+          {
+            "name": "Invoice Template",
+            "url": ""
+          }
         ],
         "training": [
-          "New Software Tutorials",
-          "Client Communication 101",
-          "Project Management Basics"
+          {
+            "name": "New Software Tutorials",
+            "url": ""
+          },
+          {
+            "name": "Client Communication 101",
+            "url": ""
+          },
+          {
+            "name": "Project Management Basics",
+            "url": ""
+          }
         ]
       },
       "apiEndpoint": null
     },
     "music": {
-      "title": "Music Library",
       "icon": "🎵",
       "enabled": false,
       "content": {
-        "tracks": [
-          {
-            "id": 1,
-            "title": "Kawaii Kitsune",
-            "artist": "Kevin MacLeod",
-            "file": "music/kawaii-kitsune-kevin-macleod-main-version-7984-04-02.mp3",
-            "duration": "4:02",
-            "uploadDate": "2024-08-19"
-          },
-          {
-            "id": 2,
-            "title": "Mirthaflare",
-            "artist": "Ian Aisling",
-            "file": "music/mirthaflare-ian-aisling-main-version-22101-02-36.mp3",
-            "duration": "2:36",
-            "uploadDate": "2024-08-19"
-          }
-        ],
-        "totalTracks": 2,
-        "totalDuration": "6:38"
+        "tracks": [],
+        "totalTracks": 0,
+        "totalDuration": "0:00"
       },
       "apiEndpoint": null
     },
     "sharing": {
-      "title": "Weekly Share Challenge",
       "icon": "📲",
-      "enabled": true,
+      "enabled": false,
       "content": {
         "weekOf": "August 20, 2024",
         "giftCardAmount": "$25",
@@ -435,29 +449,29 @@
           {
             "id": 1,
             "type": "Instagram Post",
+            "platform": "Instagram",
             "title": "Behind the Scenes at RALPH Studio",
             "description": "Check out our creative process in action!",
             "thumbnail": "https://via.placeholder.com/300x200/EB008B/FFFFFF?text=RALPH+BTS",
-            "shareUrl": "https://instagram.com/p/example1",
-            "platform": "Instagram"
+            "shareUrl": "https://instagram.com/p/example1"
           },
           {
             "id": 2,
             "type": "TikTok Video",
+            "platform": "TikTok",
             "title": "Quick Design Tips from Our Team",
             "description": "30-second design hack that will blow your mind",
             "thumbnail": "https://via.placeholder.com/300x200/31BDBF/FFFFFF?text=Design+Tips",
-            "shareUrl": "https://tiktok.com/@ralph/video/example2",
-            "platform": "TikTok"
+            "shareUrl": "https://tiktok.com/@ralph/video/example2"
           },
           {
             "id": 3,
             "type": "Substack Article",
+            "platform": "Substack",
             "title": "The Future of Creative Agencies",
             "description": "Our latest thoughts on industry trends and innovation",
             "thumbnail": "https://via.placeholder.com/300x200/F16524/FFFFFF?text=Future+Agency",
-            "shareUrl": "https://ralph.substack.com/p/future-creative-agencies",
-            "platform": "Substack"
+            "shareUrl": "https://ralph.substack.com/p/future-creative-agencies"
           }
         ]
       },
