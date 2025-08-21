@@ -52,6 +52,7 @@ const CMS_CONFIG = {
             "title": "New Biz Pipe",
             "icon": "📊",
             "enabled": true,
+            "description": "Track our business development pipeline from warm leads to won pitches. See upcoming meetings, proposal deadlines, and conversion progress.",
             "content": {
                 "header": "RALPH PIPELINE TRACKER 1.0",
                 "warmLeads": [
@@ -113,6 +114,7 @@ const CMS_CONFIG = {
             "title": "Premiere Calendar",
             "icon": "🎬",
             "enabled": true,
+            "description": "Stay up-to-date with all project premieres and launch dates. Track this month's debuts and plan for upcoming releases.",
             "content": {
                 "thisMonth": [
                     {
@@ -155,6 +157,7 @@ const CMS_CONFIG = {
             "title": "Challenges",
             "icon": "🎨",
             "enabled": true,
+            "description": "Take on creative challenges and showcase your skills! See current competitions, prizes, and celebrate recent winners.",
             "content": {
                 "currentChallenge": {
                     "month": "DECEMBER",
@@ -173,6 +176,7 @@ const CMS_CONFIG = {
             "title": "Shoutouts",
             "icon": "🎉",
             "enabled": true,
+            "description": "Celebrate team members and milestones! Check upcoming birthdays, work anniversaries, and share appreciation for great work.",
             "content": {
                 "birthdays": [
                     {
@@ -222,6 +226,7 @@ const CMS_CONFIG = {
             "title": "Industry Articles",
             "icon": "📰",
             "enabled": true,
+            "description": "Stay informed with curated industry news and trends. Read must-have articles from top publications and trending topics.",
             "content": {
                 "trending": [
                     "The Rise of AI in Creative Production",
@@ -249,6 +254,7 @@ const CMS_CONFIG = {
             "title": "Ralph News Network",
             "icon": "<span class=\"rnn-logo\">RNN</span>",
             "enabled": true,
+            "description": "Breaking news and updates from across the RALPH network. Get the latest company announcements and industry insights.",
             "content": {
                 "breaking": [
                     {
@@ -276,6 +282,7 @@ const CMS_CONFIG = {
             "title": "Suggestion Box",
             "icon": "💭",
             "enabled": true,
+            "description": "Share your ideas to improve our workplace and processes. See which suggestions are approved, under review, or being considered.",
             "content": {
                 "recentSuggestions": [
                     {
@@ -299,6 +306,7 @@ const CMS_CONFIG = {
             "title": "Announcements",
             "icon": "📣",
             "enabled": true,
+            "description": "Important company updates and system notifications. Check critical announcements and general office information.",
             "content": {
                 "important": [
                     "System maintenance scheduled for Saturday 2:00 AM",
@@ -316,6 +324,7 @@ const CMS_CONFIG = {
             "title": "Quick Links",
             "icon": "🔗",
             "enabled": true,
+            "description": "Fast access to essential tools and resources. Find internal systems, client portals, and external platforms you use daily.",
             "content": {
                 "internal": [
                     {
@@ -356,6 +365,7 @@ const CMS_CONFIG = {
             "title": "Innovation Updates",
             "icon": "💡",
             "enabled": true,
+            "description": "Explore cutting-edge projects and experimental tools. Track innovation lab progress and upcoming tech sessions.",
             "content": {
                 "experiments": [
                     {
@@ -385,6 +395,7 @@ const CMS_CONFIG = {
             "title": "Resources",
             "icon": "📁",
             "enabled": true,
+            "description": "Access brand guidelines, templates, and training materials. Your one-stop shop for company documents and learning resources.",
             "content": {
                 "documents": [
                     {

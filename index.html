@@ -716,6 +716,20 @@
             display: inline-block;
         }
 
+        /* Module Description Styling */
+        .module-description {
+            background: #f8f8f8;
+            border: 1px solid var(--gray-dark);
+            border-radius: 4px;
+            padding: 12px;
+            margin: 10px;
+            font-size: 13px;
+            line-height: 1.4;
+            color: #555;
+            font-style: italic;
+            border-left: 3px solid var(--ralph-pink);
+        }
+
         /* What's New Window Styles */
         .whats-new-header {
             background: linear-gradient(135deg, var(--ralph-pink) 0%, #ff1493 100%);
@@ -3327,6 +3341,18 @@
                     title.textContent = `${moduleConfig.icon} ${moduleConfig.title}`;
                 }
                 
+                // Update module description
+                const contentArea = windowElement.querySelector('.window-content');
+                if (contentArea && moduleConfig.description) {
+                    let existingDescription = contentArea.querySelector('.module-description');
+                    if (!existingDescription) {
+                        existingDescription = document.createElement('div');
+                        existingDescription.className = 'module-description';
+                        contentArea.insertBefore(existingDescription, contentArea.firstChild);
+                    }
+                    existingDescription.textContent = moduleConfig.description;
+                }
+                
                 // Update specific module content
                 if (moduleId === 'newBiz' && moduleConfig.content) {
                     console.log('📊 Loading New Business Pipeline content');
@@ -4201,6 +4227,9 @@
                 <div class="whats-new-header">
                     <h2 style="margin: 0; font-size: 24px; font-weight: bold;">Hey Brook! Here's what's new at RALPH</h2>
                     <div class="whats-new-date">${today}</div>
+                </div>
+                <div class="module-description">
+                    Your central hub for all the latest updates across RALPH. See new projects, announcements, celebrations, and company news in one convenient location.
                 </div>
             `;
             

@@ -1514,6 +1514,11 @@ System ready!</textarea>
                 </div>
 
                 <div class="form-field">
+                    <label>Module Description</label>
+                    <textarea id="moduleDescription" rows="3" placeholder="Brief description of what this module contains...">${module.description || ''}</textarea>
+                </div>
+
+                <div class="form-field">
                     <label>API Endpoint (optional)</label>
                     <input type="url" id="moduleApiEndpoint" value="${module.apiEndpoint || ''}" 
                            placeholder="https://api.yourcompany.com/${moduleId}">
@@ -2080,10 +2085,11 @@ System ready!</textarea>
             
             const title = document.getElementById('moduleTitle').value;
             const icon = document.getElementById('moduleIcon').value;
+            const description = document.getElementById('moduleDescription').value;
             const apiEndpoint = document.getElementById('moduleApiEndpoint').value;
             const enabled = document.getElementById('moduleEnabled').checked;
             
-            console.log('📝 Form values collected:', { title, icon, apiEndpoint, enabled });
+            console.log('📝 Form values collected:', { title, icon, description, apiEndpoint, enabled });
             
             let content = {};
             
@@ -2133,6 +2139,7 @@ System ready!</textarea>
                 ...currentConfig.modules[moduleId],
                 title,
                 icon,
+                description,
                 apiEndpoint: apiEndpoint || null,
                 enabled,
                 content
