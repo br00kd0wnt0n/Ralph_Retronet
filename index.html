@@ -5308,16 +5308,33 @@
         }
         
         function initializeMusicPlayer() {
+            console.log('🎵 Initializing music player...');
+            console.log('🎵 Current playlist length:', musicPlayer.playlist.length);
+            console.log('🎵 AppState.config exists:', !!AppState.config);
+            
             // Load playlist from CMS config if not already loaded
             if (musicPlayer.playlist.length === 0 && AppState.config && AppState.config.modules && AppState.config.modules.music) {
                 const musicModule = AppState.config.modules.music;
+                console.log('🎵 Music module found:', musicModule);
+                console.log('🎵 Music module enabled:', musicModule.enabled);
+                console.log('🎵 Music module content:', musicModule.content);
+                
                 if (musicModule.content && musicModule.content.tracks) {
+                    console.log('🎵 Loading tracks:', musicModule.content.tracks);
                     musicPlayer.playlist = musicModule.content.tracks.map(track => ({
                         title: track.title,
                         artist: track.artist,
                         file: track.file
                     }));
+                    console.log('🎵 Playlist loaded with', musicPlayer.playlist.length, 'tracks');
+                } else {
+                    console.log('🎵 No tracks found in music module content');
                 }
+            } else {
+                console.log('🎵 Playlist already loaded or config not available');
+                if (!AppState.config) console.log('🎵 - No AppState.config');
+                if (!AppState.config?.modules) console.log('🎵 - No modules in config');
+                if (!AppState.config?.modules?.music) console.log('🎵 - No music module in config');
             }
             
             if (!musicPlayer.audio) {
@@ -5515,6 +5532,9 @@
                 
                 // Load desktop icons from CMS configuration
                 loadDesktopIcons();
+                
+                // Initialize music player with CMS data
+                initializeMusicPlayer();
                 
                 // Auto-popup removed per user request
             }
