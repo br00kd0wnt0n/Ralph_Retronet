@@ -5,3 +5,7 @@ node_modules/
 dist/
 build/
 prompt-storage.json
+
+# CMS Content (production data should persist)
+cms-config-production.js
+cms-config-production.json

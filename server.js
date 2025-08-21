@@ -357,15 +357,15 @@ if (typeof module !== 'undefined' && module.exports) {
 }
 `;
         
-        // Write to cms-config.js file
-        const configFilePath = path.join(__dirname, 'cms-config.js');
+        // Write to production config files (not tracked by git)
+        const configFilePath = path.join(__dirname, 'cms-config-production.js');
         fs.writeFileSync(configFilePath, configFileContent, 'utf8');
         
         // Also write a clean JSON file for easy loading
-        const jsonFilePath = path.join(__dirname, 'cms-config.json');
+        const jsonFilePath = path.join(__dirname, 'cms-config-production.json');
         fs.writeFileSync(jsonFilePath, JSON.stringify(configData, null, 2), 'utf8');
         
-        console.log('Configuration saved successfully to cms-config.js and cms-config.json');
+        console.log('Configuration saved successfully to cms-config-production.js and cms-config-production.json');
         res.json({ success: true, message: 'Configuration saved successfully' });
         
     } catch (error) {
@@ -537,18 +537,41 @@ app.get('/api/get-config', (req, res) => {
         }
         
         const fs = require('fs');
+        const productionJsonPath = path.join(__dirname, 'cms-config-production.json');
+        const productionJsPath = path.join(__dirname, 'cms-config-production.js');
         const jsonConfigPath = path.join(__dirname, 'cms-config.json');
         const jsConfigPath = path.join(__dirname, 'cms-config.js');
         
-        // Try to read from JSON file first (cleaner)
-        if (fs.existsSync(jsonConfigPath)) {
+        // Priority 1: Try production JSON config (user's saved content)
+        if (fs.existsSync(productionJsonPath)) {
+            const config = JSON.parse(fs.readFileSync(productionJsonPath, 'utf8'));
+            configCache.data = config;
+            configCache.timestamp = now;
+            res.json(config);
+        }
+        // Priority 2: Try production JS config
+        else if (fs.existsSync(productionJsPath)) {
+            delete require.cache[require.resolve('./cms-config-production.js')];
+            const vm = require('vm');
+            const configContent = fs.readFileSync(productionJsPath, 'utf8');
+            const configMatch = configContent.match(/const CMS_CONFIG = ({[\s\S]*?});/);
+            if (configMatch) {
+                const sandbox = {};
+                vm.createContext(sandbox);
+                const config = vm.runInContext(`(${configMatch[1]})`, sandbox);
+                configCache.data = config;
+                configCache.timestamp = now;
+                res.json(config);
+            }
+        }
+        // Priority 3: Fallback to default JSON config
+        else if (fs.existsSync(jsonConfigPath)) {
             const config = JSON.parse(fs.readFileSync(jsonConfigPath, 'utf8'));
-            // Update cache
             configCache.data = config;
             configCache.timestamp = now;
             res.json(config);
         } 
-        // Fallback to original cms-config.js if JSON doesn't exist
+        // Priority 4: Fallback to original cms-config.js
         else if (fs.existsSync(jsConfigPath)) {
             // For initial load, read from the original config file
             delete require.cache[require.resolve('./cms-config.js')];
