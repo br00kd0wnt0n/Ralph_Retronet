@@ -5616,7 +5616,8 @@
             
             if (!bootScreen || !desktop) return;
             
-            
+            // Start boot ASCII animation immediately
+            startBootAsciiAnimation();
             
             const messages = [
                 'Loading system kernel...',
