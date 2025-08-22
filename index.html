@@ -732,6 +732,10 @@
         }
 
         /* What's New Dashboard Styles */
+        .whats-new-dashboard {
+            z-index: 1001 !important; /* Ensure it's above ASCII desktop */
+        }
+        
         .whats-new-dashboard .window-content {
             background: #000000 !important;
             color: #ffffff !important;
@@ -753,11 +757,11 @@
 
         .whats-new-title {
             font-size: 26px;
-            font-weight: 700;
+            font-weight: 600;
             margin: 0;
-            font-family: 'Courier Prime', monospace;
-            text-transform: uppercase;
-            letter-spacing: 1px;
+            font-family: 'Space Mono', monospace;
+            text-transform: none;
+            letter-spacing: 0.5px;
         }
 
         .whats-new-subtitle {
@@ -1255,8 +1259,8 @@
         }
         
         .boot-logo {
-            font-size: 10px;
-            line-height: 0.56;
+            font-size: 8px;
+            line-height: 0.5;
             color: var(--ralph-pink);
             white-space: pre;
             margin-bottom: 40px;
@@ -1264,6 +1268,9 @@
             overflow: hidden;
             max-width: 100%;
             opacity: 1;
+            font-family: 'Courier New', monospace;
+            image-rendering: pixelated;
+            text-rendering: optimizeSpeed;
         }
         
         
@@ -1433,8 +1440,8 @@
             }
             
             .boot-logo {
-                font-size: 5px;
-                line-height: 0.7;
+                font-size: 4px;
+                line-height: 0.6;
             }
             
             .boot-text {
@@ -1490,8 +1497,8 @@
             }
             
             .boot-logo {
-                font-size: 4px;
-                line-height: 0.49;
+                font-size: 3px;
+                line-height: 0.45;
             }
         }
         
