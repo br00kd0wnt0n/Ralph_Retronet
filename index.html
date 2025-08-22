@@ -687,7 +687,7 @@
             height: auto;
             z-index: -1;
             background: transparent;
-            color: var(--ralph-pink);
+            color: #999999;
             font-family: 'Courier Prime', monospace;
             font-size: 6px;
             line-height: 1;
@@ -745,21 +745,21 @@
         .whats-new-header {
             background: linear-gradient(135deg, var(--ralph-pink) 0%, #ff1493 100%);
             color: white;
-            padding: 24px;
+            padding: 20px;
             text-align: left;
         }
 
         .whats-new-title {
-            font-size: 32px;
+            font-size: 26px;
             font-weight: 700;
             margin: 0;
             font-family: 'Inter', sans-serif;
         }
 
         .whats-new-subtitle {
-            font-size: 16px;
+            font-size: 14px;
             opacity: 0.9;
-            margin-top: 8px;
+            margin-top: 6px;
             font-weight: 400;
         }
         
@@ -767,9 +767,9 @@
             display: grid;
             grid-template-columns: 1fr 1fr 1fr;
             grid-template-rows: auto auto;
-            gap: 20px;
-            padding: 20px;
-            height: calc(100% - 140px);
+            gap: 16px;
+            padding: 16px;
+            height: calc(100% - 120px);
             background: #000000;
         }
 
@@ -780,31 +780,29 @@
         .dashboard-card {
             background: #1a1a1a;
             border-radius: 12px;
-            padding: 20px;
+            padding: 16px;
             border: 1px solid #333;
             transition: all 0.3s ease;
         }
 
         .dashboard-card:hover {
             border-color: var(--ralph-pink);
-            transform: translateY(-2px);
-            box-shadow: 0 8px 24px rgba(235, 0, 139, 0.2);
         }
 
         .dashboard-card h3 {
             color: var(--ralph-pink);
-            font-size: 18px;
+            font-size: 16px;
             font-weight: 600;
-            margin: 0 0 16px 0;
+            margin: 0 0 14px 0;
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 6px;
         }
 
         .dashboard-card-content {
             color: #e0e0e0;
-            line-height: 1.6;
-            font-size: 14px;
+            line-height: 1.5;
+            font-size: 13px;
         }
 
         .dashboard-item {
@@ -820,7 +818,6 @@
 
         .dashboard-item:hover {
             color: var(--ralph-pink);
-            transform: translateX(4px);
         }
 
         .dashboard-stats {
@@ -1810,7 +1807,7 @@
         
         <!-- Windows -->
         <!-- What's New Window -->
-        <div id="whatsNew" class="window whats-new-dashboard" style="width: calc(100vw - 160px); height: calc(100vh - 120px); top: 60px; left: 20px;">
+        <div id="whatsNew" class="window whats-new-dashboard" style="width: calc(100vw - 300px); height: calc(100vh - 80px); top: 40px; left: 40px;">
             <div class="window-header">
                 <div class="window-title">Hey Brook! Here's what's new at RALPH</div>
                 <div class="window-controls">
