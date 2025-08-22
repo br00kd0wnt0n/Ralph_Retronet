@@ -736,7 +736,7 @@
             color: #ffffff !important;
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif !important;
             padding: 0 !important;
-            overflow-y: auto;
+            overflow: hidden;
         }
 
         .whats-new-dashboard .window-content::before {
@@ -767,10 +767,15 @@
         .whats-new-dashboard-grid {
             display: grid;
             grid-template-columns: 1fr 1fr 1fr;
-            grid-template-rows: auto auto auto;
+            grid-template-rows: auto auto;
             gap: 20px;
             padding: 20px;
             height: calc(100% - 140px);
+            background: #000000;
+        }
+
+        .dashboard-card-wide {
+            grid-column: span 2;
         }
 
         .dashboard-card {
@@ -4334,11 +4339,14 @@
                     ${generateWhatsHappeningCard()}
                     ${generateChallengesCard()}
                     ${generateShoutoutsCard()}
-                    ${generateQuickStatsCard()}
                 </div>
             `;
             
-            // Collect updates from various modules
+            return html;
+        }
+
+        // Remove old content generation - keeping stub for reference
+        function generateOldContent() {
             const updates = [];
             
             // New Business Pipeline updates
@@ -4506,25 +4514,60 @@
             
             const totalPitches = (newBiz.warmLeads?.length || 0) + 
                                (newBiz.pitchesHappening?.length || 0) + 
-                               (newBiz.pitchSubmitted?.length || 0);
+                               (newBiz.pitchSubmitted?.length || 0) +
+                               (newBiz.pitchPresented?.length || 0) +
+                               (newBiz.pitchWon?.length || 0);
             const wonPitches = newBiz.pitchWon?.length || 0;
             const progress = totalPitches > 0 ? Math.round((wonPitches / totalPitches) * 100) : 0;
             
             return `
-                <div class="dashboard-card" onclick="openWindowBeside('newBiz', 'whatsNew');">
-                    <h3><span>📊</span>New Biz Pipeline</h3>
+                <div class="dashboard-card dashboard-card-wide" onclick="openWindowBeside('newBiz', 'whatsNew');">
+                    <h3><span>📊</span>New Biz Pipeline Tracker</h3>
                     <div class="dashboard-card-content">
-                        <div class="pipeline-progress">
+                        <div style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 16px; margin-bottom: 20px;">
+                            <div style="text-align: center;">
+                                <div class="stat-number" style="font-size: 24px;">${newBiz.warmLeads?.length || 0}</div>
+                                <div class="stat-label">Warm Leads</div>
+                            </div>
+                            <div style="text-align: center;">
+                                <div class="stat-number" style="font-size: 24px; color: #ffaa00;">${newBiz.pitchesHappening?.length || 0}</div>
+                                <div class="stat-label">Active Pitches</div>
+                            </div>
+                            <div style="text-align: center;">
+                                <div class="stat-number" style="font-size: 24px; color: #00aaff;">${newBiz.pitchSubmitted?.length || 0}</div>
+                                <div class="stat-label">Submitted</div>
+                            </div>
+                            <div style="text-align: center;">
+                                <div class="stat-number" style="font-size: 24px; color: #aa00ff;">${newBiz.pitchPresented?.length || 0}</div>
+                                <div class="stat-label">Presented</div>
+                            </div>
+                            <div style="text-align: center;">
+                                <div class="stat-number" style="font-size: 24px; color: #00ff00;">${wonPitches}</div>
+                                <div class="stat-label">Won</div>
+                            </div>
+                        </div>
+                        
+                        <div class="pipeline-progress" style="height: 10px; margin-bottom: 20px;">
                             <div class="pipeline-progress-fill" style="width: ${progress}%"></div>
                         </div>
-                        <div class="dashboard-item">
-                            <strong>${newBiz.warmLeads?.length || 0}</strong> warm leads
-                        </div>
-                        <div class="dashboard-item">
-                            <strong>${newBiz.pitchesHappening?.length || 0}</strong> active pitches
-                        </div>
-                        <div class="dashboard-item">
-                            <strong>${wonPitches}</strong> wins this quarter
+                        
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                            <div>
+                                ${newBiz.warmLeads?.slice(0, 2).map(lead => `
+                                    <div class="dashboard-item">
+                                        <strong>${lead.name}</strong> - ${lead.office}
+                                        <span style="float: right; color: #888; font-size: 12px;">${lead.dueDate}</span>
+                                    </div>
+                                `).join('') || '<div class="dashboard-item">No warm leads</div>'}
+                            </div>
+                            <div>
+                                ${newBiz.pitchesHappening?.slice(0, 2).map(pitch => `
+                                    <div class="dashboard-item">
+                                        <span class="badge-new">ACTIVE</span> ${pitch.name}
+                                        <span style="float: right; color: #888; font-size: 12px;">${pitch.dueDate}</span>
+                                    </div>
+                                `).join('') || '<div class="dashboard-item">No active pitches</div>'}
+                            </div>
                         </div>
                     </div>
                 </div>
