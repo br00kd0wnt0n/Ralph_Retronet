@@ -683,19 +683,18 @@
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            width: 25vw;
+            width: 20vw;
             height: auto;
             z-index: -1;
             background: transparent;
-            color: rgba(255, 255, 255, 0.7);
+            color: var(--ralph-pink);
             font-family: 'Courier Prime', monospace;
-            font-size: 8px;
+            font-size: 6px;
             line-height: 1;
             white-space: pre;
             text-align: left;
             pointer-events: none;
             opacity: 0;
-            transition: opacity 0.5s ease;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -4524,49 +4523,89 @@
                 <div class="dashboard-card dashboard-card-wide" onclick="openWindowBeside('newBiz', 'whatsNew');">
                     <h3><span>📊</span>New Biz Pipeline Tracker</h3>
                     <div class="dashboard-card-content">
-                        <div style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 16px; margin-bottom: 20px;">
-                            <div style="text-align: center;">
-                                <div class="stat-number" style="font-size: 24px;">${newBiz.warmLeads?.length || 0}</div>
-                                <div class="stat-label">Warm Leads</div>
-                            </div>
-                            <div style="text-align: center;">
-                                <div class="stat-number" style="font-size: 24px; color: #ffaa00;">${newBiz.pitchesHappening?.length || 0}</div>
-                                <div class="stat-label">Active Pitches</div>
-                            </div>
-                            <div style="text-align: center;">
-                                <div class="stat-number" style="font-size: 24px; color: #00aaff;">${newBiz.pitchSubmitted?.length || 0}</div>
-                                <div class="stat-label">Submitted</div>
-                            </div>
-                            <div style="text-align: center;">
-                                <div class="stat-number" style="font-size: 24px; color: #aa00ff;">${newBiz.pitchPresented?.length || 0}</div>
-                                <div class="stat-label">Presented</div>
-                            </div>
-                            <div style="text-align: center;">
-                                <div class="stat-number" style="font-size: 24px; color: #00ff00;">${wonPitches}</div>
-                                <div class="stat-label">Won</div>
-                            </div>
-                        </div>
-                        
                         <div class="pipeline-progress" style="height: 10px; margin-bottom: 20px;">
                             <div class="pipeline-progress-fill" style="width: ${progress}%"></div>
                         </div>
                         
-                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
-                            <div>
-                                ${newBiz.warmLeads?.slice(0, 2).map(lead => `
-                                    <div class="dashboard-item">
-                                        <strong>${lead.name}</strong> - ${lead.office}
-                                        <span style="float: right; color: #888; font-size: 12px;">${lead.dueDate}</span>
-                                    </div>
-                                `).join('') || '<div class="dashboard-item">No warm leads</div>'}
+                        <div style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px;">
+                            <!-- Warm Leads -->
+                            <div style="border-right: 1px solid #333; padding-right: 12px;">
+                                <div style="text-align: center; margin-bottom: 12px;">
+                                    <div class="stat-number" style="font-size: 24px;">${newBiz.warmLeads?.length || 0}</div>
+                                    <div class="stat-label">Warm Leads</div>
+                                </div>
+                                <div style="font-size: 11px; line-height: 1.4;">
+                                    ${newBiz.warmLeads?.map(lead => `
+                                        <div style="margin-bottom: 6px; padding: 4px; background: #222; border-radius: 4px;">
+                                            <strong>${lead.name}</strong><br>
+                                            <span style="color: #888;">${lead.office} • ${lead.dueDate}</span>
+                                        </div>
+                                    `).join('') || '<div style="color: #666; text-align: center;">None</div>'}
+                                </div>
                             </div>
+                            
+                            <!-- Active Pitches -->
+                            <div style="border-right: 1px solid #333; padding-right: 12px;">
+                                <div style="text-align: center; margin-bottom: 12px;">
+                                    <div class="stat-number" style="font-size: 24px; color: #ffaa00;">${newBiz.pitchesHappening?.length || 0}</div>
+                                    <div class="stat-label">Active</div>
+                                </div>
+                                <div style="font-size: 11px; line-height: 1.4;">
+                                    ${newBiz.pitchesHappening?.map(pitch => `
+                                        <div style="margin-bottom: 6px; padding: 4px; background: #222; border-radius: 4px; border-left: 2px solid #ffaa00;">
+                                            <strong>${pitch.name}</strong><br>
+                                            <span style="color: #888;">${pitch.office} • ${pitch.dueDate}</span>
+                                        </div>
+                                    `).join('') || '<div style="color: #666; text-align: center;">None</div>'}
+                                </div>
+                            </div>
+                            
+                            <!-- Submitted -->
+                            <div style="border-right: 1px solid #333; padding-right: 12px;">
+                                <div style="text-align: center; margin-bottom: 12px;">
+                                    <div class="stat-number" style="font-size: 24px; color: #00aaff;">${newBiz.pitchSubmitted?.length || 0}</div>
+                                    <div class="stat-label">Submitted</div>
+                                </div>
+                                <div style="font-size: 11px; line-height: 1.4;">
+                                    ${newBiz.pitchSubmitted?.map(pitch => `
+                                        <div style="margin-bottom: 6px; padding: 4px; background: #222; border-radius: 4px; border-left: 2px solid #00aaff;">
+                                            <strong>${pitch.name}</strong><br>
+                                            <span style="color: #888;">${pitch.office} • ${pitch.dueDate}</span>
+                                        </div>
+                                    `).join('') || '<div style="color: #666; text-align: center;">None</div>'}
+                                </div>
+                            </div>
+                            
+                            <!-- Presented -->
+                            <div style="border-right: 1px solid #333; padding-right: 12px;">
+                                <div style="text-align: center; margin-bottom: 12px;">
+                                    <div class="stat-number" style="font-size: 24px; color: #aa00ff;">${newBiz.pitchPresented?.length || 0}</div>
+                                    <div class="stat-label">Presented</div>
+                                </div>
+                                <div style="font-size: 11px; line-height: 1.4;">
+                                    ${newBiz.pitchPresented?.map(pitch => `
+                                        <div style="margin-bottom: 6px; padding: 4px; background: #222; border-radius: 4px; border-left: 2px solid #aa00ff;">
+                                            <strong>${pitch.name}</strong><br>
+                                            <span style="color: #888;">${pitch.office} • ${pitch.dueDate}</span>
+                                        </div>
+                                    `).join('') || '<div style="color: #666; text-align: center;">None</div>'}
+                                </div>
+                            </div>
+                            
+                            <!-- Won -->
                             <div>
-                                ${newBiz.pitchesHappening?.slice(0, 2).map(pitch => `
-                                    <div class="dashboard-item">
-                                        <span class="badge-new">ACTIVE</span> ${pitch.name}
-                                        <span style="float: right; color: #888; font-size: 12px;">${pitch.dueDate}</span>
-                                    </div>
-                                `).join('') || '<div class="dashboard-item">No active pitches</div>'}
+                                <div style="text-align: center; margin-bottom: 12px;">
+                                    <div class="stat-number" style="font-size: 24px; color: #00ff00;">${wonPitches}</div>
+                                    <div class="stat-label">Won</div>
+                                </div>
+                                <div style="font-size: 11px; line-height: 1.4;">
+                                    ${newBiz.pitchWon?.map(pitch => `
+                                        <div style="margin-bottom: 6px; padding: 4px; background: #222; border-radius: 4px; border-left: 2px solid #00ff00;">
+                                            <strong>${pitch.name}</strong><br>
+                                            <span style="color: #888;">${pitch.office} • ${pitch.dueDate}</span>
+                                        </div>
+                                    `).join('') || '<div style="color: #666; text-align: center;">None</div>'}
+                                </div>
                             </div>
                         </div>
                     </div>
