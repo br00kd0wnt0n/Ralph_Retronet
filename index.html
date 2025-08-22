@@ -5509,13 +5509,89 @@
             });
         }
         
-        // Start boot ASCII random animation
+        // Start boot ASCII scan line loading animation
         function startBootAsciiAnimation() {
             const bootLogo = document.querySelector('.boot-logo');
             if (!bootLogo) return;
             
-            // Start animation immediately with 1.5 second duration
-            randomAnimateAscii(bootLogo, 1500);
+            // Hide the ASCII initially
+            bootLogo.style.opacity = '0';
+            bootLogo.style.maskImage = 'linear-gradient(to bottom, transparent 0%, transparent 100%)';
+            bootLogo.style.webkitMaskImage = 'linear-gradient(to bottom, transparent 0%, transparent 100%)';
+            
+            // Show it immediately but masked
+            setTimeout(() => {
+                // Start with very low opacity and fade in
+                bootLogo.style.opacity = '0.1';
+                
+                // Create scan line loading effect
+                let scanProgress = 0;
+                const scanSpeed = 8; // milliseconds between updates
+                const totalDuration = 1200; // total time to load
+                const updateInterval = totalDuration / 100; // 100 steps
+                
+                const scanInterval = setInterval(() => {
+                    scanProgress += (100 / (totalDuration / updateInterval));
+                    
+                    // Add some jerkiness to the scan
+                    const jitter = Math.random() * 3 - 1.5; // -1.5 to +1.5
+                    const actualProgress = Math.min(100, scanProgress + jitter);
+                    
+                    // Fade in the ASCII as it loads (CRT warming up effect)
+                    const fadeOpacity = Math.min(1, (scanProgress / 100) * 1.2); // Slightly faster fade than scan
+                    bootLogo.style.opacity = fadeOpacity;
+                    
+                    // Create the mask effect - revealing from top to bottom
+                    const maskValue = `linear-gradient(to bottom, 
+                        rgba(0,0,0,1) 0%, 
+                        rgba(0,0,0,1) ${actualProgress}%, 
+                        transparent ${actualProgress + 2}%, 
+                        transparent 100%)`;
+                    
+                    bootLogo.style.maskImage = maskValue;
+                    bootLogo.style.webkitMaskImage = maskValue;
+                    
+                    // Add scan line flicker effect
+                    if (Math.random() < 0.3) { // 30% chance of flicker
+                        bootLogo.style.filter = 'brightness(1.2) contrast(1.1)';
+                        setTimeout(() => {
+                            bootLogo.style.filter = 'brightness(1) contrast(1)';
+                        }, 20);
+                    }
+                    
+                    if (scanProgress >= 100) {
+                        clearInterval(scanInterval);
+                        // Final reveal
+                        bootLogo.style.maskImage = 'none';
+                        bootLogo.style.webkitMaskImage = 'none';
+                    }
+                }, updateInterval);
+                
+            }, 100);
+        }
+        
+        // Play boot completion sound
+        function playBootCompletionSound() {
+            try {
+                // Create audio element for boot completion sound
+                const bootAudio = new Audio();
+                
+                // Boot completion sound - classic Windows startup
+                bootAudio.src = '/music/windows-startup.mp3';
+                
+                // Set volume relatively low for system sound
+                bootAudio.volume = 0.3;
+                
+                // Play the sound
+                bootAudio.play().catch(error => {
+                    console.log('🔊 Boot sound autoplay blocked by browser (this is normal):', error);
+                });
+                
+                console.log('🔊 Playing boot completion sound');
+                
+            } catch (error) {
+                console.log('🔊 Boot sound error:', error);
+            }
         }
         
         // Start desktop ASCII random animation
@@ -5579,6 +5655,10 @@
                 
                 if (progress >= 100) {
                     clearInterval(bootInterval);
+                    
+                    // Play boot completion sound
+                    playBootCompletionSound();
+                    
                     setTimeout(() => {
                         bootScreen.classList.add('hide');
                         desktop.style.display = 'block';
