@@ -730,63 +730,163 @@
             border-left: 3px solid var(--ralph-pink);
         }
 
-        /* What's New Window Styles */
+        /* What's New Dashboard Styles */
+        .whats-new-dashboard .window-content {
+            background: #000000 !important;
+            color: #ffffff !important;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif !important;
+            padding: 0 !important;
+            overflow-y: auto;
+        }
+
+        .whats-new-dashboard .window-content::before {
+            display: none !important; /* Remove scan lines */
+        }
+
         .whats-new-header {
             background: linear-gradient(135deg, var(--ralph-pink) 0%, #ff1493 100%);
             color: white;
-            padding: 20px;
-            text-align: center;
-            border-bottom: 3px solid var(--black);
+            padding: 24px;
+            text-align: left;
         }
-        
-        .whats-new-date {
-            font-size: 12px;
-            opacity: 0.9;
-            margin-top: 5px;
-        }
-        
-        .whats-new-section {
-            background: white;
-            border: 2px solid;
-            border-color: var(--gray-dark) var(--white) var(--white) var(--gray-dark);
-            margin: 10px;
-            padding: 15px;
-        }
-        
-        .whats-new-section h3 {
-            color: var(--ralph-pink);
-            font-size: 16px;
-            font-family: 'Space Mono', monospace;
+
+        .whats-new-title {
+            font-size: 32px;
             font-weight: 700;
-            margin-bottom: 10px;
-            padding-bottom: 5px;
-            border-bottom: 2px dotted var(--ralph-pink);
+            margin: 0;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .whats-new-subtitle {
+            font-size: 16px;
+            opacity: 0.9;
+            margin-top: 8px;
+            font-weight: 400;
         }
         
-        .whats-new-item {
-            padding: 8px;
-            margin: 5px 0;
-            background: #f9f9f9;
-            border-left: 3px solid var(--ralph-pink);
-            font-size: 13px;
-            line-height: 1.4;
-            transition: background 0.2s;
+        .whats-new-dashboard-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            grid-template-rows: auto auto auto;
+            gap: 20px;
+            padding: 20px;
+            height: calc(100% - 140px);
         }
-        
-        .whats-new-item:hover {
-            background: #f0f0f0;
+
+        .dashboard-card {
+            background: #1a1a1a;
+            border-radius: 12px;
+            padding: 20px;
+            border: 1px solid #333;
+            transition: all 0.3s ease;
+        }
+
+        .dashboard-card:hover {
+            border-color: var(--ralph-pink);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(235, 0, 139, 0.2);
+        }
+
+        .dashboard-card h3 {
+            color: var(--ralph-pink);
+            font-size: 18px;
+            font-weight: 600;
+            margin: 0 0 16px 0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .dashboard-card-content {
+            color: #e0e0e0;
+            line-height: 1.6;
+            font-size: 14px;
+        }
+
+        .dashboard-item {
+            padding: 12px 0;
+            border-bottom: 1px solid #333;
             cursor: pointer;
+            transition: all 0.2s;
         }
-        
-        .whats-new-badge {
-            display: inline-block;
-            background: var(--terminal-yellow);
-            color: var(--black);
-            padding: 2px 6px;
-            font-size: 10px;
-            font-weight: bold;
-            margin-left: 8px;
+
+        .dashboard-item:last-child {
+            border-bottom: none;
+        }
+
+        .dashboard-item:hover {
+            color: var(--ralph-pink);
+            transform: translateX(4px);
+        }
+
+        .dashboard-stats {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+        }
+
+        .stat-item {
+            text-align: center;
+            padding: 16px;
+            background: #2a2a2a;
+            border-radius: 8px;
+        }
+
+        .stat-number {
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--ralph-pink);
+            display: block;
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: #888;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-top: 4px;
+        }
+
+        .pipeline-progress {
+            width: 100%;
+            height: 6px;
+            background: #333;
             border-radius: 3px;
+            margin: 8px 0;
+            overflow: hidden;
+        }
+
+        .pipeline-progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--ralph-pink), #ff1493);
+            transition: width 0.3s ease;
+        }
+
+        .badge-new {
+            background: var(--terminal-yellow);
+            color: #000;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 600;
+            margin-left: 8px;
+        }
+
+        .badge-urgent {
+            background: #ff4444;
+            color: white;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 600;
+            margin-left: 8px;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.7; }
+            100% { opacity: 1; }
         }
         
         .window {
@@ -1706,7 +1806,7 @@
         
         <!-- Windows -->
         <!-- What's New Window -->
-        <div id="whatsNew" class="window" style="width: 600px; height: calc(100vh - 120px); top: 60px; left: 20px;">
+        <div id="whatsNew" class="window whats-new-dashboard" style="width: calc(100vw - 160px); height: calc(100vh - 120px); top: 60px; left: 20px;">
             <div class="window-header">
                 <div class="window-title">Hey Brook! Here's what's new at RALPH</div>
                 <div class="window-controls">
@@ -4225,11 +4325,16 @@
             
             let html = `
                 <div class="whats-new-header">
-                    <h2 style="margin: 0; font-size: 24px; font-weight: bold;">Hey Brook! Here's what's new at RALPH</h2>
-                    <div class="whats-new-date">${today}</div>
+                    <h1 class="whats-new-title">Hey Brook! Here's what's new at RALPH this week</h1>
+                    <div class="whats-new-subtitle">${today}</div>
                 </div>
-                <div class="module-description">
-                    Your central hub for all the latest updates across RALPH. See new projects, announcements, celebrations, and company news in one convenient location.
+                <div class="whats-new-dashboard-grid">
+                    ${generateAnnouncementsCard()}
+                    ${generateNewBizCard()}
+                    ${generateWhatsHappeningCard()}
+                    ${generateChallengesCard()}
+                    ${generateShoutoutsCard()}
+                    ${generateQuickStatsCard()}
                 </div>
             `;
             
@@ -4369,6 +4474,160 @@
             `;
             
             return html;
+        }
+
+        // Dashboard Card Generation Functions
+        function generateAnnouncementsCard() {
+            const announcements = AppState.config?.modules?.announcements?.content;
+            if (!announcements) return '';
+            
+            return `
+                <div class="dashboard-card">
+                    <h3><span>📣</span>Announcements</h3>
+                    <div class="dashboard-card-content">
+                        ${announcements.important?.slice(0, 3).map(item => `
+                            <div class="dashboard-item">
+                                <span class="badge-urgent">URGENT</span> ${item}
+                            </div>
+                        `).join('') || ''}
+                        ${announcements.general?.slice(0, 2).map(item => `
+                            <div class="dashboard-item">
+                                • ${item}
+                            </div>
+                        `).join('') || ''}
+                    </div>
+                </div>
+            `;
+        }
+
+        function generateNewBizCard() {
+            const newBiz = AppState.config?.modules?.newBiz?.content;
+            if (!newBiz) return '';
+            
+            const totalPitches = (newBiz.warmLeads?.length || 0) + 
+                               (newBiz.pitchesHappening?.length || 0) + 
+                               (newBiz.pitchSubmitted?.length || 0);
+            const wonPitches = newBiz.pitchWon?.length || 0;
+            const progress = totalPitches > 0 ? Math.round((wonPitches / totalPitches) * 100) : 0;
+            
+            return `
+                <div class="dashboard-card" onclick="openWindowBeside('newBiz', 'whatsNew');">
+                    <h3><span>📊</span>New Biz Pipeline</h3>
+                    <div class="dashboard-card-content">
+                        <div class="pipeline-progress">
+                            <div class="pipeline-progress-fill" style="width: ${progress}%"></div>
+                        </div>
+                        <div class="dashboard-item">
+                            <strong>${newBiz.warmLeads?.length || 0}</strong> warm leads
+                        </div>
+                        <div class="dashboard-item">
+                            <strong>${newBiz.pitchesHappening?.length || 0}</strong> active pitches
+                        </div>
+                        <div class="dashboard-item">
+                            <strong>${wonPitches}</strong> wins this quarter
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function generateWhatsHappeningCard() {
+            const premieres = AppState.config?.modules?.premieres?.content;
+            const shoutouts = AppState.config?.modules?.shoutouts?.content;
+            
+            return `
+                <div class="dashboard-card">
+                    <h3><span>📅</span>What's Happening</h3>
+                    <div class="dashboard-card-content">
+                        ${premieres?.thisMonth?.slice(0, 2).map(item => `
+                            <div class="dashboard-item" onclick="openWindowBeside('premieres', 'whatsNew');">
+                                <strong>${item.date}</strong> - ${item.project}
+                            </div>
+                        `).join('') || ''}
+                        ${shoutouts?.birthdays?.filter(b => b.highlight).map(birthday => `
+                            <div class="dashboard-item">
+                                <span class="badge-new">TODAY</span> 🎂 ${birthday.person}
+                            </div>
+                        `).join('') || ''}
+                        ${shoutouts?.anniversaries?.slice(0, 1).map(anni => `
+                            <div class="dashboard-item">
+                                🎊 ${anni.person} - ${anni.years} years!
+                            </div>
+                        `).join('') || ''}
+                    </div>
+                </div>
+            `;
+        }
+
+        function generateChallengesCard() {
+            const challenge = AppState.config?.modules?.challenge?.content?.currentChallenge;
+            if (!challenge) return '';
+            
+            return `
+                <div class="dashboard-card" onclick="openWindowBeside('challenge', 'whatsNew');">
+                    <h3><span>🎨</span>Current Challenge</h3>
+                    <div class="dashboard-card-content">
+                        <div class="dashboard-item">
+                            <strong>${challenge.month} Challenge</strong>
+                            <span class="badge-new">ACTIVE</span>
+                        </div>
+                        <div class="dashboard-item">
+                            <strong>${challenge.theme}</strong>
+                        </div>
+                        <div class="dashboard-item">
+                            ${challenge.description}
+                        </div>
+                        <div class="dashboard-item">
+                            Prize: ${challenge.prize}
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function generateShoutoutsCard() {
+            const shoutouts = AppState.config?.modules?.shoutouts?.content;
+            if (!shoutouts) return '';
+            
+            return `
+                <div class="dashboard-card" onclick="openWindowBeside('shoutouts', 'whatsNew');">
+                    <h3><span>🎉</span>Shoutouts</h3>
+                    <div class="dashboard-card-content">
+                        ${shoutouts.shoutouts?.slice(0, 3).map(shout => `
+                            <div class="dashboard-item">
+                                "${shout.message}" - ${shout.from}
+                            </div>
+                        `).join('') || ''}
+                    </div>
+                </div>
+            `;
+        }
+
+        function generateQuickStatsCard() {
+            const activeModules = Object.keys(AppState.config?.modules || {}).filter(
+                id => AppState.config.modules[id].enabled
+            ).length;
+            
+            const totalProjects = (AppState.config?.modules?.premieres?.content?.thisMonth?.length || 0) +
+                                 (AppState.config?.modules?.premieres?.content?.nextMonth?.length || 0);
+            
+            return `
+                <div class="dashboard-card">
+                    <h3><span>📈</span>Quick Stats</h3>
+                    <div class="dashboard-card-content">
+                        <div class="dashboard-stats">
+                            <div class="stat-item">
+                                <span class="stat-number">${activeModules}</span>
+                                <span class="stat-label">Active Modules</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-number">${totalProjects}</span>
+                                <span class="stat-label">Projects</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
         }
         
         // Show What's New window
