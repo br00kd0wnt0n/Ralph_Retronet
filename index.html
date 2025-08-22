@@ -683,13 +683,13 @@
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            width: 20vw;
+            width: 15vw;
             height: auto;
             z-index: -1;
             background: transparent;
-            color: #999999;
-            font-family: 'Courier Prime', monospace;
-            font-size: 6px;
+            color: #ffffff;
+            font-family: 'Courier New', monospace;
+            font-size: 4px;
             line-height: 1;
             white-space: pre;
             text-align: left;
@@ -698,6 +698,8 @@
             display: flex;
             justify-content: center;
             align-items: center;
+            image-rendering: pixelated;
+            text-rendering: optimizeSpeed;
         }
 
         .ascii-intro.show {
@@ -753,7 +755,9 @@
             font-size: 26px;
             font-weight: 700;
             margin: 0;
-            font-family: 'Inter', sans-serif;
+            font-family: 'Courier Prime', monospace;
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
 
         .whats-new-subtitle {
@@ -761,6 +765,7 @@
             opacity: 0.9;
             margin-top: 6px;
             font-weight: 400;
+            font-family: 'Courier Prime', monospace;
         }
         
         .whats-new-dashboard-grid {
@@ -4487,7 +4492,7 @@
             
             return `
                 <div class="dashboard-card">
-                    <h3><span>📣</span>Announcements</h3>
+                    <h3>ANNOUNCEMENTS</h3>
                     <div class="dashboard-card-content">
                         ${announcements.important?.slice(0, 3).map(item => `
                             <div class="dashboard-item">
@@ -4508,21 +4513,10 @@
             const newBiz = AppState.config?.modules?.newBiz?.content;
             if (!newBiz) return '';
             
-            const totalPitches = (newBiz.warmLeads?.length || 0) + 
-                               (newBiz.pitchesHappening?.length || 0) + 
-                               (newBiz.pitchSubmitted?.length || 0) +
-                               (newBiz.pitchPresented?.length || 0) +
-                               (newBiz.pitchWon?.length || 0);
-            const wonPitches = newBiz.pitchWon?.length || 0;
-            const progress = totalPitches > 0 ? Math.round((wonPitches / totalPitches) * 100) : 0;
-            
             return `
                 <div class="dashboard-card dashboard-card-wide" onclick="openWindowBeside('newBiz', 'whatsNew');">
-                    <h3><span>📊</span>New Biz Pipeline Tracker</h3>
+                    <h3>NEW BIZ PIPELINE TRACKER</h3>
                     <div class="dashboard-card-content">
-                        <div class="pipeline-progress" style="height: 10px; margin-bottom: 20px;">
-                            <div class="pipeline-progress-fill" style="width: ${progress}%"></div>
-                        </div>
                         
                         <div style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px;">
                             <!-- Warm Leads -->
@@ -4613,10 +4607,11 @@
         function generateWhatsHappeningCard() {
             const premieres = AppState.config?.modules?.premieres?.content;
             const shoutouts = AppState.config?.modules?.shoutouts?.content;
+            const emojis = shoutouts?.emojis || {};
             
             return `
                 <div class="dashboard-card">
-                    <h3><span>📅</span>What's Happening</h3>
+                    <h3>WHAT'S HAPPENING</h3>
                     <div class="dashboard-card-content">
                         ${premieres?.thisMonth?.slice(0, 2).map(item => `
                             <div class="dashboard-item" onclick="openWindowBeside('premieres', 'whatsNew');">
@@ -4625,12 +4620,12 @@
                         `).join('') || ''}
                         ${shoutouts?.birthdays?.filter(b => b.highlight).map(birthday => `
                             <div class="dashboard-item">
-                                <span class="badge-new">TODAY</span> 🎂 ${birthday.person}
+                                <span class="badge-new">TODAY</span> ${emojis.birthday || ''} ${birthday.person}
                             </div>
                         `).join('') || ''}
                         ${shoutouts?.anniversaries?.slice(0, 1).map(anni => `
                             <div class="dashboard-item">
-                                🎊 ${anni.person} - ${anni.years} years!
+                                ${emojis.anniversary || ''} ${anni.person} - ${anni.years} years!
                             </div>
                         `).join('') || ''}
                     </div>
@@ -4639,12 +4634,14 @@
         }
 
         function generateChallengesCard() {
-            const challenge = AppState.config?.modules?.challenge?.content?.currentChallenge;
+            const challengeData = AppState.config?.modules?.challenge?.content;
+            const challenge = challengeData?.currentChallenge;
+            const emojis = challengeData?.emojis || {};
             if (!challenge) return '';
             
             return `
                 <div class="dashboard-card" onclick="openWindowBeside('challenge', 'whatsNew');">
-                    <h3><span>🎨</span>Current Challenge</h3>
+                    <h3>CURRENT CHALLENGE</h3>
                     <div class="dashboard-card-content">
                         <div class="dashboard-item">
                             <strong>${challenge.month} Challenge</strong>
@@ -4657,7 +4654,7 @@
                             ${challenge.description}
                         </div>
                         <div class="dashboard-item">
-                            Prize: ${challenge.prize}
+                            Prize: ${emojis.trophy || ''} ${challenge.prize}
                         </div>
                     </div>
                 </div>
@@ -4670,7 +4667,7 @@
             
             return `
                 <div class="dashboard-card" onclick="openWindowBeside('shoutouts', 'whatsNew');">
-                    <h3><span>🎉</span>Shoutouts</h3>
+                    <h3>TEAM SHOUTOUTS</h3>
                     <div class="dashboard-card-content">
                         ${shoutouts.shoutouts?.slice(0, 3).map(shout => `
                             <div class="dashboard-item">
@@ -4692,7 +4689,7 @@
             
             return `
                 <div class="dashboard-card">
-                    <h3><span>📈</span>Quick Stats</h3>
+                    <h3>QUICK STATS</h3>
                     <div class="dashboard-card-content">
                         <div class="dashboard-stats">
                             <div class="stat-item">

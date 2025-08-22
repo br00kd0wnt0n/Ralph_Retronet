@@ -153,11 +153,15 @@
       "enabled": true,
       "description": "Take on creative challenges and showcase your skills! See current competitions, prizes, and celebrate recent winners.",
       "content": {
+        "emojis": {
+          "trophy": "🏆",
+          "target": "🎯"
+        },
         "currentChallenge": {
           "month": "DECEMBER",
           "theme": "Retro Future",
           "description": "Create a 30-second concept using only 8-bit graphics and chiptune music!",
-          "prize": "🏆 Golden Pixel Award + Extra PTO Day"
+          "prize": "Golden Pixel Award + Extra PTO Day"
         },
         "lastWinner": {
           "name": "Sarah M.",
@@ -172,6 +176,11 @@
       "enabled": true,
       "description": "Celebrate team members and milestones! Check upcoming birthdays, work anniversaries, and share appreciation for great work.",
       "content": {
+        "emojis": {
+          "birthday": "🎂",
+          "anniversary": "🎊",
+          "calendar": "📅"
+        },
         "birthdays": [
           {
             "date": "Today",
