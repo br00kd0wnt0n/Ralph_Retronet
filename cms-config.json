@@ -232,22 +232,49 @@
       "description": "Stay informed with curated industry news and trends. Read must-have articles from top publications and trending topics.",
       "content": {
         "trending": [
-          "The Rise of AI in Creative Production",
-          "2025 Design Trends to Watch",
-          "Sustainable Filmmaking Practices"
+          {
+            "title": "Dexter's Most Memorable Serial Killers",
+            "url": "https://www.tvguide.com/galleries/dexters-most-memorable-serial-killers/",
+            "source": "TV Guide",
+            "submittedBy": "Test User",
+            "date": "12/25/2024"
+          },
+          {
+            "title": "2025 Design Trends to Watch",
+            "url": "https://example.com/design-trends-2025",
+            "source": "Creative Review",
+            "submittedBy": "Mike R.",
+            "date": "12/18/2024"
+          },
+          {
+            "title": "Sustainable Filmmaking Practices",
+            "url": "https://example.com/sustainable-filmmaking",
+            "source": "Variety",
+            "submittedBy": "Lisa T.",
+            "date": "12/20/2024"
+          }
         ],
         "mustReads": [
           {
             "source": "AdWeek",
-            "title": "Agencies of the Future"
+            "title": "Agencies of the Future",
+            "url": "https://example.com/agencies-future",
+            "submittedBy": "Editorial Team",
+            "date": "12/10/2024"
           },
           {
             "source": "Campaign",
-            "title": "Digital First Strategies"
+            "title": "Digital First Strategies",
+            "url": "https://example.com/digital-first-strategies",
+            "submittedBy": "Jennifer L.",
+            "date": "12/12/2024"
           },
           {
             "source": "Creative Review",
-            "title": "Best Campaigns 2024"
+            "title": "Best Campaigns 2024",
+            "url": "https://example.com/best-campaigns-2024",
+            "submittedBy": "Alex K.",
+            "date": "12/14/2024"
           }
         ]
       },
@@ -259,24 +286,90 @@
       "enabled": true,
       "description": "Breaking news and updates from across the RALPH network. Get the latest company announcements and industry insights.",
       "content": {
-        "breaking": [
+        "ticker": [
+          "BREAKING: RALPH wins Agency of the Year at Cannes Lions",
+          "New Tokyo office expansion planned for Q2 2025",
+          "Record-breaking Q4 client acquisition numbers announced",
+          "Partnership with major streaming platform confirmed",
+          "Holiday party Dec 20th - all offices invited"
+        ],
+        "mainStory": {
+          "id": "main-1",
+          "title": "RALPH Announces Major Expansion with New Tokyo Office",
+          "excerpt": "The creative powerhouse reveals plans for a significant expansion of their Tokyo operations, adding 50 new positions across creative, strategy, and production teams as they prepare for increased Asian market focus.",
+          "fullContent": "RALPH, the award-winning creative agency, today announced a major expansion of their Tokyo office operations set to begin in Q2 2025. The expansion will see the addition of 50 new positions across multiple departments including creative, strategy, production, and client services.\n\n'This expansion represents our commitment to the Asian market and our belief in the incredible talent pool in Tokyo,' said Chris Hassell, Co-Founder of RALPH. 'We're not just growing our footprint - we're investing in the future of creative excellence in this region.'\n\nThe new hires will support RALPH's growing roster of Asian clients and help establish new partnerships with major brands looking to expand their presence in Western markets. The expansion is expected to be completed by September 2025.",
+          "author": "RALPH Communications Team",
+          "date": "December 24, 2024",
+          "category": "Company News",
+          "image": "news_images/tokyo-expansion.png"
+        },
+        "secondaryStories": [
           {
-            "headline": "New Office Space Opening Q1 2025!",
-            "live": true
+            "id": "secondary-1",
+            "title": "Award Win: Best Digital Campaign at Industry Awards",
+            "excerpt": "RALPH's groundbreaking campaign for BeReal takes home top honors at the Digital Marketing Excellence Awards.",
+            "fullContent": "RALPH's innovative social media campaign for BeReal has been recognized as the Best Digital Campaign at the prestigious Digital Marketing Excellence Awards. The campaign, which ran across multiple platforms and generated over 50 million impressions, showcased the authentic moments that make life real.\n\nThe winning campaign featured user-generated content, interactive experiences, and a unique approach to authentic storytelling that resonated with audiences globally. 'This award validates our belief that authenticity beats perfection every time,' commented Jeremy Groff, Managing Director of RALPH LA.",
+            "author": "Awards Team",
+            "date": "December 22, 2024",
+            "image": "https://via.placeholder.com/400x200/31BDBF/FFFFFF?text=Award+Win"
           },
           {
-            "headline": "Award Win: Best Campaign at Industry Awards",
-            "live": false
+            "id": "secondary-2",
+            "title": "New Partnership with Streaming Giant Announced",
+            "excerpt": "RALPH secures major deal to create original content series for leading streaming platform, marking entry into entertainment production.",
+            "fullContent": "In a significant move into entertainment production, RALPH has announced a new partnership with a major streaming platform to create a series of original branded content pieces. The partnership will see RALPH produce monthly content that blends entertainment with brand storytelling.\n\n'This partnership represents the evolution of advertising into entertainment,' said Tom Winbow, Managing Director of RALPH London. 'We're not just creating ads anymore - we're creating content that people actually want to watch.'",
+            "author": "Business Development",
+            "date": "December 20, 2024",
+            "image": "https://via.placeholder.com/400x200/F16524/FFFFFF?text=Streaming+Partnership"
           },
           {
-            "headline": "Client Win: Major Automotive Account",
-            "live": false
+            "id": "secondary-3",
+            "title": "Q4 Client Acquisition Breaks All Records",
+            "excerpt": "RALPH closes 2024 with the highest quarterly client acquisition in company history, adding 15 new accounts globally.",
+            "fullContent": "RALPH has concluded 2024 with record-breaking Q4 numbers, adding 15 new client accounts across all office locations. The new clients span industries from technology and automotive to entertainment and consumer goods.\n\n'These results reflect the incredible work our teams have been doing and the trust clients place in our creative vision,' said Gareth Jones, Managing Director of RALPH NY. The new business success positions RALPH for significant growth heading into 2025.",
+            "author": "New Business Team",
+            "date": "December 18, 2024",
+            "image": "https://via.placeholder.com/400x200/44B658/FFFFFF?text=Record+Q4"
+          },
+          {
+            "id": "secondary-4",
+            "title": "Innovation Lab Launches AI-Powered Creative Tools",
+            "excerpt": "RALPH's innovation team unveils new AI-assisted creative workflow tools designed to enhance, not replace, human creativity.",
+            "fullContent": "The RALPH Innovation Lab has released a suite of AI-powered tools designed to streamline creative workflows while maintaining the human touch that defines great advertising. The tools include automated asset organization, smart project management, and creative inspiration engines.\n\n'Our approach to AI is about augmentation, not replacement,' explained the Innovation Team. 'These tools free our creatives to focus on what they do best - creating meaningful connections between brands and people.'",
+            "author": "Innovation Lab",
+            "date": "December 16, 2024",
+            "image": "https://via.placeholder.com/400x200/FBC000/FFFFFF?text=AI+Tools"
           }
         ],
-        "updates": [
-          "New Equipment in Studio B",
-          "Holiday Party December 20th",
-          "Q4 Numbers Looking Strong!"
+        "sidebarStories": [
+          {
+            "id": "sidebar-1",
+            "title": "Holiday Party Details Announced",
+            "excerpt": "All offices invited to virtual celebration Dec 20th with special appearances and prizes.",
+            "author": "People & Culture",
+            "date": "December 15, 2024"
+          },
+          {
+            "id": "sidebar-2",
+            "title": "New Studio Equipment Arrives",
+            "excerpt": "State-of-the-art cameras and lighting equipment installed in Studio B for enhanced production capabilities.",
+            "author": "Production Team",
+            "date": "December 14, 2024"
+          },
+          {
+            "id": "sidebar-3",
+            "title": "Health Benefits Update",
+            "excerpt": "Enhanced mental health support and wellness programs added to employee benefits package.",
+            "author": "HR Team",
+            "date": "December 12, 2024"
+          },
+          {
+            "id": "sidebar-4",
+            "title": "Sustainability Initiative Launch",
+            "excerpt": "RALPH commits to carbon neutrality by 2026 with new environmental programs across all offices.",
+            "author": "Sustainability Team",
+            "date": "December 10, 2024"
+          }
         ]
       },
       "apiEndpoint": null
