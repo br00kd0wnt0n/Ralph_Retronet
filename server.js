@@ -9,12 +9,7 @@ const PORT = process.env.PORT || 3000;
 // Enable gzip compression for better performance
 app.use(compression());
 
-// Cache for configuration to reduce file I/O
-const configCache = {
-    data: null,
-    timestamp: 0,
-    maxAge: 5000 // 5 seconds cache
-};
+// Removed complex caching - direct file reads are fast enough for small team
 
 // Prompt management functions
 const PROMPT_STORAGE_FILE = path.join(__dirname, 'prompt-storage.json');
@@ -329,13 +324,69 @@ app.get('/admin/:sessionId?', (req, res) => {
 });
 
 // API endpoint for saving configuration
+// Helper function to create automatic backups
+function createBackup(filePath) {
+    const fs = require('fs');
+    const path = require('path');
+    
+    if (fs.existsSync(filePath)) {
+        const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
+        const backupPath = filePath.replace('.json', `-backup-${timestamp}.json`);
+        
+        try {
+            fs.copyFileSync(filePath, backupPath);
+            console.log(`📦 Backup created: ${path.basename(backupPath)}`);
+            
+            // Keep only last 5 backups
+            const backupDir = path.dirname(filePath);
+            const baseName = path.basename(filePath, '.json');
+            const backupFiles = fs.readdirSync(backupDir)
+                .filter(f => f.startsWith(`${baseName}-backup-`) && f.endsWith('.json'))
+                .sort()
+                .reverse();
+            
+            if (backupFiles.length > 5) {
+                const oldBackups = backupFiles.slice(5);
+                oldBackups.forEach(backup => {
+                    fs.unlinkSync(path.join(backupDir, backup));
+                    console.log(`🗑️  Removed old backup: ${backup}`);
+                });
+            }
+        } catch (error) {
+            console.warn(`⚠️  Backup failed: ${error.message}`);
+        }
+    }
+}
+
 app.post('/api/save-config', express.json(), (req, res) => {
     const fs = require('fs');
     const path = require('path');
     
     try {
-        const configData = req.body;
+        const { configData, lastModified } = req.body;
         console.log('Config update requested for modules:', Object.keys(configData.modules || {}));
+        
+        const jsonFilePath = path.join(__dirname, 'cms-config-production.json');
+        
+        // Check for conflicts if lastModified timestamp provided
+        if (lastModified && fs.existsSync(jsonFilePath)) {
+            const currentFileStats = fs.statSync(jsonFilePath);
+            const currentModified = currentFileStats.mtime.getTime();
+            
+            if (currentModified > lastModified) {
+                console.log(`⚠️  Conflict detected: File modified at ${new Date(currentModified)}, user timestamp ${new Date(lastModified)}`);
+                return res.json({
+                    success: false,
+                    conflict: true,
+                    message: 'File has been modified by another user since you loaded it.',
+                    currentModified: currentModified,
+                    userModified: lastModified
+                });
+            }
+        }
+        
+        // Create backup before saving
+        createBackup(jsonFilePath);
         
         // Create the updated cms-config.js content
         const configFileContent = `/**
@@ -362,7 +413,6 @@ if (typeof module !== 'undefined' && module.exports) {
         fs.writeFileSync(configFilePath, configFileContent, 'utf8');
         
         // Also write a clean JSON file for easy loading
-        const jsonFilePath = path.join(__dirname, 'cms-config-production.json');
         fs.writeFileSync(jsonFilePath, JSON.stringify(configData, null, 2), 'utf8');
         
         console.log('Configuration saved successfully to cms-config-production.js and cms-config-production.json');
@@ -525,74 +575,64 @@ app.post('/api/restore-prompt', express.json(), async (req, res) => {
     }
 });
 
-// API endpoint to get current configuration with caching
+// API endpoint to get current configuration with timestamp (simplified - no caching)
 app.get('/api/get-config', (req, res) => {
     try {
-        const now = Date.now();
-        
-        // Return cached config if still valid
-        if (configCache.data && (now - configCache.timestamp) < configCache.maxAge) {
-            res.json(configCache.data);
-            return;
-        }
-        
         const fs = require('fs');
         const productionJsonPath = path.join(__dirname, 'cms-config-production.json');
         const productionJsPath = path.join(__dirname, 'cms-config-production.js');
         const jsonConfigPath = path.join(__dirname, 'cms-config.json');
         const jsConfigPath = path.join(__dirname, 'cms-config.js');
         
+        let config = null;
+        let lastModified = null;
+        
         // Priority 1: Try production JSON config (user's saved content)
         if (fs.existsSync(productionJsonPath)) {
-            const config = JSON.parse(fs.readFileSync(productionJsonPath, 'utf8'));
-            configCache.data = config;
-            configCache.timestamp = now;
-            res.json(config);
+            config = JSON.parse(fs.readFileSync(productionJsonPath, 'utf8'));
+            lastModified = fs.statSync(productionJsonPath).mtime.getTime();
         }
         // Priority 2: Try production JS config
         else if (fs.existsSync(productionJsPath)) {
-            delete require.cache[require.resolve('./cms-config-production.js')];
             const vm = require('vm');
             const configContent = fs.readFileSync(productionJsPath, 'utf8');
             const configMatch = configContent.match(/const CMS_CONFIG = ({[\s\S]*?});/);
             if (configMatch) {
                 const sandbox = {};
                 vm.createContext(sandbox);
-                const config = vm.runInContext(`(${configMatch[1]})`, sandbox);
-                configCache.data = config;
-                configCache.timestamp = now;
-                res.json(config);
+                config = vm.runInContext(`(${configMatch[1]})`, sandbox);
+                lastModified = fs.statSync(productionJsPath).mtime.getTime();
             }
         }
         // Priority 3: Fallback to default JSON config
         else if (fs.existsSync(jsonConfigPath)) {
-            const config = JSON.parse(fs.readFileSync(jsonConfigPath, 'utf8'));
-            configCache.data = config;
-            configCache.timestamp = now;
-            res.json(config);
+            config = JSON.parse(fs.readFileSync(jsonConfigPath, 'utf8'));
+            lastModified = fs.statSync(jsonConfigPath).mtime.getTime();
         } 
         // Priority 4: Fallback to original cms-config.js
         else if (fs.existsSync(jsConfigPath)) {
-            // For initial load, read from the original config file
-            delete require.cache[require.resolve('./cms-config.js')];
-            
-            // Create a temporary global context to safely evaluate the config
             const vm = require('vm');
             const configContent = fs.readFileSync(jsConfigPath, 'utf8');
-            
-            // Extract just the config object
             const configMatch = configContent.match(/const CMS_CONFIG = ({[\s\S]*?});/);
             if (configMatch) {
                 const sandbox = {};
                 vm.createContext(sandbox);
                 vm.runInContext(`const CMS_CONFIG = ${configMatch[1]}`, sandbox);
-                res.json(sandbox.CMS_CONFIG);
+                config = sandbox.CMS_CONFIG;
+                lastModified = fs.statSync(jsConfigPath).mtime.getTime();
             } else {
                 throw new Error('Could not parse CMS_CONFIG from file');
             }
         } else {
             throw new Error('Configuration file not found');
         }
+        
+        // Return config with metadata for conflict detection
+        res.json({
+            config: config,
+            lastModified: lastModified
+        });
+        
     } catch (error) {
         console.error('Error loading configuration:', error);
         res.status(500).json({ error: 'Failed to load configuration: ' + error.message });

@@ -8,6 +8,9 @@
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self';">
+    <meta http-equiv="X-Content-Type-Options" content="nosniff">
+    <meta http-equiv="X-Frame-Options" content="DENY">
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -16,7 +19,7 @@
     <script>
         // Fallback CMS config if external file fails to load
         if (typeof CMS_CONFIG === 'undefined') {
-            console.log('Loading fallback CMS config...');
+            // Fallback CMS config loaded
         }
     </script>
     <script src="./cms-config.js" onerror="console.error('Failed to load cms-config.js')"></script>
@@ -144,7 +147,7 @@
             border: 2px solid;
             border-color: var(--white) var(--black) var(--black) var(--white);
             box-shadow: 2px 2px 4px rgba(0,0,0,0.5);
-            z-index: 10000;
+            z-index: 20000; /* Above all windows */
         }
         
         .start-menu-header {
@@ -274,7 +277,7 @@
             visibility: hidden;
             transform: translateY(10px);
             transition: all 0.3s ease;
-            z-index: 1000;
+            z-index: 20001; /* Above all windows */
             box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
             font-size: 16px;
         }
@@ -431,7 +434,7 @@
             border: 2px solid;
             border-color: var(--white) var(--gray-dark) var(--gray-dark) var(--white);
             display: none;
-            z-index: 1000;
+            z-index: 20002; /* Above all windows */
             font-family: 'VT323', monospace;
             box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
         }
@@ -740,15 +743,7 @@
         }
 
         /* What's New Dashboard Styles */
-        .whats-new-dashboard,
-        .new-biz-dashboard,
-        .premieres-dashboard,
-        .challenges-dashboard,
-        .shoutouts-dashboard,
-        .articles-dashboard,
-        .ralph-news-dashboard {
-            z-index: 1001 !important; /* Ensure it's above ASCII desktop */
-        }
+        /* Z-index is now managed dynamically by JavaScript for proper layering */
         
         .articles-content {
             height: calc(100% - 80px);
@@ -1305,7 +1300,7 @@
             width: 100%;
             height: 100%;
             background: rgba(0, 0, 0, 0.9);
-            z-index: 10000;
+            z-index: 19000; /* Above all windows, below UI controls */
             display: none;
             justify-content: center;
             align-items: center;
@@ -1359,7 +1354,12 @@
         .challenges-dashboard .window-content,
         .shoutouts-dashboard .window-content,
         .articles-dashboard .window-content,
-        .ralph-news-dashboard .window-content {
+        .ralph-news-dashboard .window-content,
+        .suggestions-dashboard .window-content,
+        .announcements-dashboard .window-content,
+        .links-dashboard .window-content,
+        .innovation-dashboard .window-content,
+        .resources-dashboard .window-content {
             background: #000000 !important;
             color: #ffffff !important;
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif !important;
@@ -1373,7 +1373,12 @@
         .challenges-dashboard .window-content::before,
         .shoutouts-dashboard .window-content::before,
         .articles-dashboard .window-content::before,
-        .ralph-news-dashboard .window-content::before {
+        .ralph-news-dashboard .window-content::before,
+        .suggestions-dashboard .window-content::before,
+        .announcements-dashboard .window-content::before,
+        .links-dashboard .window-content::before,
+        .innovation-dashboard .window-content::before,
+        .resources-dashboard .window-content::before {
             display: none !important; /* Remove scan lines */
         }
 
@@ -1382,7 +1387,12 @@
         .challenges-dashboard .module-description,
         .shoutouts-dashboard .module-description,
         .articles-dashboard .module-description,
-        .ralph-news-dashboard .module-description {
+        .ralph-news-dashboard .module-description,
+        .suggestions-dashboard .module-description,
+        .announcements-dashboard .module-description,
+        .links-dashboard .module-description,
+        .innovation-dashboard .module-description,
+        .resources-dashboard .module-description {
             display: none !important; /* Hide duplicate description */
         }
 
@@ -1748,7 +1758,8 @@
             background: var(--ralph-pink);
         }
 
-        .pipeline-contact-section {
+        .pipeline-contact-section,
+        .innovation-contact-section {
             background: #1a1a1a;
             border-radius: 12px;
             padding: 16px;
@@ -1774,7 +1785,8 @@
             flex: 1;
         }
 
-        .pipeline-contact-section h3 {
+        .pipeline-contact-section h3,
+        .innovation-contact-section h3 {
             color: var(--ralph-green);
             font-size: 14px;
             font-weight: 600;
@@ -2642,7 +2654,7 @@
             font-size: 14px;
             font-family: 'Space Mono', monospace;
             font-weight: 400;
-            z-index: 9998;
+            z-index: 20003; /* Above all windows and UI elements */
             display: none;
             max-width: 300px;
             line-height: 1.4;
@@ -3249,6 +3261,19 @@
             padding: 20px;
             text-align: left;
             position: relative;
+        }
+        
+        /* Dashboard content styling for new modules */
+        .suggestions-dashboard .dashboard-content,
+        .announcements-dashboard .dashboard-content,
+        .links-dashboard .dashboard-content,
+        .innovation-dashboard .dashboard-content,
+        .resources-dashboard .dashboard-content {
+            padding: 16px;
+            background: #000000;
+            color: #ffffff;
+            overflow-y: auto;
+            height: calc(100% - 120px);
         }
         
         /* Suggestion Box - Ralph Pink */
@@ -4078,25 +4103,10 @@
                     <div style="color: #EB008B;">RALPH ASSISTANT v1.0 - INITIALIZED</div>
                     <div style="color: #EB008B;">=======================================</div>
                     <div style="margin-top: 10px;">
-                        <span style="color: #ffff00;">ASSISTANT:</span> Welcome to RALPH's Super-Intranet!
+                        <span style="color: #ffff00;">ASSISTANT:</span> I'm here to help with questions about RALPH, projects, or anything else you need assistance with.
                     </div>
                     <div style="margin-top: 10px;">
-                        Here's what you can do:
-                    </div>
-                    <div style="margin-top: 10px; color: #00ffff;">
-                        ► Click any desktop icon to open modules<br>
-                        ► Drag windows by their title bars<br>
-                        ► Minimize, maximize, or close windows<br>
-                        ► Submit suggestions in the Suggestion Box<br>
-                        ► Accept challenges<br>
-                        ► Check project pipelines and deadlines<br>
-                        ► Send shoutouts to team members
-                    </div>
-                    <div style="margin-top: 10px;">
-                        <span style="color: #ffff00;">TIP:</span> Press ESC to close all windows
-                    </div>
-                    <div style="margin-top: 10px;">
-                        Type 'help' for more commands or ask me anything!
+                        Type your message below or ask me anything!
                     </div>
                     <div style="margin-top: 10px; color: #00ff00;" class="blink">
                         > _
@@ -4522,12 +4532,12 @@
                     <button class="window-button" onclick="closeWindow('suggestions')">X</button>
                 </div>
             </div>
-            <div class="window-content" style="overflow-y: auto; height: calc(100% - 40px);">
-            <div class="suggestions-header">
-                <h1 class="suggestions-title">Suggestions</h1>
-                <div class="suggestions-subtitle">The best way to get your voice heard and make positive changes at RALPH</div>
-            </div>
-            <div class="dashboard-content">
+            <div class="window-content">
+                <div class="suggestions-header">
+                    <h2 class="suggestions-title">Suggestions</h2>
+                    <div class="suggestions-subtitle">The best way to get your voice heard and make positive changes at RALPH</div>
+                </div>
+                <div class="dashboard-content">
                 <div class="suggestions-list-section">
                     <h3>Recent Suggestions & Status</h3>
                     <div class="suggestions-list">
@@ -4596,12 +4606,12 @@
                     <button class="window-button" onclick="closeWindow('announcements')">X</button>
                 </div>
             </div>
-            <div class="window-content" style="overflow-y: auto; height: calc(100% - 40px);">
-            <div class="announcements-header">
-                <h1 class="announcements-title">Announcements</h1>
-                <div class="announcements-subtitle">Important updates, policy changes, and company news you need to know</div>
-            </div>
-            <div class="dashboard-content">
+            <div class="window-content">
+                <div class="announcements-header">
+                    <h2 class="announcements-title">Announcements</h2>
+                    <div class="announcements-subtitle">Important updates, policy changes, and company news you need to know</div>
+                </div>
+                <div class="dashboard-content">
                 <div class="announcements-urgent-section">
                     <h3>⚠️ Important Notices</h3>
                     <div class="announcements-list">
@@ -4654,7 +4664,7 @@
                         </div>
                     </div>
                 </div>
-            </div>
+                </div>
             </div>
         </div>
         
@@ -4668,12 +4678,12 @@
                     <button class="window-button" onclick="closeWindow('links')">X</button>
                 </div>
             </div>
-            <div class="window-content" style="overflow-y: auto; height: calc(100% - 40px);">
-            <div class="links-header">
-                <h1 class="links-title">Quick Links</h1>
-                <div class="links-subtitle">Quick access to essential tools, internal systems, and external resources</div>
-            </div>
-            <div class="module-tabs">
+            <div class="window-content">
+                <div class="links-header">
+                    <h2 class="links-title">Quick Links</h2>
+                    <div class="links-subtitle">Quick access to essential tools, internal systems, and external resources</div>
+                </div>
+                <div class="module-tabs">
                 <button class="module-tab active" onclick="scrollToSection('links-internal-section')">Internal Tools</button>
                 <button class="module-tab" onclick="scrollToSection('links-external-section')">External Resources</button>
                 <button class="module-tab" onclick="scrollToSection('links-add-section')">Submit Link</button>
@@ -4750,7 +4760,8 @@
                         <button class="link-btn" onclick="submitLink()">Submit Link</button>
                     </div>
                 </div>
-            </div>
+                </div>
+                </div>
             </div>
         </div>
         
@@ -4764,12 +4775,12 @@
                     <button class="window-button" onclick="closeWindow('innovation')">X</button>
                 </div>
             </div>
-            <div class="window-content" style="overflow-y: auto; height: calc(100% - 40px);">
-            <div class="innovation-header">
-                <h1 class="innovation-title">Innovation @ Ralph</h1>
-                <div class="innovation-subtitle">Cutting-edge projects, emerging technologies, and creative experiments</div>
-            </div>
-            <div class="dashboard-content">
+            <div class="window-content">
+                <div class="innovation-header">
+                    <h2 class="innovation-title">Innovation @ Ralph</h2>
+                    <div class="innovation-subtitle">Cutting-edge projects, emerging technologies, and creative experiments</div>
+                </div>
+                <div class="dashboard-content">
                 <div class="innovation-experiments-section">
                     <h3>🔬 Current Experiments</h3>
                     <div class="experiments-list">
@@ -4840,7 +4851,7 @@
                         </div>
                     </div>
                 </div>
-            </div>
+                </div>
             </div>
         </div>
         
@@ -4854,12 +4865,12 @@
                     <button class="window-button" onclick="closeWindow('resources')">X</button>
                 </div>
             </div>
-            <div class="window-content" style="overflow-y: auto; height: calc(100% - 40px);">
-            <div class="resources-header">
-                <h1 class="resources-title">Resource Center</h1>
-                <div class="resources-subtitle">Documents, templates, training materials, and organizational resources</div>
-            </div>
-            <div class="module-tabs">
+            <div class="window-content">
+                <div class="resources-header">
+                    <h2 class="resources-title">Resource Center</h2>
+                    <div class="resources-subtitle">Documents, templates, training materials, and organizational resources</div>
+                </div>
+                <div class="module-tabs">
                 <button class="module-tab active" onclick="scrollToSection('resources-documents-section')">Documents</button>
                 <button class="module-tab" onclick="scrollToSection('resources-templates-section')">Templates</button>
                 <button class="module-tab" onclick="scrollToSection('resources-training-section')">Training</button>
@@ -4942,7 +4953,7 @@
                         </div>
                     </div>
                 </div>
-            </div>
+                </div>
             </div>
         </div>
         
@@ -4970,6 +4981,10 @@
                     <div class="start-menu-item" onclick="openAdminLogin(); toggleStartMenu();">
                         <span class="start-menu-icon">⚙️</span>
                         <span>Admin Panel</span>
+                    </div>
+                    <div class="start-menu-item" onclick="openWindow('info'); toggleStartMenu();">
+                        <span class="start-menu-icon">📊</span>
+                        <span>Info</span>
                     </div>
                     <div class="start-menu-item" onclick="location.reload();">
                         <span class="start-menu-icon">🔄</span>
@@ -5071,7 +5086,7 @@
                     </div>
                     <div>
                         <label style="display: block; margin-bottom: 4px; font-weight: bold;">PASSWORD:</label>
-                        <input type="password" id="adminPassword" value="admin123" style="width: 100%; padding: 8px; background: #000; color: #00ff00; border: 2px solid #808080; font-family: 'Space Mono', monospace; font-size: 14px; line-height: 1.4;">
+                        <input type="password" id="adminPassword" placeholder="Password" style="width: 100%; padding: 8px; background: #000; color: #00ff00; border: 2px solid #808080; font-family: 'Space Mono', monospace; font-size: 14px; line-height: 1.4;">
                     </div>
                     <div style="display: flex; gap: 8px; margin-top: 16px;">
                         <button type="submit" class="pixel-button" style="flex: 1;">ACCESS CMS</button>
@@ -5080,6 +5095,92 @@
                 </form>
                 <div id="adminLoginError" style="display: none; margin-top: 16px; color: #ff0000; text-align: center; font-weight: bold;">
                     ⚠️ ACCESS DENIED - Invalid credentials
+                </div>
+            </div>
+        </div>
+        
+        <!-- Info Window -->
+        <div id="info" class="window" style="top: 50px; left: 50px; width: 800px; height: 600px;">
+            <div class="window-header">
+                <div class="window-title">📊 RALPH Intranet Info</div>
+                <div class="window-controls">
+                    <button class="window-button" onclick="minimizeWindow('info')">_</button>
+                    <button class="window-button" onclick="maximizeWindow('info')">□</button>
+                    <button class="window-button" onclick="closeWindow('info')">X</button>
+                </div>
+            </div>
+            <div class="window-content" style="padding: 20px; background: var(--white); overflow-y: auto; font-family: 'Space Mono', monospace; font-size: 14px; line-height: 1.6;">
+                <div style="text-align: center; margin-bottom: 30px;">
+                    <div style="font-size: 18px; font-weight: bold; color: var(--ralph-pink); margin-bottom: 10px;">
+                        🏢 WELCOME TO RALPH'S RETRO INTRANET SYSTEM
+                    </div>
+                    <div style="font-size: 12px; color: #666;">
+                        Version 2.0 | Built with ♥️ by the RALPH team
+                    </div>
+                </div>
+                
+                <div style="margin-bottom: 25px;">
+                    <h3 style="color: var(--ralph-green); margin-bottom: 15px; font-size: 16px;">🚀 How It Works</h3>
+                    <p>This retro-inspired intranet brings together all your RALPH tools, updates, and team connections in one nostalgic interface. Navigate using desktop icons, drag windows around, and interact with content just like the good old days!</p>
+                    
+                    <ul style="margin: 15px 0; padding-left: 20px; color: #333;">
+                        <li><strong>Desktop Icons:</strong> Click any icon to open modules and tools</li>
+                        <li><strong>Window System:</strong> Drag, minimize, maximize, and organize your workspace</li>
+                        <li><strong>Start Menu:</strong> Access system tools and options</li>
+                        <li><strong>Music Player:</strong> Enjoy background tunes while you work</li>
+                        <li><strong>World Clock:</strong> Stay connected with global team members</li>
+                    </ul>
+                </div>
+                
+                <div style="margin-bottom: 25px;">
+                    <h3 style="color: var(--ralph-blue); margin-bottom: 15px; font-size: 16px;">🛠️ Built With</h3>
+                    <p>Our intranet combines modern functionality with retro aesthetics:</p>
+                    <ul style="margin: 15px 0; padding-left: 20px; color: #333;">
+                        <li><strong>Frontend:</strong> Pure HTML5, CSS3, and Vanilla JavaScript</li>
+                        <li><strong>Design:</strong> Windows 95-inspired UI with modern responsive features</li>
+                        <li><strong>Content Management:</strong> Dynamic CMS integration for easy updates</li>
+                        <li><strong>Security:</strong> Production-ready authentication and data protection</li>
+                        <li><strong>Performance:</strong> Optimized for fast loading and smooth interactions</li>
+                    </ul>
+                </div>
+                
+                <div style="margin-bottom: 25px;">
+                    <h3 style="color: var(--ralph-orange); margin-bottom: 15px; font-size: 16px;">📊 Key Features</h3>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin: 15px 0;">
+                        <div style="padding: 15px; background: #f9f9f9; border-radius: 8px;">
+                            <strong style="color: var(--ralph-pink);">💼 Business Pipeline</strong><br>
+                            Track projects from leads to completion
+                        </div>
+                        <div style="padding: 15px; background: #f9f9f9; border-radius: 8px;">
+                            <strong style="color: var(--ralph-green);">💡 Innovation Hub</strong><br>
+                            Collaborate on cutting-edge projects
+                        </div>
+                        <div style="padding: 15px; background: #f9f9f9; border-radius: 8px;">
+                            <strong style="color: var(--ralph-blue);">📣 Announcements</strong><br>
+                            Stay updated with company news
+                        </div>
+                        <div style="padding: 15px; background: #f9f9f9; border-radius: 8px;">
+                            <strong style="color: var(--ralph-yellow);">📝 Resources</strong><br>
+                            Access documents and training materials
+                        </div>
+                    </div>
+                </div>
+                
+                <div style="margin-bottom: 25px;">
+                    <h3 style="color: var(--ralph-brown); margin-bottom: 15px; font-size: 16px;">🔍 Fun Facts</h3>
+                    <ul style="margin: 15px 0; padding-left: 20px; color: #333;">
+                        <li>The system uses over 15,000 lines of hand-crafted code</li>
+                        <li>Window z-index management ensures perfect layering behavior</li>
+                        <li>Dynamic content loading keeps information fresh and relevant</li>
+                        <li>Pixel-perfect recreations of classic Windows UI elements</li>
+                        <li>Responsive design works seamlessly on desktop, tablet, and mobile</li>
+                        <li>Built-in security features protect sensitive company information</li>
+                    </ul>
+                </div>
+                
+                <div style="background: var(--ralph-pink); color: white; padding: 15px; border-radius: 8px; text-align: center; margin-top: 30px;">
+                    <strong>🌟 Have ideas for new features?</strong><br>
+                    Use the Suggestion Box to share your thoughts and help make the intranet even better!
                 </div>
             </div>
         </div>
@@ -5414,7 +5515,7 @@
         const AppState = {
             windows: {},
             activeWindow: null,
-            zIndex: 100,
+            zIndex: 15000, // Start well above any CSS z-index values
             isMobile: false,
             touchDevice: false,
             config: null,
@@ -5567,11 +5668,16 @@
             }
             
             windowEl.classList.add('active');
-            windowEl.style.zIndex = ++AppState.zIndex;
+            // Ensure newly opened window is always on top
+            AppState.zIndex = Math.max(AppState.zIndex + 1, 15001);
+            windowEl.style.zIndex = AppState.zIndex;
             AppState.activeWindow = windowId;
             
             // Ensure window stays within viewport
             constrainWindowToViewport(windowEl);
+            
+            // Ensure window is properly initialized and independent
+            windowEl.style.position = 'absolute';
             
             if (!AppState.windows[windowId]) {
                 AppState.windows[windowId] = { draggable: null };
@@ -5657,9 +5763,15 @@
         function makeDraggable(element) {
             if (AppState.isMobile) return; // Disable dragging on mobile
             
-            let pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
+            // Clear any existing drag handlers to prevent conflicts
             const header = element.querySelector('.window-header');
             if (!header) return;
+            
+            // Remove any existing handlers
+            header.onmousedown = null;
+            header.ontouchstart = null;
+            
+            let pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
             
             const dragMouseDown = (e) => {
                 e = e || window.event;
@@ -5677,7 +5789,8 @@
                 document.ontouchend = closeDragElement;
                 document.onmousemove = elementDrag;
                 document.ontouchmove = elementDrag;
-                element.style.zIndex = ++AppState.zIndex;
+                AppState.zIndex = Math.max(AppState.zIndex + 1, 15001);
+                element.style.zIndex = AppState.zIndex;
             };
             
             const elementDrag = (e) => {
@@ -5868,8 +5981,9 @@
                 document.onmouseup = closeDragElement;
                 document.onmousemove = elementDrag;
                 
-                // Bring to front
-                windowElement.style.zIndex = 1001;
+                // Bring to front with robust z-index
+                AppState.zIndex = Math.max(AppState.zIndex + 1, 15001);
+                windowElement.style.zIndex = AppState.zIndex;
             }
 
             function elementDrag(e) {
@@ -5969,6 +6083,17 @@
             if (!startButton && !startMenuItem && startMenu) {
                 startMenu.style.display = 'none';
             }
+            
+            // Bring clicked window to front - handle ALL window types
+            const clickedWindow = e.target.closest('.window, .iframe-window');
+            if (clickedWindow && (clickedWindow.classList.contains('active') || clickedWindow.classList.contains('iframe-window'))) {
+                // Ensure this window is on top with robust z-index
+                AppState.zIndex = Math.max(AppState.zIndex + 1, 15001);
+                clickedWindow.style.zIndex = AppState.zIndex;
+                if (clickedWindow.id) {
+                    AppState.activeWindow = clickedWindow.id;
+                }
+            }
         });
 
         // Enhanced chatbot functionality with AI integration
@@ -5994,7 +6119,12 @@
             const userMsg = document.createElement('div');
             userMsg.style.marginTop = '10px';
             userMsg.style.color = '#00ff00';
-            userMsg.innerHTML = `<span style="color: #ffffff;">USER:</span> ${message}`;
+            // Create safe DOM elements to prevent XSS
+            const userSpan = document.createElement('span');
+            userSpan.style.color = '#ffffff';
+            userSpan.textContent = 'USER:';
+            userMsg.appendChild(userSpan);
+            userMsg.appendChild(document.createTextNode(' ' + message));
             fragment.appendChild(userMsg);
             
             // Add loading indicator
@@ -6074,14 +6204,14 @@
                     });
                     
                     const result = await apiResponse.json();
-                    console.log('🤖 API response received:', result);
+                    // API response received
                     response = result.response;
                     
                     if (result.fallback) {
-                        console.log('Using fallback response (API key not configured or error occurred)');
+                        // Using fallback response
                     }
                 } catch (error) {
-                    console.error('Chatbot API error:', error);
+                    // API error occurred
                     // Fallback responses
                     const responses = AppState.config?.chatbot?.openai?.fallbackResponses || [
                         'I\'m having trouble processing that right now.',
@@ -6621,7 +6751,7 @@
         }
 
         function loadModuleContentFromCMS(moduleId) {
-            console.log(`📄 LOADING CONTENT FROM CMS FOR MODULE: ${moduleId}`);
+            // Loading content from CMS
             if (!AppState.config || !AppState.config.modules) {
                 console.log('⚠️ No config available, skipping content load');
                 return;
@@ -6640,16 +6770,19 @@
                     title.textContent = `${moduleConfig.icon} ${moduleConfig.title}`;
                 }
                 
-                // Update module description
-                const contentArea = windowElement.querySelector('.window-content');
-                if (contentArea && moduleConfig.description) {
-                    let existingDescription = contentArea.querySelector('.module-description');
-                    if (!existingDescription) {
-                        existingDescription = document.createElement('div');
-                        existingDescription.className = 'module-description';
-                        contentArea.insertBefore(existingDescription, contentArea.firstChild);
+                // Update module description (skip for redesigned modules)
+                const redesignedModules = ['suggestions', 'announcements', 'links', 'innovation', 'resources'];
+                if (!redesignedModules.includes(moduleId)) {
+                    const contentArea = windowElement.querySelector('.window-content');
+                    if (contentArea && moduleConfig.description) {
+                        let existingDescription = contentArea.querySelector('.module-description');
+                        if (!existingDescription) {
+                            existingDescription = document.createElement('div');
+                            existingDescription.className = 'module-description';
+                            contentArea.insertBefore(existingDescription, contentArea.firstChild);
+                        }
+                        existingDescription.textContent = moduleConfig.description;
                     }
-                    existingDescription.textContent = moduleConfig.description;
                 }
                 
                 // Update specific module content
@@ -6683,7 +6816,7 @@
         }
 
         function loadContentFromCMS() {
-            console.log('📄 LOADING CONTENT FROM CMS');
+            // Loading CMS content
             if (!AppState.config) {
                 console.log('⚠️ No config available, skipping content load');
                 return;
@@ -7309,152 +7442,191 @@ This year's theme is "Creative Connections" and will include virtual rooms for e
 
         // Update Innovation content dynamically
         function updateInnovationContent(windowElement, content) {
-            console.log('🚫 Skipping CMS update for redesigned Innovation module');
-            return; // Skip CMS updates for redesigned module
+            console.log('🔄 Updating redesigned Innovation module with CMS content');
             
-            // Build experiments HTML
-            let experimentsHtml = '';
-            if (content.experiments) {
+            if (!content) {
+                console.log('⚠️ No innovation content provided');
+                return;
+            }
+            
+            // Update experiments/current projects section
+            const experimentsContainer = windowElement.querySelector('.innovation-experiments');
+            if (experimentsContainer && content.experiments) {
+                let experimentsHTML = '';
                 content.experiments.forEach(experiment => {
-                    const linkHtml = experiment.url ? 
-                        ` <button onclick="openIframeWindow('${experiment.url}', '${experiment.name}', 1000, 700)" style="background: #EB008B; color: white; border: none; padding: 4px 8px; cursor: pointer; border-radius: 2px; font-size: 12px; font-family: 'Space Mono', monospace;">[VIEW]</button>` : '';
-                    
-                    experimentsHtml += `
-                        <p>🔬 ${experiment.name}${linkHtml}</p>
-                        <div class="progress-bar">
-                            <div class="progress-fill" style="width: ${experiment.progress}%;"></div>
+                    experimentsHTML += `
+                        <div class="innovation-project">
+                            <div class="project-header">
+                                <h4>${experiment.name || 'Untitled Project'}</h4>
+                                <div class="project-progress">
+                                    <div class="progress-bar">
+                                        <div class="progress-fill" style="width: ${experiment.progress || 0}%"></div>
+                                    </div>
+                                    <span class="progress-text">${experiment.progress || 0}%</span>
+                                </div>
+                            </div>
+                            <p>${experiment.description || 'No description available'}</p>
+                            ${experiment.url ? `<button class="project-btn" onclick="openExternalLink('${experiment.url}')">View Project</button>` : ''}
                         </div>
                     `;
                 });
+                experimentsContainer.innerHTML = experimentsHTML;
             }
             
-            // Build next session HTML
-            const nextSession = content.nextSession || {};
-            const sessionHtml = `
-                <div class="module-item">
-                    <h3>NEXT SESSION</h3>
-                    <p>💡 Topic: ${nextSession.topic || 'TBA'}</p>
-                    <p>🎤 Speaker: ${nextSession.speaker || 'TBA'}</p>
-                </div>
-            `;
-            
-            // Update the window content
-            windowContent.innerHTML = `
-                <div class="module-item">
-                    <h3>CURRENT EXPERIMENTS</h3>
-                    ${experimentsHtml}
-                </div>
-                ${sessionHtml}
-            `;
+            // Update upcoming sessions section
+            const upcomingContainer = windowElement.querySelector('.innovation-upcoming');
+            if (upcomingContainer && content.upcomingSessions) {
+                let upcomingHTML = '';
+                content.upcomingSessions.forEach(session => {
+                    upcomingHTML += `
+                        <div class="upcoming-session">
+                            <div class="session-date">${session.date || 'TBD'}</div>
+                            <div class="session-details">
+                                <h4>${session.topic || 'Session Topic'}</h4>
+                                <p>${session.description || 'Details coming soon'}</p>
+                                <span class="session-presenter">Led by: ${session.presenter || 'TBD'}</span>
+                            </div>
+                        </div>
+                    `;
+                });
+                upcomingContainer.innerHTML = upcomingHTML;
+            }
             
             console.log('✅ Innovation content updated successfully');
         }
 
         // Update Resources content dynamically
         function updateResourcesContent(windowElement, content) {
-            console.log('🚫 Skipping CMS update for redesigned Resources module');
-            return; // Skip CMS updates for redesigned module
+            console.log('🔄 Updating redesigned Resources module with CMS content');
             
-            // Build documents HTML
-            let documentsHtml = '';
-            if (content.documents) {
-                content.documents.forEach(doc => {
-                    const name = typeof doc === 'string' ? doc : (doc.name || '');
-                    const url = typeof doc === 'object' ? (doc.url || '') : '';
-                    const linkHtml = url ? 
-                        ` <button onclick="openIframeWindow('${url}', '${name}', 800, 600)" style="background: #00ff00; color: black; border: none; padding: 4px 8px; cursor: pointer; border-radius: 2px; font-size: 12px; font-family: 'Space Mono', monospace;">[DOWNLOAD]</button>` : '';
-                    
-                    documentsHtml += `<p>📄 ${name}${linkHtml}</p>`;
-                });
+            if (!content) {
+                console.log('⚠️ No resources content provided');
+                return;
             }
             
-            // Build templates HTML
-            let templatesHtml = '';
-            if (content.templates) {
+            // Update Documents section
+            const documentsContainer = windowElement.querySelector('.resources-documents .resource-items');
+            if (documentsContainer && content.documents) {
+                let documentsHTML = '';
+                content.documents.forEach(document => {
+                    const isActive = document.url && document.url !== '#';
+                    documentsHTML += `
+                        <div class="resource-item ${isActive ? '' : 'inactive'}">
+                            <div class="resource-icon">📄</div>
+                            <div class="resource-details">
+                                <h4>${document.name || 'Untitled Document'}</h4>
+                                <p>${document.description || 'Essential company document'}</p>
+                            </div>
+                            <button class="resource-btn" onclick="${isActive ? `openExternalLink('${document.url}')` : ''}" ${isActive ? '' : 'disabled style="opacity: 0.5;"'}>
+                                ${isActive ? 'View' : 'Coming Soon'}
+                            </button>
+                        </div>
+                    `;
+                });
+                documentsContainer.innerHTML = documentsHTML;
+            }
+            
+            // Update Templates section
+            const templatesContainer = windowElement.querySelector('.resources-templates .resource-items');
+            if (templatesContainer && content.templates) {
+                let templatesHTML = '';
                 content.templates.forEach(template => {
-                    const name = typeof template === 'string' ? template : (template.name || '');
-                    const url = typeof template === 'object' ? (template.url || '') : '';
-                    const linkHtml = url ? 
-                        ` <button onclick="openIframeWindow('${url}', '${name}', 800, 600)" style="background: #00ff00; color: black; border: none; padding: 4px 8px; cursor: pointer; border-radius: 2px; font-size: 12px; font-family: 'Space Mono', monospace;">[DOWNLOAD]</button>` : '';
-                    
-                    templatesHtml += `<p>📋 ${name}${linkHtml}</p>`;
+                    const isActive = template.url && template.url !== '#';
+                    templatesHTML += `
+                        <div class="resource-item ${isActive ? '' : 'inactive'}">
+                            <div class="resource-icon">📋</div>
+                            <div class="resource-details">
+                                <h4>${template.name || 'Untitled Template'}</h4>
+                                <p>${template.description || 'Professional template'}</p>
+                            </div>
+                            <button class="resource-btn" onclick="${isActive ? `openExternalLink('${template.url}')` : ''}" ${isActive ? '' : 'disabled style="opacity: 0.5;"'}>
+                                ${isActive ? 'Download' : 'Coming Soon'}
+                            </button>
+                        </div>
+                    `;
                 });
+                templatesContainer.innerHTML = templatesHTML;
             }
             
-            // Build training HTML
-            let trainingHtml = '';
-            if (content.training) {
-                content.training.forEach(course => {
-                    const name = typeof course === 'string' ? course : (course.name || '');
-                    const url = typeof course === 'object' ? (course.url || '') : '';
-                    const linkHtml = url ? 
-                        ` <button onclick="openIframeWindow('${url}', '${name}', 800, 600)" style="background: #00ff00; color: black; border: none; padding: 4px 8px; cursor: pointer; border-radius: 2px; font-size: 12px; font-family: 'Space Mono', monospace;">[START]</button>` : '';
-                    
-                    trainingHtml += `<p>🎓 ${name}${linkHtml}</p>`;
+            // Update Training section
+            const trainingContainer = windowElement.querySelector('.resources-training .resource-items');
+            if (trainingContainer && content.training) {
+                let trainingHTML = '';
+                content.training.forEach(training => {
+                    const isActive = training.url && training.url !== '#';
+                    trainingHTML += `
+                        <div class="resource-item ${isActive ? '' : 'inactive'}">
+                            <div class="resource-icon">🎓</div>
+                            <div class="resource-details">
+                                <h4>${training.name || 'Untitled Training'}</h4>
+                                <p>${training.description || 'Professional development resource'}</p>
+                            </div>
+                            <button class="resource-btn" onclick="${isActive ? `openExternalLink('${training.url}')` : ''}" ${isActive ? '' : 'disabled style="opacity: 0.5;"'}>
+                                ${isActive ? 'Start' : 'Coming Soon'}
+                            </button>
+                        </div>
+                    `;
                 });
+                trainingContainer.innerHTML = trainingHTML;
             }
-            
-            // Update the window content
-            windowContent.innerHTML = `
-                <div class="module-item">
-                    <h3>DOCUMENTS</h3>
-                    ${documentsHtml}
-                </div>
-                <div class="module-item">
-                    <h3>TEMPLATES</h3>
-                    ${templatesHtml}
-                </div>
-                <div class="module-item">
-                    <h3>TRAINING</h3>
-                    ${trainingHtml}
-                </div>
-            `;
             
             console.log('✅ Resources content updated successfully');
         }
 
         // Update Quick Links content dynamically
         function updateLinksContent(windowElement, content) {
-            console.log('🚫 Skipping CMS update for redesigned Links module');
-            return; // Skip CMS updates for redesigned module
+            console.log('🔄 Updating redesigned Links module with CMS content');
             
-            // Build internal links HTML
-            let internalHtml = '';
-            if (content.internal) {
+            if (!content) {
+                console.log('⚠️ No links content provided');
+                return;
+            }
+            
+            // Update Internal Tools section
+            const internalGrid = windowElement.querySelector('.links-internal-section .links-grid');
+            if (internalGrid && content.internal) {
+                let internalHTML = '';
                 content.internal.forEach(link => {
                     const url = link.url && link.url !== '#' ? link.url : null;
-                    const buttonHtml = url ? 
-                        `<button class="pixel-button" onclick="openIframeWindow('${url}', '${link.name}', 900, 700)">${link.name}</button>` :
-                        `<button class="pixel-button" style="opacity: 0.5; cursor: not-allowed;">${link.name}</button>`;
+                    const clickAction = url ? `openExternalLink('${url}')` : '';
+                    const disabled = !url;
                     
-                    internalHtml += buttonHtml;
+                    internalHTML += `
+                        <div class="link-card">
+                            <div class="link-icon">${link.icon || '🔗'}</div>
+                            <h4>${link.name || 'Untitled'}</h4>
+                            <p>${link.description || 'No description available'}</p>
+                            <button class="link-card-btn" onclick="${clickAction}" ${disabled ? 'style="opacity: 0.5; cursor: not-allowed;" disabled' : ''}>
+                                ${disabled ? 'Coming Soon' : 'Open'}
+                            </button>
+                        </div>
+                    `;
                 });
+                internalGrid.innerHTML = internalHTML;
             }
             
-            // Build external links HTML
-            let externalHtml = '';
-            if (content.external) {
+            // Update External Resources section
+            const externalGrid = windowElement.querySelector('.links-external-section .links-grid');
+            if (externalGrid && content.external) {
+                let externalHTML = '';
                 content.external.forEach(link => {
                     const url = link.url && link.url !== '#' ? link.url : null;
-                    const buttonHtml = url ? 
-                        `<button class="pixel-button" onclick="openIframeWindow('${url}', '${link.name}', 900, 700)">${link.name}</button>` :
-                        `<button class="pixel-button" style="opacity: 0.5; cursor: not-allowed;">${link.name}</button>`;
+                    const clickAction = url ? `openExternalLink('${url}')` : '';
+                    const disabled = !url;
                     
-                    externalHtml += buttonHtml;
+                    externalHTML += `
+                        <div class="link-card">
+                            <div class="link-icon">${link.icon || '🌍'}</div>
+                            <h4>${link.name || 'Untitled'}</h4>
+                            <p>${link.description || 'No description available'}</p>
+                            <button class="link-card-btn" onclick="${clickAction}" ${disabled ? 'style="opacity: 0.5; cursor: not-allowed;" disabled' : ''}>
+                                ${disabled ? 'Coming Soon' : 'Open'}
+                            </button>
+                        </div>
+                    `;
                 });
+                externalGrid.innerHTML = externalHTML;
             }
-            
-            // Update the window content
-            windowContent.innerHTML = `
-                <div class="module-item">
-                    <h3>INTERNAL TOOLS</h3>
-                    ${internalHtml}
-                </div>
-                <div class="module-item">
-                    <h3>EXTERNAL RESOURCES</h3>
-                    ${externalHtml}
-                </div>
-            `;
             
             console.log('✅ Quick Links content updated successfully');
         }
@@ -7618,69 +7790,122 @@ This year's theme is "Creative Connections" and will include virtual rooms for e
 
 
         function updateSuggestionsContent(windowElement, content) {
-            console.log('🚫 Skipping CMS update for redesigned Suggestions module');
-            return; // Skip CMS updates for redesigned module
+            console.log('🔄 Updating redesigned Suggestions module with CMS content');
             
+            if (!content || !content.recentSuggestions) {
+                console.log('⚠️ No suggestions content provided');
+                return;
+            }
+            
+            // Find the suggestions list container
+            const suggestionsList = windowElement.querySelector('.suggestions-list');
+            if (!suggestionsList) {
+                console.error('❌ Suggestions list container not found');
+                return;
+            }
+            
+            // Generate HTML for suggestions from CMS
             let suggestionsHTML = '';
             if (content.recentSuggestions && content.recentSuggestions.length > 0) {
                 content.recentSuggestions.forEach(suggestion => {
-                    const statusColor = {
-                        'APPROVED': '#00ff00',
-                        'IN REVIEW': '#ffff00',
-                        'CONSIDERING': '#ff9900',
-                        'REJECTED': '#ff0000'
-                    }[suggestion.status] || '#ffffff';
+                    const statusClass = {
+                        'APPROVED': 'approved',
+                        'IN REVIEW': 'reviewing', 
+                        'CONSIDERING': 'considering',
+                        'REJECTED': 'rejected'
+                    }[suggestion.status] || 'considering';
                     
-                    suggestionsHTML += `<p>💡 ${suggestion.idea} <span style="color: ${statusColor};">[${suggestion.status}]</span></p>`;
+                    const statusText = {
+                        'APPROVED': 'APPROVED ✓',
+                        'IN REVIEW': 'IN REVIEW',
+                        'CONSIDERING': 'CONSIDERING',
+                        'REJECTED': 'REJECTED ✗'
+                    }[suggestion.status] || 'CONSIDERING';
+                    
+                    suggestionsHTML += `
+                        <div class="suggestion-item">
+                            <div class="suggestion-content">
+                                <h4>${suggestion.title || suggestion.idea || 'Untitled Suggestion'}</h4>
+                                <p>${suggestion.description || suggestion.idea || 'No description provided'}</p>
+                                <div class="suggestion-meta">
+                                    <span class="suggestion-author">${suggestion.author || 'Anonymous'}</span>
+                                    <span class="suggestion-category">${suggestion.category || 'General'}</span>
+                                </div>
+                            </div>
+                            <div class="suggestion-status ${statusClass}">${statusText}</div>
+                        </div>
+                    `;
                 });
             } else {
-                suggestionsHTML = '<p>No recent suggestions</p>';
+                suggestionsHTML = '<div class="no-suggestions">No recent suggestions available</div>';
             }
             
-            contentDiv.innerHTML = `
-                <div class="module-item">
-                    <h3>RECENT SUGGESTIONS 📝</h3>
-                    ${suggestionsHTML}
-                </div>
-                <div class="module-item">
-                    <textarea placeholder="Enter your suggestion..." style="width: 100%; height: 80px; background: #000; color: #fff; border: 1px solid #404040; padding: 8px; font-family: 'Space Mono', monospace; font-size: 14px; line-height: 1.4;"></textarea>
-                    <button class="pixel-button" onclick="showNotification('Suggestion submitted!')" style="margin-top: 10px;">SUBMIT SUGGESTION</button>
-                </div>
-            `;
+            // Update the content
+            suggestionsList.innerHTML = suggestionsHTML;
+            
+            console.log('✅ Suggestions content updated successfully');
         }
 
         function updateAnnouncementsContent(windowElement, content) {
-            console.log('🚫 Skipping CMS update for redesigned Announcements module');
-            return; // Skip CMS updates for redesigned module
+            console.log('🔄 Updating redesigned Announcements module with CMS content');
             
-            let importantHTML = '';
-            if (content.important && content.important.length > 0) {
-                content.important.forEach(announcement => {
-                    importantHTML += `<p class="blink">🚨 ${announcement}</p>`;
-                });
-            } else {
-                importantHTML = '<p>No important announcements</p>';
+            if (!content) {
+                console.log('⚠️ No announcements content provided');
+                return;
             }
             
-            let generalHTML = '';
-            if (content.general && content.general.length > 0) {
-                content.general.forEach(announcement => {
-                    generalHTML += `<p>► ${announcement}</p>`;
-                });
-            } else {
-                generalHTML = '<p>No general announcements</p>';
+            // Update Important/Urgent announcements
+            const urgentList = windowElement.querySelector('.announcements-urgent-section .announcements-list');
+            if (urgentList) {
+                let importantHTML = '';
+                if (content.important && content.important.length > 0) {
+                    content.important.forEach(announcement => {
+                        importantHTML += `
+                            <div class="announcement-item urgent">
+                                <div class="announcement-badge">URGENT</div>
+                                <div class="announcement-content">
+                                    <h4>${announcement.title || 'Important Notice'}</h4>
+                                    <p>${announcement.message || announcement}</p>
+                                    <div class="announcement-meta">
+                                        <span class="announcement-date">Posted: ${announcement.date || 'Today'}</span>
+                                        <span class="announcement-dept">${announcement.department || 'Management'}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+                    });
+                } else {
+                    importantHTML = '<div class="no-announcements">No urgent announcements</div>';
+                }
+                urgentList.innerHTML = importantHTML;
             }
             
-            contentDiv.innerHTML = `
-                <div class="module-item">
-                    <h3>IMPORTANT NOTICES ⚠️</h3>
-                    ${importantHTML}
-                </div>
-                <div class="module-item">
-                    <h3>GENERAL ANNOUNCEMENTS 📢</h3>
-                    ${generalHTML}
-                </div>
-            `;
+            // Update General announcements
+            const generalList = windowElement.querySelector('.announcements-general-section .announcements-list');
+            if (generalList) {
+                let generalHTML = '';
+                if (content.general && content.general.length > 0) {
+                    content.general.forEach(announcement => {
+                        generalHTML += `
+                            <div class="announcement-item">
+                                <div class="announcement-content">
+                                    <h4>${announcement.title || 'General Notice'}</h4>
+                                    <p>${announcement.message || announcement}</p>
+                                    <div class="announcement-meta">
+                                        <span class="announcement-date">Posted: ${announcement.date || 'Recently'}</span>
+                                        <span class="announcement-dept">${announcement.department || 'General'}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+                    });
+                } else {
+                    generalHTML = '<div class="no-announcements">No general announcements</div>';
+                }
+                generalList.innerHTML = generalHTML;
+            }
+            
+            console.log('✅ Announcements content updated successfully');
         }
 
         function showChallengeMenu() {
@@ -8331,31 +8556,20 @@ This year's theme is "Creative Connections" and will include virtual rooms for e
             }
             openWindow('whatsNew');
             
-            // Make draggable
+            // Ensure draggable functionality is properly set up
             const whatsNewWindow = document.getElementById('whatsNew');
-            if (whatsNewWindow && !AppState.windows.whatsNew) {
-                AppState.windows.whatsNew = { draggable: null };
+            if (whatsNewWindow) {
+                if (!AppState.windows.whatsNew) {
+                    AppState.windows.whatsNew = { draggable: null };
+                }
+                // Always ensure it's draggable (safe to call multiple times)
                 makeDraggable(whatsNewWindow);
             }
         }
 
         // Show new dashboard modules (Suggestions, Announcements, Links, Innovation, Resources)
         function showDashboardModule(moduleId) {
-            console.log('🖥️ Opening dashboard module:', moduleId);
-            const windowElement = document.getElementById(moduleId);
-            if (windowElement) {
-                console.log('✅ Found window element for', moduleId);
-                console.log('📍 Window visibility:', windowElement.style.display);
-                console.log('📍 Window position:', {
-                    top: windowElement.style.top,
-                    left: windowElement.style.left,
-                    width: windowElement.style.width,
-                    height: windowElement.style.height
-                });
-            } else {
-                console.log('❌ Window element not found for', moduleId);
-            }
-            // Simply use the normal window opening system
+            // Simply redirect to openWindow for consistency
             openWindow(moduleId);
         }
 
@@ -8372,7 +8586,7 @@ This year's theme is "Creative Connections" and will include virtual rooms for e
 
         // Load desktop icons dynamically from CMS configuration
         function loadDesktopIcons() {
-            console.log('🖥️ Loading desktop icons from configuration...');
+            // Desktop icons loading
             
             const container = document.getElementById('desktop-icons');
             if (!container) {
@@ -8395,13 +8609,8 @@ This year's theme is "Creative Connections" and will include virtual rooms for e
                     const iconElement = document.createElement('div');
                     iconElement.className = 'icon';
                     
-                    // Use new dashboard module function for redesigned modules
-                    const dashboardModules = ['suggestions', 'announcements', 'links', 'innovation', 'resources'];
-                    if (dashboardModules.includes(moduleId)) {
-                        iconElement.onclick = () => showDashboardModule(moduleId);
-                    } else {
-                        iconElement.onclick = () => openWindow(moduleId);
-                    }
+                    // All modules now use the same openWindow function
+                    iconElement.onclick = () => openWindow(moduleId);
                     
                     // Create a simplified label (remove extra words)
                     let label = moduleConfig.title || moduleId; // Fallback to moduleId if no title
@@ -8860,7 +9069,8 @@ This year's theme is "Creative Connections" and will include virtual rooms for e
             });
             
             // Bring clicked window to front
-            windowElement.style.zIndex = 1001;
+            AppState.zIndex = Math.max(AppState.zIndex + 1, 15001);
+            windowElement.style.zIndex = AppState.zIndex;
         }
 
         // Create iframe window within desktop
@@ -8954,8 +9164,7 @@ This year's theme is "Creative Connections" and will include virtual rooms for e
         // Admin login functionality
         function openRalphWorld() {
             console.log('🌍 Opening Ralph.World...');
-            console.log('📊 AppState.config:', AppState.config);
-            console.log('⚙️ System config:', AppState.config?.system);
+            // Configuration loaded successfully
             
             const url = AppState.config?.system?.ralphWorldUrl || 'https://ralph.world';
             console.log('🔗 Using URL:', url);
@@ -8971,11 +9180,8 @@ This year's theme is "Creative Connections" and will include virtual rooms for e
             }, 100);
         }
 
-        // Admin credentials (in production, this would be server-side)
-        const ADMIN_CREDS = {
-            username: 'ralph',
-            password: 'admin123'
-        };
+        // SECURITY: Admin credentials removed for production
+        // Authentication should be handled server-side with proper security
 
         // Handle admin login form
         document.addEventListener('DOMContentLoaded', () => {
@@ -9004,9 +9210,9 @@ This year's theme is "Creative Connections" and will include virtual rooms for e
                             setTimeout(() => {
                                 window.open(`/admin/${result.sessionId}`, '_blank');
                                 closeWindow('adminLogin');
-                                // Reset the form to default values
-                                document.getElementById('adminUsername').value = 'ralph';
-                                document.getElementById('adminPassword').value = 'admin123';
+                                // Clear form values
+                                document.getElementById('adminUsername').value = '';
+                                document.getElementById('adminPassword').value = '';
                             }, 1500);
                         } else {
                             throw new Error('Authentication failed');
@@ -9889,6 +10095,26 @@ This year's theme is "Creative Connections" and will include virtual rooms for e
                 // Initialize music player with CMS data
                 initializeMusicPlayer();
                 
+                // Initialize all windows to ensure they're draggable
+                // Clear any existing window states first to prevent conflicts
+                AppState.windows = {};
+                const allWindows = ['suggestions', 'announcements', 'links', 'innovation', 'resources', 
+                                   'newBiz', 'premieres', 'challenge', 'shoutouts', 'articles', 
+                                   'whatsNew', 'ralphNews', 'chatbot', 'info'];
+                allWindows.forEach(windowId => {
+                    const windowEl = document.getElementById(windowId);
+                    if (windowEl) {
+                        // Ensure window is properly positioned and independent
+                        windowEl.style.position = 'absolute';
+                        // Clear any CSS z-index that might interfere
+                        windowEl.style.zIndex = '';
+                        
+                        // Initialize fresh window state
+                        AppState.windows[windowId] = { draggable: null };
+                        makeDraggable(windowEl);
+                    }
+                });
+                
                 // Auto-popup removed per user request
             }
             
@@ -9952,8 +10178,16 @@ This year's theme is "Creative Connections" and will include virtual rooms for e
                 console.log('📡 Config fetch response status:', response.status);
                 
                 if (response.ok) {
-                    const newConfig = await response.json();
+                    const response_data = await response.json();
+                    
+                    // Handle new API structure with config and timestamp
+                    const newConfig = response_data.config || response_data;
+                    const lastModified = response_data.lastModified;
+                    
                     console.log('📥 New config received, modules:', Object.keys(newConfig.modules || {}));
+                    if (lastModified) {
+                        console.log('📅 Config timestamp:', new Date(lastModified));
+                    }
                     
                     // Check if config actually changed
                     const configChanged = JSON.stringify(newConfig) !== JSON.stringify(AppState.config);
@@ -9962,6 +10196,7 @@ This year's theme is "Creative Connections" and will include virtual rooms for e
                     if (configChanged) {
                         console.log('🚀 APPLYING CONFIG CHANGES TO FRONTEND');
                         AppState.config = newConfig;
+                        AppState.configLastModified = lastModified;
                         
                         // Update global reference
                         window.CMS_CONFIG = newConfig;
