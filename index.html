@@ -147,7 +147,7 @@
             border: 2px solid;
             border-color: var(--white) var(--black) var(--black) var(--white);
             box-shadow: 2px 2px 4px rgba(0,0,0,0.5);
-            z-index: 20000; /* Above all windows */
+            z-index: 25000; /* Well above all windows */
         }
         
         .start-menu-header {
@@ -6068,6 +6068,8 @@
             if (startMenu) {
                 if (startMenu.style.display === 'none' || startMenu.style.display === '') {
                     startMenu.style.display = 'block';
+                    // Ensure start menu is always on top when opened
+                    startMenu.style.zIndex = '25000';
                 } else {
                     startMenu.style.display = 'none';
                 }
