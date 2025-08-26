@@ -3239,6 +3239,632 @@
             box-shadow: 2px 2px 0 var(--black);
         }
         
+        /* Suggestion Box Module Styles */
+        .suggestions-header,
+        .announcements-header,
+        .links-header,
+        .innovation-header,
+        .resources-header {
+            color: white;
+            padding: 20px;
+            text-align: left;
+            position: relative;
+        }
+        
+        /* Suggestion Box - Ralph Pink */
+        .suggestions-header {
+            background: linear-gradient(135deg, var(--ralph-pink) 0%, #ff1493 100%);
+        }
+        
+        /* Announcements - Ralph Orange (Alert/Notice theme) */
+        .announcements-header {
+            background: linear-gradient(135deg, var(--ralph-orange) 0%, #ff7635 100%);
+        }
+        
+        /* Quick Links - Ralph Blue (Connection theme) */
+        .links-header {
+            background: linear-gradient(135deg, var(--ralph-blue) 0%, #42cdcf 100%);
+        }
+        
+        /* Innovation - Ralph Green (Growth/Future theme) */
+        .innovation-header {
+            background: linear-gradient(135deg, var(--ralph-green) 0%, #55c669 100%);
+        }
+        
+        /* Resources - Ralph Brown (Knowledge/Foundation theme) */
+        .resources-header {
+            background: linear-gradient(135deg, var(--ralph-brown) 0%, #42271a 100%);
+        }
+        
+        .suggestions-title,
+        .announcements-title,
+        .links-title,
+        .innovation-title,
+        .resources-title {
+            font-size: 26px;
+            font-weight: 600;
+            margin: 0;
+            font-family: 'Space Mono', monospace;
+            text-transform: none;
+            letter-spacing: 0.5px;
+        }
+        
+        .suggestions-subtitle,
+        .announcements-subtitle,
+        .links-subtitle,
+        .innovation-subtitle,
+        .resources-subtitle {
+            font-size: 14px;
+            opacity: 0.9;
+            margin-top: 6px;
+            font-weight: 400;
+            font-family: 'Courier Prime', monospace;
+        }
+        
+        /* Suggestion Form */
+        .suggestion-form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            background: #1a1a1a;
+            padding: 20px;
+            border-radius: 8px;
+            border: 1px solid #333;
+        }
+        
+        .suggestion-input,
+        .suggestion-select,
+        .suggestion-textarea {
+            background: #2a2a2a;
+            border: 1px solid #444;
+            color: white;
+            padding: 12px;
+            border-radius: 6px;
+            font-family: inherit;
+        }
+        
+        .suggestion-textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+        
+        .suggestion-btn {
+            background: var(--ralph-pink);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: background 0.2s;
+        }
+        
+        .suggestion-btn:hover {
+            background: #ff1493;
+        }
+        
+        /* Suggestions List */
+        .suggestions-list {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .suggestion-item {
+            background: #1a1a1a;
+            border: 1px solid #333;
+            border-radius: 8px;
+            padding: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+        }
+        
+        .suggestion-content h4 {
+            margin: 0 0 8px 0;
+            color: var(--ralph-pink);
+            font-size: 16px;
+        }
+        
+        .suggestion-content p {
+            margin: 0 0 10px 0;
+            color: #ccc;
+            line-height: 1.4;
+        }
+        
+        .suggestion-meta {
+            display: flex;
+            gap: 15px;
+            font-size: 12px;
+            color: #888;
+        }
+        
+        .suggestion-status {
+            padding: 6px 12px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+        
+        .suggestion-status.approved {
+            background: #2d5a3d;
+            color: #4ade80;
+        }
+        
+        .suggestion-status.reviewing {
+            background: #4a3c1d;
+            color: #fbbf24;
+        }
+        
+        .suggestion-status.considering {
+            background: #3c4a5d;
+            color: #60a5fa;
+        }
+        
+        /* Announcements */
+        .announcements-list {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .announcement-item {
+            background: #1a1a1a;
+            border: 1px solid #333;
+            border-radius: 8px;
+            padding: 15px;
+            display: flex;
+            align-items: flex-start;
+            gap: 15px;
+        }
+        
+        .announcement-item.urgent {
+            border-color: var(--ralph-orange);
+            background: rgba(241, 101, 36, 0.1);
+        }
+        
+        .announcement-badge {
+            background: var(--ralph-orange);
+            color: white;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 10px;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+        
+        .announcement-content h4 {
+            margin: 0 0 8px 0;
+            color: var(--ralph-orange);
+            font-size: 16px;
+        }
+        
+        .announcement-content p {
+            margin: 0 0 10px 0;
+            color: #ccc;
+            line-height: 1.4;
+        }
+        
+        .announcement-meta {
+            display: flex;
+            gap: 15px;
+            font-size: 12px;
+            color: #888;
+        }
+        
+        /* Links */
+        .link-form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            background: #1a1a1a;
+            padding: 20px;
+            border-radius: 8px;
+            border: 1px solid #333;
+        }
+        
+        .link-input,
+        .link-select,
+        .link-textarea {
+            background: #2a2a2a;
+            border: 1px solid #444;
+            color: white;
+            padding: 12px;
+            border-radius: 6px;
+            font-family: inherit;
+        }
+        
+        .link-textarea {
+            min-height: 80px;
+            resize: vertical;
+        }
+        
+        .link-btn {
+            background: var(--ralph-blue);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: background 0.2s;
+        }
+        
+        .link-btn:hover {
+            background: #42cdcf;
+        }
+        
+        .links-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 15px;
+        }
+        
+        .link-card {
+            background: #1a1a1a;
+            border: 1px solid #333;
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+            transition: all 0.2s ease;
+        }
+        
+        .link-card:hover {
+            border-color: var(--ralph-blue);
+            transform: translateY(-2px);
+        }
+        
+        .link-icon {
+            font-size: 32px;
+            margin-bottom: 10px;
+        }
+        
+        .link-card h4 {
+            margin: 0 0 8px 0;
+            color: var(--ralph-blue);
+            font-size: 16px;
+        }
+        
+        .link-card p {
+            margin: 0 0 15px 0;
+            color: #ccc;
+            font-size: 14px;
+            line-height: 1.4;
+        }
+        
+        .link-card-btn {
+            background: var(--ralph-blue);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 600;
+            transition: background 0.2s;
+        }
+        
+        .link-card-btn:hover {
+            background: #42cdcf;
+        }
+        
+        /* Innovation */
+        .experiments-list {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .experiment-item {
+            background: #1a1a1a;
+            border: 1px solid #333;
+            border-radius: 8px;
+            padding: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+        }
+        
+        .experiment-content h4 {
+            margin: 0 0 8px 0;
+            color: var(--ralph-green);
+            font-size: 16px;
+        }
+        
+        .experiment-content p {
+            margin: 0 0 12px 0;
+            color: #ccc;
+            line-height: 1.4;
+        }
+        
+        .experiment-progress {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .experiment-progress-bar {
+            flex: 1;
+            height: 8px;
+            background: #333;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        
+        .experiment-progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--ralph-green), #55c669);
+            transition: width 0.3s ease;
+        }
+        
+        .experiment-percentage {
+            font-size: 12px;
+            color: #888;
+            white-space: nowrap;
+        }
+        
+        .experiment-status {
+            padding: 6px 12px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+        
+        .experiment-status.active {
+            background: #2d5a3d;
+            color: #4ade80;
+        }
+        
+        .experiment-status.testing {
+            background: #4a3c1d;
+            color: #fbbf24;
+        }
+        
+        .experiment-status.launching {
+            background: #3c4a5d;
+            color: #60a5fa;
+        }
+        
+        .innovation-event {
+            background: #1a1a1a;
+            border: 1px solid #333;
+            border-radius: 8px;
+            padding: 20px;
+            display: flex;
+            gap: 20px;
+            align-items: flex-start;
+        }
+        
+        .event-date {
+            background: var(--ralph-green);
+            color: white;
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-weight: 600;
+            font-size: 14px;
+            white-space: nowrap;
+        }
+        
+        .event-content h4 {
+            margin: 0 0 8px 0;
+            color: var(--ralph-green);
+            font-size: 18px;
+        }
+        
+        .event-content p {
+            margin: 0 0 12px 0;
+            color: #ccc;
+            line-height: 1.4;
+        }
+        
+        .event-details {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 15px;
+            font-size: 14px;
+            color: #888;
+        }
+        
+        .innovation-btn {
+            background: var(--ralph-green);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: background 0.2s;
+        }
+        
+        .innovation-btn:hover {
+            background: #55c669;
+        }
+        
+        /* Resources - Leadership Org Chart */
+        .leadership-org-chart {
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+            align-items: center;
+        }
+        
+        .leadership-row {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            flex-wrap: wrap;
+        }
+        
+        .leadership-member {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            background: #1a1a1a;
+            border: 1px solid #333;
+            border-radius: 12px;
+            padding: 20px;
+            min-width: 200px;
+            transition: all 0.2s ease;
+        }
+        
+        .leadership-member:hover {
+            border-color: var(--ralph-brown);
+            transform: translateY(-2px);
+        }
+        
+        .leadership-headshot {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            border: 3px solid var(--ralph-brown);
+            margin-bottom: 15px;
+            image-rendering: pixelated;
+        }
+        
+        .leadership-info h4 {
+            margin: 0 0 8px 0;
+            color: var(--ralph-brown);
+            font-size: 16px;
+            font-weight: 600;
+        }
+        
+        .leadership-info p {
+            margin: 0;
+            color: #ccc;
+            font-size: 14px;
+            line-height: 1.3;
+        }
+        
+        .resources-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 15px;
+        }
+        
+        .resource-card {
+            background: #1a1a1a;
+            border: 1px solid #333;
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+            transition: all 0.2s ease;
+        }
+        
+        .resource-card:hover {
+            border-color: var(--ralph-brown);
+            transform: translateY(-2px);
+        }
+        
+        .resource-icon {
+            font-size: 32px;
+            margin-bottom: 10px;
+        }
+        
+        .resource-card h4 {
+            margin: 0 0 8px 0;
+            color: var(--ralph-brown);
+            font-size: 16px;
+        }
+        
+        .resource-card p {
+            margin: 0 0 15px 0;
+            color: #ccc;
+            font-size: 14px;
+            line-height: 1.4;
+        }
+        
+        .resource-btn {
+            background: var(--ralph-brown);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 600;
+            transition: background 0.2s;
+        }
+        
+        .resource-btn:hover {
+            background: #42271a;
+        }
+        
+        /* Module tabs for Quick Links and Resources */
+        .module-tabs {
+            display: flex;
+            gap: 10px;
+            padding: 0 20px 15px;
+            background: rgba(0, 0, 0, 0.3);
+            border-bottom: 1px solid #333;
+        }
+        
+        .module-tab {
+            padding: 10px 20px;
+            background: rgba(255, 255, 255, 0.2);
+            border: 1px solid #555;
+            border-bottom: none;
+            color: #fff;
+            cursor: pointer;
+            font-family: inherit;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.2s;
+            border-radius: 8px 8px 0 0;
+        }
+        
+        .module-tab:hover {
+            background: rgba(255, 255, 255, 0.3);
+            color: white;
+            border-color: #666;
+        }
+        
+        .module-tab.active {
+            background: rgba(255, 255, 255, 0.35);
+            color: white;
+            border-color: #777;
+            font-weight: 600;
+        }
+        
+        /* Back to Top Button */
+        .back-to-top {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: var(--ralph-pink);
+            color: white;
+            border: none;
+            padding: 12px 18px;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 14px;
+            transition: all 0.3s;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            z-index: 100;
+        }
+        
+        .back-to-top:hover {
+            background: #ff1493;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);
+        }
+        
+        /* Announcement Links */
+        .announcement-link {
+            color: var(--ralph-orange);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+        
+        .announcement-link:hover {
+            color: #ff7635;
+            text-decoration: underline;
+        }
+        
         /* Mobile banner adjustments */
         @media screen and (max-width: 600px) {
             .banner-popup {
@@ -3887,145 +4513,385 @@
             <!-- Modal content will be inserted dynamically -->
         </div>
         
-        <div id="suggestions" class="window" style="top: 50px; left: 350px;">
-            <div class="window-header">
-                <div class="window-title">💭 Digital Suggestion Box</div>
-                <div class="window-controls">
-                    <button class="window-button" onclick="minimizeWindow('suggestions')">_</button>
-                    <button class="window-button" onclick="maximizeWindow('suggestions')">□</button>
-                    <button class="window-button" onclick="closeWindow('suggestions')">X</button>
-                </div>
+        <!-- Suggestions Dashboard -->
+        <div id="suggestions-dashboard" class="dashboard-module" style="display: none;">
+            <div class="suggestions-header">
+                <h1 class="suggestions-title">Suggestions</h1>
+                <div class="suggestions-subtitle">You speak, we listen!</div>
             </div>
-            <div class="window-content">
-                <div class="module-item">
-                    <h3>SUBMIT YOUR IDEA</h3>
-                    <input type="text" placeholder="Your Name...">
-                    <textarea rows="4" placeholder="Your brilliant idea here..."></textarea>
-                    <button class="pixel-button" onclick="submitSuggestion()">SUBMIT</button>
-                </div>
-                <div class="module-item">
-                    <h3>RECENT SUGGESTIONS</h3>
-                    <p>💡 "Coffee machine upgrade" - Status: APPROVED ✓</p>
-                    <p>💡 "Flexible Friday hours" - Status: IN REVIEW</p>
-                    <p>💡 "Pet-friendly office days" - Status: CONSIDERING</p>
-                </div>
-            </div>
-        </div>
-        
-        <div id="announcements" class="window" style="top: 100px; left: 400px;">
-            <div class="window-header">
-                <div class="window-title">📣 System Announcements</div>
-                <div class="window-controls">
-                    <button class="window-button" onclick="minimizeWindow('announcements')">_</button>
-                    <button class="window-button" onclick="maximizeWindow('announcements')">□</button>
-                    <button class="window-button" onclick="closeWindow('announcements')">X</button>
-                </div>
-            </div>
-            <div class="window-content">
-                <div class="module-item">
-                    <h3 class="blink">⚠️ IMPORTANT ⚠️</h3>
-                    <p>System maintenance scheduled for Saturday 2:00 AM</p>
-                    <p>Please save all work before Friday EOD</p>
-                </div>
-                <div class="module-item">
-                    <h3>GENERAL ANNOUNCEMENTS</h3>
-                    <p>📌 Parking lot B closed for repairs this week</p>
-                    <p>📌 New health benefits info session Thursday</p>
-                    <p>📌 Kitchen renovation complete - enjoy!</p>
-                </div>
-            </div>
-        </div>
-        
-        <div id="links" class="window" style="top: 150px; left: 450px;">
-            <div class="window-header">
-                <div class="window-title">🔗 Quick Links Directory</div>
-                <div class="window-controls">
-                    <button class="window-button" onclick="minimizeWindow('links')">_</button>
-                    <button class="window-button" onclick="maximizeWindow('links')">□</button>
-                    <button class="window-button" onclick="closeWindow('links')">X</button>
-                </div>
-            </div>
-            <div class="window-content">
-                <div class="module-item">
-                    <h3>INTERNAL TOOLS</h3>
-                    <button class="pixel-button">TIMESHEET SYSTEM</button>
-                    <button class="pixel-button">PROJECT TRACKER</button>
-                    <button class="pixel-button">EXPENSE REPORTS</button>
-                    <button class="pixel-button">IT HELPDESK</button>
-                </div>
-                <div class="module-item">
-                    <h3>EXTERNAL RESOURCES</h3>
-                    <button class="pixel-button">CLIENT PORTAL</button>
-                    <button class="pixel-button">VENDOR DATABASE</button>
-                    <button class="pixel-button">STOCK FOOTAGE</button>
-                </div>
-            </div>
-        </div>
-        
-        <div id="innovation" class="window" style="top: 50px; left: 500px;">
-            <div class="window-header">
-                <div class="window-title">💡 Innovation Lab Updates</div>
-                <div class="window-controls">
-                    <button class="window-button" onclick="minimizeWindow('innovation')">_</button>
-                    <button class="window-button" onclick="maximizeWindow('innovation')">□</button>
-                    <button class="window-button" onclick="closeWindow('innovation')">X</button>
-                </div>
-            </div>
-            <div class="window-content">
-                <div class="module-item">
-                    <h3>CURRENT EXPERIMENTS</h3>
-                    <p>🔬 VR Production Pipeline - Phase 2</p>
-                    <div class="progress-bar">
-                        <div class="progress-fill" style="width: 60%;"></div>
-                    </div>
-                    <p>🔬 AI-Assisted Editing Tools</p>
-                    <div class="progress-bar">
-                        <div class="progress-fill" style="width: 40%;"></div>
-                    </div>
-                    <p>🔬 Real-time Rendering System</p>
-                    <div class="progress-bar">
-                        <div class="progress-fill" style="width: 80%;"></div>
+            <div class="dashboard-content">
+                <div class="suggestions-list-section">
+                    <h3>Recent Suggestions & Status</h3>
+                    <div class="suggestions-list">
+                        <div class="suggestion-item">
+                            <div class="suggestion-content">
+                                <h4>Coffee Machine Upgrade</h4>
+                                <p>Install premium espresso machines in all break rooms</p>
+                                <div class="suggestion-meta">
+                                    <span class="suggestion-author">Anonymous</span>
+                                    <span class="suggestion-category">Workplace</span>
+                                </div>
+                            </div>
+                            <div class="suggestion-status approved">APPROVED ✓</div>
+                        </div>
+                        <div class="suggestion-item">
+                            <div class="suggestion-content">
+                                <h4>Flexible Friday Hours</h4>
+                                <p>Allow flexible start/end times on Fridays for better work-life balance</p>
+                                <div class="suggestion-meta">
+                                    <span class="suggestion-author">Team Lead</span>
+                                    <span class="suggestion-category">Culture</span>
+                                </div>
+                            </div>
+                            <div class="suggestion-status reviewing">IN REVIEW</div>
+                        </div>
+                        <div class="suggestion-item">
+                            <div class="suggestion-content">
+                                <h4>Pet-Friendly Office Days</h4>
+                                <p>Designate certain days where employees can bring well-behaved pets</p>
+                                <div class="suggestion-meta">
+                                    <span class="suggestion-author">Sarah M.</span>
+                                    <span class="suggestion-category">Benefits</span>
+                                </div>
+                            </div>
+                            <div class="suggestion-status considering">CONSIDERING</div>
+                        </div>
                     </div>
                 </div>
-                <div class="module-item">
-                    <h3>INNOVATION FRIDAYS</h3>
-                    <p>Next Session: "Future of Motion Graphics"</p>
-                    <p>Speaker: Guest from Pixar</p>
-                    <button class="pixel-button" onclick="showNotification('RSVP Confirmed!')">RSVP</button>
+                <div class="suggestions-section">
+                    <h3>Submit Your Idea</h3>
+                    <div class="suggestion-form">
+                        <input type="text" class="suggestion-input" id="suggesterName" placeholder="Your name (optional)">
+                        <select class="suggestion-select" id="suggestionCategory">
+                            <option value="general">General Improvement</option>
+                            <option value="workplace">Workplace Environment</option>
+                            <option value="process">Process Enhancement</option>
+                            <option value="technology">Technology & Tools</option>
+                            <option value="culture">Company Culture</option>
+                            <option value="benefits">Benefits & Perks</option>
+                        </select>
+                        <textarea class="suggestion-textarea" id="suggestionText" placeholder="Describe your brilliant idea here..."></textarea>
+                        <button class="suggestion-btn" onclick="submitSuggestion()">Submit Suggestion</button>
+                    </div>
+            </div>
+        </div>
+        
+        <!-- Announcements Dashboard -->
+        <div id="announcements-dashboard" class="dashboard-module" style="display: none;">
+            <div class="announcements-header">
+                <h1 class="announcements-title">📣 System Announcements</h1>
+                <div class="announcements-subtitle">Stay informed with the latest updates</div>
+            </div>
+            <div class="dashboard-content">
+                <div class="announcements-urgent-section">
+                    <h3>⚠️ Important Notices</h3>
+                    <div class="announcements-list">
+                        <div class="announcement-item urgent">
+                            <div class="announcement-badge">URGENT</div>
+                            <div class="announcement-content">
+                                <h4>System Maintenance Scheduled</h4>
+                                <p>Scheduled for Saturday 2:00 AM - Please save all work before Friday EOD</p>
+                                <div class="announcement-meta">
+                                    <span class="announcement-date">Posted: Today</span>
+                                    <span class="announcement-dept">IT Department</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="announcements-general-section">
+                    <h3>📢 General Announcements</h3>
+                    <div class="announcements-list">
+                        <div class="announcement-item">
+                            <div class="announcement-content">
+                                <h4>Parking Lot B Closure</h4>
+                                <p>Parking lot B closed for repairs this week - please use alternative parking areas</p>
+                                <div class="announcement-meta">
+                                    <span class="announcement-date">Posted: 2 days ago</span>
+                                    <span class="announcement-dept">Facilities</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="announcement-item">
+                            <div class="announcement-content">
+                                <h4>Health Benefits Info Session</h4>
+                                <p>Join us Thursday at 2 PM in Conference Room A for important benefits updates</p>
+                                <div class="announcement-meta">
+                                    <span class="announcement-date">Posted: 1 day ago</span>
+                                    <span class="announcement-dept">HR</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="announcement-item">
+                            <div class="announcement-content">
+                                <h4>Kitchen Renovation Complete</h4>
+                                <p>Our newly renovated kitchen is ready! Enjoy the upgraded appliances and seating area</p>
+                                <div class="announcement-meta">
+                                    <span class="announcement-date">Posted: 3 days ago</span>
+                                    <span class="announcement-dept">Facilities</span>
+                                    <a href="https://facilities.ralph.com/kitchen" class="announcement-link" target="_blank">View Photos</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
         
-        <div id="resources" class="window" style="top: 100px; left: 550px;">
-            <div class="window-header">
-                <div class="window-title">📁 Resource Center</div>
-                <div class="window-controls">
-                    <button class="window-button" onclick="minimizeWindow('resources')">_</button>
-                    <button class="window-button" onclick="maximizeWindow('resources')">□</button>
-                    <button class="window-button" onclick="closeWindow('resources')">X</button>
+        <!-- Quick Links Dashboard -->
+        <div id="links-dashboard" class="dashboard-module" style="display: none;">
+            <div class="links-header">
+                <h1 class="links-title">Quick Links</h1>
+                <div class="links-subtitle">Fast access to tools and resources</div>
+            </div>
+            <div class="module-tabs">
+                <button class="module-tab active" onclick="scrollToSection('links-internal-section')">Internal Tools</button>
+                <button class="module-tab" onclick="scrollToSection('links-external-section')">External Resources</button>
+                <button class="module-tab" onclick="scrollToSection('links-add-section')">Submit Link</button>
+            </div>
+            <div class="dashboard-content" onscroll="checkScrollPosition(this)">
+                <button class="back-to-top" id="links-back-to-top" onclick="scrollToTop('links-dashboard')" style="display: none;">↑ Back to Top</button>
+                <div class="links-internal-section" id="links-internal-section">
+                    <h3>🏢 Internal Tools</h3>
+                    <div class="links-grid">
+                        <div class="link-card">
+                            <div class="link-icon">⏰</div>
+                            <h4>Timesheet System</h4>
+                            <p>Track your hours and submit timesheets</p>
+                            <button class="link-card-btn" onclick="openExternalLink('https://timesheet.ralph.com')">Open</button>
+                        </div>
+                        <div class="link-card">
+                            <div class="link-icon">📋</div>
+                            <h4>Project Tracker</h4>
+                            <p>Monitor project progress and milestones</p>
+                            <button class="link-card-btn" onclick="openExternalLink('https://projects.ralph.com')">Open</button>
+                        </div>
+                        <div class="link-card">
+                            <div class="link-icon">💰</div>
+                            <h4>Expense Reports</h4>
+                            <p>Submit and track expense reimbursements</p>
+                            <button class="link-card-btn" onclick="openExternalLink('https://expenses.ralph.com')">Open</button>
+                        </div>
+                        <div class="link-card">
+                            <div class="link-icon">🛠️</div>
+                            <h4>IT Helpdesk</h4>
+                            <p>Submit IT tickets and check status</p>
+                            <button class="link-card-btn" onclick="openExternalLink('https://helpdesk.ralph.com')">Open</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="links-external-section" id="links-external-section">
+                    <h3>🌍 External Resources</h3>
+                    <div class="links-grid">
+                        <div class="link-card">
+                            <div class="link-icon">👥</div>
+                            <h4>Client Portal</h4>
+                            <p>Client project access and communication</p>
+                            <button class="link-card-btn" onclick="openExternalLink('https://client.ralph.com')">Open</button>
+                        </div>
+                        <div class="link-card">
+                            <div class="link-icon">📋</div>
+                            <h4>Vendor Database</h4>
+                            <p>Approved vendor contacts and services</p>
+                            <button class="link-card-btn" onclick="openExternalLink('https://vendors.ralph.com')">Open</button>
+                        </div>
+                        <div class="link-card">
+                            <div class="link-icon">🎥</div>
+                            <h4>Stock Footage Library</h4>
+                            <p>Licensed footage and media assets</p>
+                            <button class="link-card-btn" onclick="openExternalLink('https://footage.ralph.com')">Open</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="links-add-section" id="links-add-section">
+                    <h3>Submit a Useful Link</h3>
+                    <div class="link-form">
+                        <input type="text" class="link-input" id="linkTitle" placeholder="Link title">
+                        <input type="url" class="link-input" id="linkUrl" placeholder="https://example.com">
+                        <select class="link-select" id="linkCategory">
+                            <option value="internal">Internal Tool</option>
+                            <option value="external">External Resource</option>
+                            <option value="reference">Reference Material</option>
+                            <option value="software">Software/Apps</option>
+                            <option value="training">Training Resources</option>
+                            <option value="partner">Partner Sites</option>
+                            <option value="industry">Industry Resources</option>
+                        </select>
+                        <textarea class="link-textarea" id="linkDescription" placeholder="Brief description of what this link provides..."></textarea>
+                        <button class="link-btn" onclick="submitLink()">Submit Link</button>
+                    </div>
                 </div>
             </div>
-            <div class="window-content">
-                <div class="module-item">
-                    <h3>DOCUMENTS</h3>
-                    <p>📄 Brand Guidelines v3.2</p>
-                    <p>📄 Employee Handbook 2024</p>
-                    <p>📄 Creative Best Practices</p>
-                    <p>📄 Client Onboarding Guide</p>
-                    <button class="pixel-button">DOWNLOAD ALL</button>
+        </div>
+        
+        <!-- Innovation Dashboard -->
+        <div id="innovation-dashboard" class="dashboard-module" style="display: none;">
+            <div class="innovation-header">
+                <h1 class="innovation-title">Innovation @ Ralph</h1>
+                <div class="innovation-subtitle">Pioneering the future of creative technology</div>
+            </div>
+            <div class="dashboard-content">
+                <div class="innovation-experiments-section">
+                    <h3>🔬 Current Experiments</h3>
+                    <div class="experiments-list">
+                        <div class="experiment-item">
+                            <div class="experiment-content">
+                                <h4>VR Production Pipeline - Phase 2</h4>
+                                <p>Developing immersive content creation workflows with real-time collaboration</p>
+                                <div class="experiment-progress">
+                                    <div class="experiment-progress-bar">
+                                        <div class="experiment-progress-fill" style="width: 60%;"></div>
+                                    </div>
+                                    <span class="experiment-percentage">60% Complete</span>
+                                </div>
+                            </div>
+                            <div class="experiment-status active">ACTIVE</div>
+                        </div>
+                        <div class="experiment-item">
+                            <div class="experiment-content">
+                                <h4>AI-Assisted Editing Tools</h4>
+                                <p>Machine learning algorithms to streamline post-production workflows</p>
+                                <div class="experiment-progress">
+                                    <div class="experiment-progress-bar">
+                                        <div class="experiment-progress-fill" style="width: 40%;"></div>
+                                    </div>
+                                    <span class="experiment-percentage">40% Complete</span>
+                                </div>
+                            </div>
+                            <div class="experiment-status testing">TESTING</div>
+                        </div>
+                        <div class="experiment-item">
+                            <div class="experiment-content">
+                                <h4>Real-time Rendering System</h4>
+                                <p>Ultra-fast rendering pipeline for immediate creative feedback</p>
+                                <div class="experiment-progress">
+                                    <div class="experiment-progress-bar">
+                                        <div class="experiment-progress-fill" style="width: 80%;"></div>
+                                    </div>
+                                    <span class="experiment-percentage">80% Complete</span>
+                                </div>
+                            </div>
+                            <div class="experiment-status launching">LAUNCHING</div>
+                        </div>
+                    </div>
                 </div>
-                <div class="module-item">
-                    <h3>TEMPLATES</h3>
-                    <p>📋 Presentation Template</p>
-                    <p>📋 Project Brief Template</p>
-                    <p>📋 Invoice Template</p>
-                    <button class="pixel-button">ACCESS TEMPLATES</button>
+                <div class="innovation-events-section">
+                    <h3>🚀 Innovation Fridays</h3>
+                    <div class="innovation-event">
+                        <div class="event-date">This Friday</div>
+                        <div class="event-content">
+                            <h4>"Future of Motion Graphics"</h4>
+                            <p>Join us for an exclusive session with a guest speaker from Pixar discussing the cutting-edge of motion design</p>
+                            <div class="event-details">
+                                <span class="event-time">2:00 PM - Conference Room A</span>
+                                <span class="event-speaker">Guest from Pixar Studios</span>
+                            </div>
+                            <button class="innovation-btn" onclick="rsvpInnovationEvent()">RSVP Now</button>
+                        </div>
+                    </div>
                 </div>
-                <div class="module-item">
-                    <h3>TRAINING MATERIALS</h3>
-                    <p>🎓 New Software Tutorials</p>
-                    <p>🎓 Client Communication 101</p>
-                    <p>🎓 Project Management Basics</p>
+                <div class="innovation-contact-section">
+                    <img src="headshots/8bit_Brook-closed.png" alt="Brook Downtom" class="contact-headshot">
+                    <div class="contact-content">
+                        <h3>🚀 Connect with Brook (Innovation Lead)</h3>
+                        <p>Have an innovative idea or want to collaborate on emerging tech projects? Reach out directly!</p>
+                        <div class="contact-form-horizontal">
+                            <textarea id="brookMessage" placeholder="Share your innovation ideas, technology suggestions, or collaboration proposals..."></textarea>
+                            <button class="contact-btn" onclick="sendMessageToBrook()">Send Message</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Resources Dashboard -->
+        <div id="resources-dashboard" class="dashboard-module" style="display: none;">
+            <div class="resources-header">
+                <h1 class="resources-title">Resource Center</h1>
+                <div class="resources-subtitle">Everything you need to excel at RALPH</div>
+            </div>
+            <div class="module-tabs">
+                <button class="module-tab active" onclick="scrollToSection('resources-documents-section')">Documents</button>
+                <button class="module-tab" onclick="scrollToSection('resources-templates-section')">Templates</button>
+                <button class="module-tab" onclick="scrollToSection('resources-training-section')">Training</button>
+                <button class="module-tab" onclick="showLeadershipWindow()">Leadership Team</button>
+            </div>
+            <div class="dashboard-content" onscroll="checkScrollPosition(this)">
+                <button class="back-to-top" id="resources-back-to-top" onclick="scrollToTop('resources-dashboard')" style="display: none;">↑ Back to Top</button>
+                <div class="resources-documents-section" id="resources-documents-section">
+                    <h3>📄 Documents & Guidelines</h3>
+                    <div class="resources-grid">
+                        <div class="resource-card">
+                            <div class="resource-icon">🎨</div>
+                            <h4>Brand Guidelines v3.2</h4>
+                            <p>Complete brand identity standards and usage guidelines</p>
+                            <button class="resource-btn" onclick="downloadResource('brand-guidelines')">Download</button>
+                        </div>
+                        <div class="resource-card">
+                            <div class="resource-icon">📚</div>
+                            <h4>Employee Handbook 2024</h4>
+                            <p>Company policies, procedures, and benefits information</p>
+                            <button class="resource-btn" onclick="downloadResource('handbook')">Download</button>
+                        </div>
+                        <div class="resource-card">
+                            <div class="resource-icon">✨</div>
+                            <h4>Creative Best Practices</h4>
+                            <p>Standards for creative work and project delivery</p>
+                            <button class="resource-btn" onclick="downloadResource('best-practices')">Download</button>
+                        </div>
+                        <div class="resource-card">
+                            <div class="resource-icon">🤝</div>
+                            <h4>Client Onboarding Guide</h4>
+                            <p>Step-by-step process for new client relationships</p>
+                            <button class="resource-btn" onclick="downloadResource('onboarding')">Download</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="resources-templates-section" id="resources-templates-section">
+                    <h3>📋 Templates & Tools</h3>
+                    <div class="resources-grid">
+                        <div class="resource-card">
+                            <div class="resource-icon">📊</div>
+                            <h4>Presentation Template</h4>
+                            <p>Standard RALPH presentation format and layouts</p>
+                            <button class="resource-btn" onclick="accessTemplate('presentation')">Access</button>
+                        </div>
+                        <div class="resource-card">
+                            <div class="resource-icon">📉</div>
+                            <h4>Project Brief Template</h4>
+                            <p>Structured template for project requirements</p>
+                            <button class="resource-btn" onclick="accessTemplate('project-brief')">Access</button>
+                        </div>
+                        <div class="resource-card">
+                            <div class="resource-icon">💳</div>
+                            <h4>Invoice Template</h4>
+                            <p>Professional invoice format with company branding</p>
+                            <button class="resource-btn" onclick="accessTemplate('invoice')">Access</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="resources-training-section" id="resources-training-section">
+                    <h3>🎓 Training Materials</h3>
+                    <div class="resources-grid">
+                        <div class="resource-card">
+                            <div class="resource-icon">🎬</div>
+                            <h4>New Software Tutorials</h4>
+                            <p>Step-by-step guides for our latest tools</p>
+                            <button class="resource-btn" onclick="accessTemplate('tutorials')">View</button>
+                        </div>
+                        <div class="resource-card">
+                            <div class="resource-icon">💬</div>
+                            <h4>Client Communication 101</h4>
+                            <p>Best practices for client interactions</p>
+                            <button class="resource-btn" onclick="accessTemplate('communication')">View</button>
+                        </div>
+                        <div class="resource-card">
+                            <div class="resource-icon">📅</div>
+                            <h4>Project Management Basics</h4>
+                            <p>Essential PM skills and methodologies</p>
+                            <button class="resource-btn" onclick="accessTemplate('pm-basics')">View</button>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -4484,7 +5350,7 @@
         'use strict';
         
         // Force cache clear version
-        const CACHE_VERSION = '2025-08-25-17-48';
+        const CACHE_VERSION = '2025-08-26-18-35';
         const storedVersion = localStorage.getItem('rnn_version');
         if (storedVersion !== CACHE_VERSION) {
             console.log('🔄 Clearing cache due to version update');
@@ -5276,6 +6142,284 @@
                 message: message,
                 timestamp: new Date().toISOString()
             });
+        }
+
+        // Send message to Brook (Innovation Lead) function
+        function sendMessageToBrook() {
+            const messageTextarea = document.getElementById('brookMessage');
+            if (!messageTextarea) return;
+            
+            const message = messageTextarea.value.trim();
+            if (!message) {
+                showNotification('Please enter a message before sending.', 'warning');
+                return;
+            }
+            
+            showNotification(`Innovation idea sent to Brook Downtom: "${message.substring(0, 50)}${message.length > 50 ? '...' : ''}"`, 'success');
+            messageTextarea.value = '';
+            
+            console.log('🚀 Innovation message to Brook:', {
+                recipient: 'Brook Downtom - Innovation Lead, RALPH',
+                message: message,
+                timestamp: new Date().toISOString()
+            });
+        }
+
+        // Submit suggestion function
+        function submitSuggestion() {
+            const nameInput = document.getElementById('suggesterName');
+            const categorySelect = document.getElementById('suggestionCategory');
+            const textArea = document.getElementById('suggestionText');
+            
+            if (!textArea) return;
+            
+            const suggestion = textArea.value.trim();
+            const name = nameInput ? nameInput.value.trim() : '';
+            const category = categorySelect ? categorySelect.value : 'general';
+            
+            if (!suggestion) {
+                showNotification('Please enter your suggestion before submitting.', 'warning');
+                return;
+            }
+            
+            const submitterName = name || 'Anonymous';
+            showNotification(`Suggestion submitted by ${submitterName}: "${suggestion.substring(0, 50)}${suggestion.length > 50 ? '...' : ''}"`, 'success');
+            
+            // Clear form
+            if (nameInput) nameInput.value = '';
+            if (categorySelect) categorySelect.selectedIndex = 0;
+            textArea.value = '';
+            
+            console.log('💡 New suggestion submitted:', {
+                submitter: submitterName,
+                category: category,
+                suggestion: suggestion,
+                timestamp: new Date().toISOString()
+            });
+        }
+
+        // Submit link function
+        function submitLink() {
+            const titleInput = document.getElementById('linkTitle');
+            const urlInput = document.getElementById('linkUrl');
+            const categorySelect = document.getElementById('linkCategory');
+            const descriptionArea = document.getElementById('linkDescription');
+            
+            if (!titleInput || !urlInput) return;
+            
+            const title = titleInput.value.trim();
+            const url = urlInput.value.trim();
+            const category = categorySelect ? categorySelect.value : 'internal';
+            const description = descriptionArea ? descriptionArea.value.trim() : '';
+            
+            if (!title || !url) {
+                showNotification('Please enter both title and URL before submitting.', 'warning');
+                return;
+            }
+            
+            showNotification(`Link submitted: "${title}" - ${url.substring(0, 30)}${url.length > 30 ? '...' : ''}`, 'success');
+            
+            // Clear form
+            titleInput.value = '';
+            urlInput.value = '';
+            if (categorySelect) categorySelect.selectedIndex = 0;
+            if (descriptionArea) descriptionArea.value = '';
+            
+            console.log('🔗 New link submitted:', {
+                title: title,
+                url: url,
+                category: category,
+                description: description,
+                timestamp: new Date().toISOString()
+            });
+        }
+
+        // Open external link function
+        function openExternalLink(url) {
+            if (!url) return;
+            window.open(url, '_blank', 'noopener,noreferrer');
+            console.log('🌐 External link opened:', url);
+        }
+
+        // RSVP Innovation Event function
+        function rsvpInnovationEvent() {
+            showNotification('RSVP confirmed for "Future of Motion Graphics" - Innovation Friday!', 'success');
+            console.log('📅 Innovation Friday RSVP confirmed:', {
+                event: 'Future of Motion Graphics',
+                timestamp: new Date().toISOString()
+            });
+        }
+
+        // Resource download function
+        function downloadResource(resourceType) {
+            const resourceNames = {
+                'brand-guidelines': 'Brand Guidelines v3.2',
+                'handbook': 'Employee Handbook 2024',
+                'best-practices': 'Creative Best Practices',
+                'onboarding': 'Client Onboarding Guide'
+            };
+            
+            const resourceName = resourceNames[resourceType] || 'Resource';
+            showNotification(`Downloading ${resourceName}...`, 'success');
+            
+            console.log('📄 Resource download initiated:', {
+                resource: resourceName,
+                type: resourceType,
+                timestamp: new Date().toISOString()
+            });
+        }
+
+        // Access template function
+        function accessTemplate(templateType) {
+            const templateNames = {
+                'presentation': 'Presentation Template',
+                'project-brief': 'Project Brief Template',
+                'invoice': 'Invoice Template',
+                'tutorials': 'Software Tutorials',
+                'communication': 'Client Communication Guide',
+                'pm-basics': 'PM Basics Training'
+            };
+            
+            const templateName = templateNames[templateType] || 'Template';
+            showNotification(`Opening ${templateName}...`, 'success');
+            
+            console.log('📋 Template access:', {
+                template: templateName,
+                type: templateType,
+                timestamp: new Date().toISOString()
+            });
+        }
+
+        // Scroll to section function for tabs
+        function scrollToSection(sectionId) {
+            const section = document.getElementById(sectionId);
+            if (section) {
+                section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                
+                // Update active tab
+                const tabs = section.closest('.dashboard-module').querySelectorAll('.module-tab');
+                tabs.forEach(tab => tab.classList.remove('active'));
+                event.target.classList.add('active');
+            }
+        }
+
+        // Check scroll position for back to top button
+        function checkScrollPosition(container) {
+            const module = container.closest('.dashboard-module');
+            const backToTopBtn = module.querySelector('.back-to-top');
+            if (backToTopBtn) {
+                if (container.scrollTop > 300) {
+                    backToTopBtn.style.display = 'block';
+                } else {
+                    backToTopBtn.style.display = 'none';
+                }
+            }
+        }
+
+        // Scroll to top function
+        function scrollToTop(moduleId) {
+            const module = document.getElementById(moduleId);
+            if (module) {
+                const content = module.querySelector('.dashboard-content');
+                if (content) {
+                    content.scrollTo({ top: 0, behavior: 'smooth' });
+                }
+            }
+        }
+
+        // Show Leadership Window
+        function showLeadershipWindow() {
+            // Create or show the leadership window
+            let leadershipWindow = document.getElementById('leadership-window');
+            if (!leadershipWindow) {
+                leadershipWindow = document.createElement('div');
+                leadershipWindow.id = 'leadership-window';
+                leadershipWindow.className = 'window active';
+                leadershipWindow.style.width = '800px';
+                leadershipWindow.style.height = '600px';
+                leadershipWindow.style.top = '100px';
+                leadershipWindow.style.left = '200px';
+                leadershipWindow.innerHTML = `
+                    <div class="window-header">
+                        <div class="window-title">🏢 Leadership Team</div>
+                        <div class="window-controls">
+                            <button class="window-button" onclick="minimizeWindow('leadership-window')">_</button>
+                            <button class="window-button" onclick="maximizeWindow('leadership-window')">□</button>
+                            <button class="window-button" onclick="closeWindow('leadership-window')">X</button>
+                        </div>
+                    </div>
+                    <div class="window-content" style="padding: 20px; overflow: auto;">
+                        <div class="leadership-org-chart">
+                            <div class="leadership-row leadership-ceo">
+                                <div class="leadership-member">
+                                    <img src="headshots/placeholder_CEO.png" alt="CEO" class="leadership-headshot">
+                                    <div class="leadership-info">
+                                        <h4>Chief Executive Officer</h4>
+                                        <p>Strategic Vision & Company Direction</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="leadership-row leadership-executives">
+                                <div class="leadership-member">
+                                    <img src="headshots/placeholder_COO.png" alt="COO" class="leadership-headshot">
+                                    <div class="leadership-info">
+                                        <h4>Chief Operating Officer</h4>
+                                        <p>Operations & Business Development</p>
+                                    </div>
+                                </div>
+                                <div class="leadership-member">
+                                    <img src="headshots/placeholder_CD.png" alt="Creative Director" class="leadership-headshot">
+                                    <div class="leadership-info">
+                                        <h4>Creative Director</h4>
+                                        <p>Creative Vision & Project Leadership</p>
+                                    </div>
+                                </div>
+                                <div class="leadership-member">
+                                    <img src="headshots/placeholder_CTO.png" alt="CTO" class="leadership-headshot">
+                                    <div class="leadership-info">
+                                        <h4>Chief Technology Officer</h4>
+                                        <p>Technology Strategy & Innovation</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="leadership-row leadership-directors">
+                                <div class="leadership-member">
+                                    <img src="headshots/8bit_Gareth.png" alt="Gareth" class="leadership-headshot">
+                                    <div class="leadership-info">
+                                        <h4>Gareth - Head of Growth</h4>
+                                        <p>Business Development & Partnerships</p>
+                                    </div>
+                                </div>
+                                <div class="leadership-member">
+                                    <img src="headshots/8bit_Brook-closed.png" alt="Brook" class="leadership-headshot">
+                                    <div class="leadership-info">
+                                        <h4>Brook - Innovation Lead</h4>
+                                        <p>Emerging Technology & R&D</p>
+                                    </div>
+                                </div>
+                                <div class="leadership-member">
+                                    <img src="headshots/8bit_Ronda.png" alt="Ronda" class="leadership-headshot">
+                                    <div class="leadership-info">
+                                        <h4>Ronda - Community Manager</h4>
+                                        <p>Team Culture & Communications</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                document.querySelector('.desktop').appendChild(leadershipWindow);
+            } else {
+                leadershipWindow.classList.add('active');
+            }
+            
+            // Make it draggable
+            if (!AppState.windows['leadership-window']) {
+                AppState.windows['leadership-window'] = { draggable: null };
+                makeDraggable(leadershipWindow);
+            }
+            
+            console.log('🏢 Leadership window opened');
         }
 
         // Add new premiere function
@@ -7155,6 +8299,69 @@ This year's theme is "Creative Connections" and will include virtual rooms for e
             }
         }
 
+        // Show new dashboard modules (Suggestions, Announcements, Links, Innovation, Resources)
+        function showDashboardModule(moduleId) {
+            // Hide all dashboard modules first
+            document.querySelectorAll('.dashboard-module').forEach(module => {
+                module.style.display = 'none';
+            });
+            
+            // Show the requested module
+            const dashboardModule = document.getElementById(moduleId + '-dashboard');
+            if (dashboardModule) {
+                dashboardModule.style.display = 'block';
+                
+                // Create a window wrapper for it if not exists
+                let windowWrapper = document.getElementById(moduleId + '-window');
+                if (!windowWrapper) {
+                    // Create window wrapper
+                    windowWrapper = document.createElement('div');
+                    windowWrapper.id = moduleId + '-window';
+                    windowWrapper.className = 'window';
+                    windowWrapper.style.top = '100px';
+                    windowWrapper.style.left = '100px';
+                    windowWrapper.style.width = '900px';
+                    windowWrapper.style.height = '600px';
+                    
+                    const titles = {
+                        'suggestions': '💭 Suggestions',
+                        'announcements': '📣 Announcements',
+                        'links': '🔗 Quick Links',
+                        'innovation': '🚀 Innovation @ Ralph',
+                        'resources': '📁 Resource Center'
+                    };
+                    
+                    windowWrapper.innerHTML = `
+                        <div class="window-header">
+                            <div class="window-title">${titles[moduleId] || moduleId}</div>
+                            <div class="window-controls">
+                                <button class="window-button" onclick="minimizeWindow('${moduleId}-window')">_</button>
+                                <button class="window-button" onclick="maximizeWindow('${moduleId}-window')">□</button>
+                                <button class="window-button" onclick="closeWindow('${moduleId}-window')">X</button>
+                            </div>
+                        </div>
+                        <div class="window-content" style="overflow: auto;"></div>
+                    `;
+                    document.querySelector('.desktop').appendChild(windowWrapper);
+                }
+                
+                // Move dashboard content into window
+                const windowContent = windowWrapper.querySelector('.window-content');
+                windowContent.innerHTML = '';
+                windowContent.appendChild(dashboardModule);
+                dashboardModule.style.display = 'block';
+                
+                // Open the window
+                openWindow(moduleId + '-window');
+                
+                // Make draggable
+                if (!AppState.windows[moduleId + '-window']) {
+                    AppState.windows[moduleId + '-window'] = { draggable: null };
+                    makeDraggable(windowWrapper);
+                }
+            }
+        }
+
         function refreshAllModules() {
             if (!AppState.apiIntegration || !AppState.config) return;
             
@@ -7190,7 +8397,14 @@ This year's theme is "Creative Connections" and will include virtual rooms for e
                 if (moduleConfig.enabled && moduleId !== 'music') {
                     const iconElement = document.createElement('div');
                     iconElement.className = 'icon';
-                    iconElement.onclick = () => openWindow(moduleId);
+                    
+                    // Use new dashboard module function for redesigned modules
+                    const dashboardModules = ['suggestions', 'announcements', 'links', 'innovation', 'resources'];
+                    if (dashboardModules.includes(moduleId)) {
+                        iconElement.onclick = () => showDashboardModule(moduleId);
+                    } else {
+                        iconElement.onclick = () => openWindow(moduleId);
+                    }
                     
                     // Create a simplified label (remove extra words)
                     let label = moduleConfig.title || moduleId; // Fallback to moduleId if no title
