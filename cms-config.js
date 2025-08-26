@@ -30,6 +30,8 @@ const CMS_CONFIG = {
         "title": "RALPH Assistant v1.0",
         "welcomeMessage": "Welcome to RALPH's Super-Intranet!",
         "helpText": "Here's what you can do:\n► Click any desktop icon to open modules\n► Drag windows by their title bars\n► Minimize, maximize, or close windows\n► Submit suggestions in the Suggestion Box\n► Accept challenges\n► Check project pipelines and deadlines\n► Send shoutouts to team members",
+        "introText": "I'm here to help with questions about RALPH, projects, or anything else you need assistance with.",
+        "promptText": "Type your message below or ask me anything!",
         "openai": {
             "enabled": false,
             "apiKey": "",
@@ -493,6 +495,81 @@ const CMS_CONFIG = {
                 ]
             },
             "apiEndpoint": null
+        }
+    },
+    "infoPanel": {
+        "title": "📊 RALPH Intranet Info",
+        "subtitle": "Version 2.0 | Built with ♥️ by the RALPH team",
+        "welcome": {
+            "title": "🏢 WELCOME TO RALPH'S RETRO INTRANET SYSTEM",
+            "description": "This retro-inspired intranet brings together all your RALPH tools, updates, and team connections in one nostalgic interface. Navigate using desktop icons, drag windows around, and interact with content just like the good old days!"
+        },
+        "sections": [
+            {
+                "title": "🚀 How It Works",
+                "icon": "var(--ralph-green)",
+                "items": [
+                    "**Desktop Icons:** Click any icon to open modules and tools",
+                    "**Window System:** Drag, minimize, maximize, and organize your workspace",
+                    "**Start Menu:** Access system tools and options",
+                    "**Music Player:** Enjoy background tunes while you work",
+                    "**World Clock:** Stay connected with global team members"
+                ]
+            },
+            {
+                "title": "🛠️ Built With",
+                "icon": "var(--ralph-blue)",
+                "description": "Our intranet combines modern functionality with retro aesthetics:",
+                "items": [
+                    "**Frontend:** Pure HTML5, CSS3, and Vanilla JavaScript",
+                    "**Design:** Windows 95-inspired UI with modern responsive features",
+                    "**Content Management:** Dynamic CMS integration for easy updates",
+                    "**Security:** Production-ready authentication and data protection",
+                    "**Performance:** Optimized for fast loading and smooth interactions"
+                ]
+            },
+            {
+                "title": "📊 Key Features",
+                "icon": "var(--ralph-orange)",
+                "features": [
+                    {
+                        "title": "💼 Business Pipeline",
+                        "color": "var(--ralph-pink)",
+                        "description": "Track projects from leads to completion"
+                    },
+                    {
+                        "title": "💡 Innovation Hub",
+                        "color": "var(--ralph-green)",
+                        "description": "Collaborate on cutting-edge projects"
+                    },
+                    {
+                        "title": "📣 Announcements",
+                        "color": "var(--ralph-blue)",
+                        "description": "Stay updated with company news"
+                    },
+                    {
+                        "title": "📝 Resources",
+                        "color": "var(--ralph-yellow)",
+                        "description": "Access documents and training materials"
+                    }
+                ]
+            },
+            {
+                "title": "🔍 Fun Facts",
+                "icon": "var(--ralph-brown)",
+                "items": [
+                    "The system uses over 15,000 lines of hand-crafted code",
+                    "Window z-index management ensures perfect layering behavior",
+                    "Dynamic content loading keeps information fresh and relevant",
+                    "Pixel-perfect recreations of classic Windows UI elements",
+                    "Responsive design works seamlessly on desktop, tablet, and mobile",
+                    "Built-in security features protect sensitive company information"
+                ]
+            }
+        ],
+        "footer": {
+            "title": "🌟 Have ideas for new features?",
+            "message": "Use the Suggestion Box to share your thoughts and help make the intranet even better!"
         }
     },
     "api": {
