@@ -4513,8 +4513,16 @@
             <!-- Modal content will be inserted dynamically -->
         </div>
         
-        <!-- Suggestions Dashboard -->
-        <div id="suggestions-dashboard" class="dashboard-module" style="display: none;">
+        <div id="suggestions" class="window suggestions-dashboard" style="top: 50px; left: 350px;">
+            <div class="window-header">
+                <div class="window-title">💭 Suggestions</div>
+                <div class="window-controls">
+                    <button class="window-button" onclick="minimizeWindow('suggestions')">_</button>
+                    <button class="window-button" onclick="maximizeWindow('suggestions')">□</button>
+                    <button class="window-button" onclick="closeWindow('suggestions')">X</button>
+                </div>
+            </div>
+            <div class="window-content">
             <div class="suggestions-header">
                 <h1 class="suggestions-title">Suggestions</h1>
                 <div class="suggestions-subtitle">You speak, we listen!</div>
@@ -4575,11 +4583,22 @@
                     </div>
             </div>
         </div>
+            </div>
+        </div>
         
-        <!-- Announcements Dashboard -->
-        <div id="announcements-dashboard" class="dashboard-module" style="display: none;">
+        <!-- Announcements Window -->
+        <div id="announcements" class="window announcements-dashboard" style="top: 100px; left: 400px;">
+            <div class="window-header">
+                <div class="window-title">📣 Announcements</div>
+                <div class="window-controls">
+                    <button class="window-button" onclick="minimizeWindow('announcements')">_</button>
+                    <button class="window-button" onclick="maximizeWindow('announcements')">□</button>
+                    <button class="window-button" onclick="closeWindow('announcements')">X</button>
+                </div>
+            </div>
+            <div class="window-content">
             <div class="announcements-header">
-                <h1 class="announcements-title">📣 System Announcements</h1>
+                <h1 class="announcements-title">Announcements</h1>
                 <div class="announcements-subtitle">Stay informed with the latest updates</div>
             </div>
             <div class="dashboard-content">
@@ -4636,10 +4655,20 @@
                     </div>
                 </div>
             </div>
+            </div>
         </div>
         
-        <!-- Quick Links Dashboard -->
-        <div id="links-dashboard" class="dashboard-module" style="display: none;">
+        <!-- Quick Links Window -->
+        <div id="links" class="window links-dashboard" style="top: 150px; left: 450px;">
+            <div class="window-header">
+                <div class="window-title">🔗 Quick Links</div>
+                <div class="window-controls">
+                    <button class="window-button" onclick="minimizeWindow('links')">_</button>
+                    <button class="window-button" onclick="maximizeWindow('links')">□</button>
+                    <button class="window-button" onclick="closeWindow('links')">X</button>
+                </div>
+            </div>
+            <div class="window-content">
             <div class="links-header">
                 <h1 class="links-title">Quick Links</h1>
                 <div class="links-subtitle">Fast access to tools and resources</div>
@@ -4722,10 +4751,20 @@
                     </div>
                 </div>
             </div>
+            </div>
         </div>
         
-        <!-- Innovation Dashboard -->
-        <div id="innovation-dashboard" class="dashboard-module" style="display: none;">
+        <!-- Innovation Window -->
+        <div id="innovation" class="window innovation-dashboard" style="top: 50px; left: 500px;">
+            <div class="window-header">
+                <div class="window-title">🚀 Innovation @ Ralph</div>
+                <div class="window-controls">
+                    <button class="window-button" onclick="minimizeWindow('innovation')">_</button>
+                    <button class="window-button" onclick="maximizeWindow('innovation')">□</button>
+                    <button class="window-button" onclick="closeWindow('innovation')">X</button>
+                </div>
+            </div>
+            <div class="window-content">
             <div class="innovation-header">
                 <h1 class="innovation-title">Innovation @ Ralph</h1>
                 <div class="innovation-subtitle">Pioneering the future of creative technology</div>
@@ -4802,10 +4841,20 @@
                     </div>
                 </div>
             </div>
+            </div>
         </div>
         
-        <!-- Resources Dashboard -->
-        <div id="resources-dashboard" class="dashboard-module" style="display: none;">
+        <!-- Resources Window -->
+        <div id="resources" class="window resources-dashboard" style="top: 100px; left: 550px;">
+            <div class="window-header">
+                <div class="window-title">📁 Resource Center</div>
+                <div class="window-controls">
+                    <button class="window-button" onclick="minimizeWindow('resources')">_</button>
+                    <button class="window-button" onclick="maximizeWindow('resources')">□</button>
+                    <button class="window-button" onclick="closeWindow('resources')">X</button>
+                </div>
+            </div>
+            <div class="window-content">
             <div class="resources-header">
                 <h1 class="resources-title">Resource Center</h1>
                 <div class="resources-subtitle">Everything you need to excel at RALPH</div>
@@ -4893,6 +4942,7 @@
                         </div>
                     </div>
                 </div>
+            </div>
             </div>
         </div>
         
@@ -5350,7 +5400,7 @@
         'use strict';
         
         // Force cache clear version
-        const CACHE_VERSION = '2025-08-26-18-35';
+        const CACHE_VERSION = '2025-08-26-19-00';
         const storedVersion = localStorage.getItem('rnn_version');
         if (storedVersion !== CACHE_VERSION) {
             console.log('🔄 Clearing cache due to version update');
@@ -7259,10 +7309,8 @@ This year's theme is "Creative Connections" and will include virtual rooms for e
 
         // Update Innovation content dynamically
         function updateInnovationContent(windowElement, content) {
-            console.log('🔄 Updating Innovation content:', content);
-            
-            const windowContent = windowElement.querySelector('.window-content');
-            if (!windowContent) return;
+            console.log('🚫 Skipping CMS update for redesigned Innovation module');
+            return; // Skip CMS updates for redesigned module
             
             // Build experiments HTML
             let experimentsHtml = '';
@@ -7304,10 +7352,8 @@ This year's theme is "Creative Connections" and will include virtual rooms for e
 
         // Update Resources content dynamically
         function updateResourcesContent(windowElement, content) {
-            console.log('🔄 Updating Resources content:', content);
-            
-            const windowContent = windowElement.querySelector('.window-content');
-            if (!windowContent) return;
+            console.log('🚫 Skipping CMS update for redesigned Resources module');
+            return; // Skip CMS updates for redesigned module
             
             // Build documents HTML
             let documentsHtml = '';
@@ -7369,10 +7415,8 @@ This year's theme is "Creative Connections" and will include virtual rooms for e
 
         // Update Quick Links content dynamically
         function updateLinksContent(windowElement, content) {
-            console.log('🔄 Updating Quick Links content:', content);
-            
-            const windowContent = windowElement.querySelector('.window-content');
-            if (!windowContent) return;
+            console.log('🚫 Skipping CMS update for redesigned Links module');
+            return; // Skip CMS updates for redesigned module
             
             // Build internal links HTML
             let internalHtml = '';
@@ -7574,10 +7618,8 @@ This year's theme is "Creative Connections" and will include virtual rooms for e
 
 
         function updateSuggestionsContent(windowElement, content) {
-            console.log('🔄 Updating Suggestions content:', content);
-            
-            const contentDiv = windowElement.querySelector('.window-content');
-            if (!contentDiv) return;
+            console.log('🚫 Skipping CMS update for redesigned Suggestions module');
+            return; // Skip CMS updates for redesigned module
             
             let suggestionsHTML = '';
             if (content.recentSuggestions && content.recentSuggestions.length > 0) {
@@ -7608,10 +7650,8 @@ This year's theme is "Creative Connections" and will include virtual rooms for e
         }
 
         function updateAnnouncementsContent(windowElement, content) {
-            console.log('🔄 Updating Announcements content:', content);
-            
-            const contentDiv = windowElement.querySelector('.window-content');
-            if (!contentDiv) return;
+            console.log('🚫 Skipping CMS update for redesigned Announcements module');
+            return; // Skip CMS updates for redesigned module
             
             let importantHTML = '';
             if (content.important && content.important.length > 0) {
@@ -8301,65 +8341,22 @@ This year's theme is "Creative Connections" and will include virtual rooms for e
 
         // Show new dashboard modules (Suggestions, Announcements, Links, Innovation, Resources)
         function showDashboardModule(moduleId) {
-            // Hide all dashboard modules first
-            document.querySelectorAll('.dashboard-module').forEach(module => {
-                module.style.display = 'none';
-            });
-            
-            // Show the requested module
-            const dashboardModule = document.getElementById(moduleId + '-dashboard');
-            if (dashboardModule) {
-                dashboardModule.style.display = 'block';
-                
-                // Create a window wrapper for it if not exists
-                let windowWrapper = document.getElementById(moduleId + '-window');
-                if (!windowWrapper) {
-                    // Create window wrapper
-                    windowWrapper = document.createElement('div');
-                    windowWrapper.id = moduleId + '-window';
-                    windowWrapper.className = 'window';
-                    windowWrapper.style.top = '100px';
-                    windowWrapper.style.left = '100px';
-                    windowWrapper.style.width = '900px';
-                    windowWrapper.style.height = '600px';
-                    
-                    const titles = {
-                        'suggestions': '💭 Suggestions',
-                        'announcements': '📣 Announcements',
-                        'links': '🔗 Quick Links',
-                        'innovation': '🚀 Innovation @ Ralph',
-                        'resources': '📁 Resource Center'
-                    };
-                    
-                    windowWrapper.innerHTML = `
-                        <div class="window-header">
-                            <div class="window-title">${titles[moduleId] || moduleId}</div>
-                            <div class="window-controls">
-                                <button class="window-button" onclick="minimizeWindow('${moduleId}-window')">_</button>
-                                <button class="window-button" onclick="maximizeWindow('${moduleId}-window')">□</button>
-                                <button class="window-button" onclick="closeWindow('${moduleId}-window')">X</button>
-                            </div>
-                        </div>
-                        <div class="window-content" style="overflow: auto;"></div>
-                    `;
-                    document.querySelector('.desktop').appendChild(windowWrapper);
-                }
-                
-                // Move dashboard content into window
-                const windowContent = windowWrapper.querySelector('.window-content');
-                windowContent.innerHTML = '';
-                windowContent.appendChild(dashboardModule);
-                dashboardModule.style.display = 'block';
-                
-                // Open the window
-                openWindow(moduleId + '-window');
-                
-                // Make draggable
-                if (!AppState.windows[moduleId + '-window']) {
-                    AppState.windows[moduleId + '-window'] = { draggable: null };
-                    makeDraggable(windowWrapper);
-                }
+            console.log('🖥️ Opening dashboard module:', moduleId);
+            const windowElement = document.getElementById(moduleId);
+            if (windowElement) {
+                console.log('✅ Found window element for', moduleId);
+                console.log('📍 Window visibility:', windowElement.style.display);
+                console.log('📍 Window position:', {
+                    top: windowElement.style.top,
+                    left: windowElement.style.left,
+                    width: windowElement.style.width,
+                    height: windowElement.style.height
+                });
+            } else {
+                console.log('❌ Window element not found for', moduleId);
             }
+            // Simply use the normal window opening system
+            openWindow(moduleId);
         }
 
         function refreshAllModules() {
