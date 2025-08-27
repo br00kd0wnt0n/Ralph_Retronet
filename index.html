@@ -9411,7 +9411,14 @@ This year's theme is "Creative Connections" and will include virtual rooms for e
         
         // Generate What's New content
         function generateWhatsNewContent() {
-            if (!AppState.config || !AppState.config.modules) return '';
+            console.log('🔄 Generating What\'s New content...');
+            console.log('📊 AppState.config:', AppState.config ? 'loaded' : 'missing');
+            console.log('📋 AppState.config.modules:', AppState.config?.modules ? Object.keys(AppState.config.modules) : 'missing');
+            
+            if (!AppState.config || !AppState.config.modules) {
+                console.error('❌ Cannot generate What\'s New: config or modules missing');
+                return '';
+            }
             
             const today = new Date().toLocaleDateString('en-US', { 
                 weekday: 'long', 
@@ -9839,7 +9846,30 @@ This year's theme is "Creative Connections" and will include virtual rooms for e
         }
         
         // Show What's New window
-        function showWhatsNew() {
+        function showWhatsNew(retryCount = 0) {
+            // Check if config is loaded, if not wait for it
+            if (!AppState.config || !AppState.config.modules) {
+                if (retryCount < 10) { // Max 5 seconds of retries
+                    console.log(`⏳ Config not loaded yet, waiting for config... (attempt ${retryCount + 1}/10)`);
+                    setTimeout(() => showWhatsNew(retryCount + 1), 500);
+                } else {
+                    console.error('❌ Config failed to load after 5 seconds, showing fallback content');
+                    // Show fallback content when config fails to load
+                    const whatsNewContent = document.getElementById('whatsNewContent');
+                    if (whatsNewContent) {
+                        whatsNewContent.innerHTML = `
+                            <div style="padding: 40px; text-align: center; color: #666;">
+                                <h2>⚠️ Loading Configuration</h2>
+                                <p>Configuration is still loading. Please refresh the page if this continues.</p>
+                                <button onclick="window.location.reload()" style="padding: 10px 20px; margin-top: 20px; background: var(--ralph-pink); color: white; border: none; border-radius: 4px; cursor: pointer;">Refresh Page</button>
+                            </div>
+                        `;
+                    }
+                    openWindow('whatsNew');
+                }
+                return;
+            }
+            
             const whatsNewContent = document.getElementById('whatsNewContent');
             if (whatsNewContent) {
                 whatsNewContent.innerHTML = generateWhatsNewContent();
