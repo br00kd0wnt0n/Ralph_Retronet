@@ -1366,6 +1366,11 @@ System ready!</textarea>
                 const response = await fetch('/api/get-config');
                 if (response.ok) {
                     const result = await response.json();
+                    console.log('🔍 Raw result from server:', result);
+                    console.log('🔍 result.config:', result.config);
+                    console.log('🔍 result.config.modules:', result.config?.modules);
+                    console.log('🔍 typeof result.config.modules:', typeof result.config?.modules);
+                    
                     // Handle new API structure with timestamp
                     if (result.config) {
                         currentConfig = result.config;

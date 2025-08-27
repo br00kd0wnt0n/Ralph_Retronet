@@ -629,11 +629,17 @@ app.get('/api/get-config', (req, res) => {
             throw new Error('Configuration file not found');
         }
         
-        // Return config with metadata for conflict detection
-        res.json({
+        // Debug: Check what we're actually sending
+        const response = {
             config: config,
             lastModified: lastModified
-        });
+        };
+        
+        console.log('📤 Sending response with config.modules keys:', config.modules ? Object.keys(config.modules) : 'NO MODULES');
+        console.log('📤 Response.config.modules keys:', response.config.modules ? Object.keys(response.config.modules) : 'NO MODULES');
+        
+        // Return config with metadata for conflict detection
+        res.json(response);
         
     } catch (error) {
         console.error('Error loading configuration:', error);
