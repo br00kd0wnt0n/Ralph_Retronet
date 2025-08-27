@@ -158,7 +158,8 @@ const CMS_CONFIG = {
             "apiEndpoint": null
         },
         "pitchPlease": {
-            "title": "Pitch, Please!",
+            "windowTitle": "Pitch, Please!",
+            "headerTitle": "Pitch, Please!",
             "icon": "💡",
             "enabled": true,
             "description": "Submit your innovative ideas to our quarterly pitch competition! Share your vision and compete for funding and development support.",
@@ -283,7 +284,8 @@ const CMS_CONFIG = {
             "apiEndpoint": null
         },
         "suggestions": {
-            "title": "Suggestion Box",
+            "windowTitle": "Suggestions",
+            "headerTitle": "Suggestions",
             "icon": "💭",
             "enabled": true,
             "description": "Share your ideas to improve our workplace and processes. See which suggestions are approved, under review, or being considered.",
@@ -325,7 +327,8 @@ const CMS_CONFIG = {
             "apiEndpoint": null
         },
         "links": {
-            "title": "Quick Links",
+            "windowTitle": "Quick Links",
+            "headerTitle": "Quick Links",
             "icon": "🔗",
             "enabled": true,
             "description": "Fast access to essential tools and resources. Find internal systems, client portals, and external platforms you use daily.",
