@@ -7936,7 +7936,23 @@
                 if (windowElement) {
                     const title = windowElement.querySelector('.window-title');
                     if (title) {
-                        title.textContent = `${moduleConfig.icon} ${moduleConfig.title}`;
+                        // Use new windowTitle field, fallback to old title field for backward compatibility
+                        const windowTitleText = moduleConfig.windowTitle || moduleConfig.title || 'Module';
+                        title.textContent = `${moduleConfig.icon} ${windowTitleText}`;
+                    }
+                    
+                    // Update internal header title (h2 elements)
+                    const headerTitle = windowElement.querySelector('h2[class$="-title"]');
+                    if (headerTitle) {
+                        // Use new headerTitle field, fallback to windowTitle or title for backward compatibility
+                        const headerTitleText = moduleConfig.headerTitle || moduleConfig.windowTitle || moduleConfig.title || 'Module';
+                        headerTitle.textContent = headerTitleText;
+                    }
+                    
+                    // Update subtitle/description
+                    const subtitle = windowElement.querySelector('[class$="-subtitle"]');
+                    if (subtitle && moduleConfig.description) {
+                        subtitle.textContent = moduleConfig.description;
                     }
                     
                     // Update specific module content
@@ -10004,7 +10020,7 @@ This year's theme is "Creative Connections" and will include virtual rooms for e
                     }
                     
                     // Create a simplified label (remove extra words)
-                    let label = moduleConfig.title || moduleId; // Fallback to moduleId if no title
+                    let label = moduleConfig.windowTitle || moduleConfig.title || moduleId; // Use new windowTitle field
                     if (typeof label === 'string') {
                         label = label.replace(/v\d+\.\d+/g, ''); // Remove version numbers
                         label = label.replace(/\s+/g, ' ').trim(); // Clean up spaces

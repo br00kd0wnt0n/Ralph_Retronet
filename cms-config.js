@@ -51,7 +51,8 @@ const CMS_CONFIG = {
     },
     "modules": {
         "newBiz": {
-            "title": "New Biz Pipe",
+            "windowTitle": "New Biz Pipe",
+            "headerTitle": "New Business Pipeline", 
             "icon": "📊",
             "enabled": true,
             "description": "Track our business development pipeline from warm leads to won pitches. See upcoming meetings, proposal deadlines, and conversion progress.",
@@ -113,10 +114,11 @@ const CMS_CONFIG = {
             "apiEndpoint": null
         },
         "premieres": {
-            "title": "Premiere Calendar",
+            "windowTitle": "Premiere Calendar",
+            "headerTitle": "Premiere Calendar",
             "icon": "🎬",
             "enabled": true,
-            "description": "Stay up-to-date with all project premieres and launch dates. Track this month's debuts and plan for upcoming releases.",
+            "description": "Track project launches and debut dates • Add upcoming premieres",
             "content": {
                 "thisMonth": [
                     {
@@ -172,10 +174,11 @@ const CMS_CONFIG = {
             "apiEndpoint": null
         },
         "shoutouts": {
-            "title": "Shoutouts",
+            "windowTitle": "Shoutouts & Celebrations",
+            "headerTitle": "Shoutouts & Celebrations",
             "icon": "🎉",
             "enabled": true,
-            "description": "Celebrate team members and milestones! Check upcoming birthdays, work anniversaries, and share appreciation for great work.",
+            "description": "Celebrate team milestones and achievements • Share appreciation for great work",
             "content": {
                 "birthdays": [
                     {
@@ -222,7 +225,8 @@ const CMS_CONFIG = {
             "apiEndpoint": null
         },
         "articles": {
-            "title": "Industry Articles",
+            "windowTitle": "Industry Articles",
+            "headerTitle": "Industry Articles",
             "icon": "📰",
             "enabled": true,
             "description": "Stay informed with curated industry news and trends. Read must-have articles from top publications and trending topics.",
@@ -250,8 +254,9 @@ const CMS_CONFIG = {
             "apiEndpoint": null
         },
         "ralphNews": {
-            "title": "Ralph News Network",
-            "icon": "<span class=\"rnn-logo\">RNN</span>",
+            "windowTitle": "RNN - Ralph News Network",
+            "headerTitle": "RALPH News Network",
+            "icon": "📢",
             "enabled": true,
             "description": "Breaking news and updates from across the RALPH network. Get the latest company announcements and industry insights.",
             "content": {
