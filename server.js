@@ -394,20 +394,23 @@ app.post('/api/save-config', express.json(), (req, res) => {
         // Create backup before saving
         createBackup(jsonFilePath);
         
-        // RAILWAY PERSISTENCE: Create the data directory if it doesn't exist
-        const dataDir = path.join(__dirname, 'data');
-        if (!fs.existsSync(dataDir)) {
-            fs.mkdirSync(dataDir, { recursive: true });
-            console.log('📁 Created data directory for persistence');
-        }
-        
-        // Try saving to a persistent data file 
-        const persistentConfigPath = path.join(dataDir, 'persistent-config.json');
+        // RAILWAY PERSISTENCE: Try to save to persistent data file
         try {
+            const dataDir = path.join(__dirname, 'data');
+            
+            // Try to create directory (Railway might not allow this)
+            if (!fs.existsSync(dataDir)) {
+                fs.mkdirSync(dataDir, { recursive: true });
+                console.log('📁 Created data directory for persistence');
+            }
+            
+            // Try saving to a persistent data file 
+            const persistentConfigPath = path.join(dataDir, 'persistent-config.json');
             fs.writeFileSync(persistentConfigPath, JSON.stringify(configData, null, 2));
             console.log('💾 Config saved to persistent data file:', persistentConfigPath);
         } catch (persistError) {
-            console.warn('⚠️ Failed to save to persistent data file:', persistError.message);
+            console.warn('⚠️ Failed to save to persistent data file (Railway filesystem restrictions):', persistError.message);
+            console.log('📝 Falling back to standard cms-config-production.json file');
         }
         
         // Create the updated cms-config.js content
@@ -620,20 +623,20 @@ app.get('/api/get-config', (req, res) => {
         let lastModified = null;
         
         // Priority 0: Check persistent data file first (Railway persistence)
-        const dataDir = path.join(__dirname, 'data');
-        const persistentConfigPath = path.join(dataDir, 'persistent-config.json');
-        
-        if (fs.existsSync(persistentConfigPath)) {
-            try {
+        try {
+            const dataDir = path.join(__dirname, 'data');
+            const persistentConfigPath = path.join(dataDir, 'persistent-config.json');
+            
+            if (fs.existsSync(persistentConfigPath)) {
                 const persistentConfigData = fs.readFileSync(persistentConfigPath, 'utf8');
                 config = JSON.parse(persistentConfigData);
                 lastModified = fs.statSync(persistentConfigPath).mtime.getTime();
                 console.log('📄 Loaded config from persistent data file (Railway persistence)');
                 console.log('📊 Config modules keys:', config.modules ? Object.keys(config.modules) : 'NO MODULES');
-            } catch (persistError) {
-                console.warn('⚠️ Failed to parse config from persistent data file:', persistError.message);
-                config = null; // Fall back to file-based loading
             }
+        } catch (persistError) {
+            console.warn('⚠️ Failed to check persistent data file:', persistError.message);
+            config = null; // Fall back to file-based loading
         }
         
         // Priority 1: Try production JSON config (user's saved content) - only if env config not found
