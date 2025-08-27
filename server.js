@@ -639,7 +639,7 @@ app.get('/api/get-config', async (req, res) => {
             console.log('📊 Config modules keys:', config.modules ? Object.keys(config.modules) : 'NO MODULES');
         }
         // Priority 2: Try production JS config
-        else if (!config && fs.existsSync(productionJsPath)) {
+        if (!config && fs.existsSync(productionJsPath)) {
             const vm = require('vm');
             const configContent = fs.readFileSync(productionJsPath, 'utf8');
             const configMatch = configContent.match(/const CMS_CONFIG = ({[\s\S]*?});/);
@@ -651,12 +651,12 @@ app.get('/api/get-config', async (req, res) => {
             }
         }
         // Priority 3: Fallback to default JSON config
-        else if (!config && fs.existsSync(jsonConfigPath)) {
+        if (!config && fs.existsSync(jsonConfigPath)) {
             config = JSON.parse(fs.readFileSync(jsonConfigPath, 'utf8'));
             lastModified = fs.statSync(jsonConfigPath).mtime.getTime();
         } 
         // Priority 4: Fallback to original cms-config.js
-        else if (!config && fs.existsSync(jsConfigPath)) {
+        if (!config && fs.existsSync(jsConfigPath)) {
             const vm = require('vm');
             const configContent = fs.readFileSync(jsConfigPath, 'utf8');
             
@@ -682,7 +682,10 @@ app.get('/api/get-config', async (req, res) => {
                     throw new Error('Could not parse CMS_CONFIG from file using regex');
                 }
             }
-        } else {
+        }
+        
+        // Final check - if still no config, throw error
+        if (!config) {
             throw new Error('Configuration file not found');
         }
         
