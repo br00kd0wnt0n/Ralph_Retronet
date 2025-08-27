@@ -3690,6 +3690,29 @@ System ready!</textarea>
             }
         }
 
+        function addMustRead() {
+            const container = document.getElementById('mustReads');
+            const newIndex = container.children.length;
+            const newItemHtml = `
+                <div class="mustread-item" style="background: #2d2d2d; padding: 12px; margin-bottom: 8px; border-radius: 6px;">
+                    <div style="display: flex; gap: 12px; align-items: center; margin-bottom: 8px;">
+                        <button onclick="removeMustRead(${newIndex})" style="background: #ef4444; color: white; border: none; border-radius: 4px; padding: 4px 8px; cursor: pointer;">✕</button>
+                        <input type="text" value="" placeholder="Source" style="width: 120px; background: #1e1e1e; border: 1px solid #404040; color: white; padding: 8px; border-radius: 4px;">
+                        <input type="text" value="" placeholder="Article title" style="flex: 1; background: #1e1e1e; border: 1px solid #404040; color: white; padding: 8px; border-radius: 4px;">
+                    </div>
+                    <input type="url" value="" placeholder="Article URL (optional - for iframe/new window)" style="width: 100%; background: #1e1e1e; border: 1px solid #404040; color: white; padding: 8px; border-radius: 4px; margin-left: 44px;">
+                </div>
+            `;
+            container.insertAdjacentHTML('beforeend', newItemHtml);
+            updateMustReadIndices();
+        }
+
+        function removeMustRead(index) {
+            const container = document.getElementById('mustReads');
+            container.children[index].remove();
+            updateMustReadIndices();
+        }
+
         function updateBreakingNewsIndices() {
             const container = document.getElementById('breakingNews');
             if (container) {
