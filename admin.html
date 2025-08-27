@@ -3513,10 +3513,16 @@ System ready!</textarea>
             const container = document.getElementById('thisMonth');
             const newIndex = container.children.length;
             const newItemHtml = `
-                <div class="premiere-item" style="background: #2d2d2d; padding: 12px; margin-bottom: 8px; border-radius: 6px; display: flex; gap: 12px; align-items: center;">
-                    <button onclick="removeThisMonth(${newIndex})" style="background: #ef4444; color: white; border: none; border-radius: 4px; padding: 4px 8px; cursor: pointer;">✕</button>
-                    <input type="text" value="" placeholder="Date" style="width: 100px; background: #1e1e1e; border: 1px solid #404040; color: white; padding: 8px; border-radius: 4px;">
-                    <input type="text" value="" placeholder="Project name" style="flex: 1; background: #1e1e1e; border: 1px solid #404040; color: white; padding: 8px; border-radius: 4px;">
+                <div class="premiere-item draggable-item" draggable="true" style="background: #2d2d2d; padding: 12px; margin-bottom: 8px; border-radius: 6px;">
+                    <div style="display: flex; gap: 12px; align-items: center; margin-bottom: 8px;">
+                        <span class="drag-handle">⋮⋮</span>
+                        <button onclick="removeThisMonth(${newIndex})" style="background: #ef4444; color: white; border: none; border-radius: 4px; padding: 4px 8px; cursor: pointer;">✕</button>
+                        <input type="text" value="" placeholder="Date" style="width: 100px; background: #1e1e1e; border: 1px solid #404040; color: white; padding: 8px; border-radius: 4px;">
+                        <input type="text" value="" placeholder="Project name" style="flex: 1; background: #1e1e1e; border: 1px solid #404040; color: white; padding: 8px; border-radius: 4px;">
+                    </div>
+                    <div style="margin-left: 44px;">
+                        <input type="url" value="" placeholder="Live Link (Optional)" style="width: 100%; background: #1e1e1e; border: 1px solid #404040; color: white; padding: 6px; border-radius: 4px; font-size: 12px;">
+                    </div>
                 </div>
             `;
             container.insertAdjacentHTML('beforeend', newItemHtml);
@@ -3541,10 +3547,16 @@ System ready!</textarea>
             const container = document.getElementById('nextMonth');
             const newIndex = container.children.length;
             const newItemHtml = `
-                <div class="premiere-item" style="background: #2d2d2d; padding: 12px; margin-bottom: 8px; border-radius: 6px; display: flex; gap: 12px; align-items: center;">
-                    <button onclick="removeNextMonth(${newIndex})" style="background: #ef4444; color: white; border: none; border-radius: 4px; padding: 4px 8px; cursor: pointer;">✕</button>
-                    <input type="text" value="" placeholder="Date" style="width: 100px; background: #1e1e1e; border: 1px solid #404040; color: white; padding: 8px; border-radius: 4px;">
-                    <input type="text" value="" placeholder="Project name" style="flex: 1; background: #1e1e1e; border: 1px solid #404040; color: white; padding: 8px; border-radius: 4px;">
+                <div class="premiere-item draggable-item" draggable="true" style="background: #2d2d2d; padding: 12px; margin-bottom: 8px; border-radius: 6px;">
+                    <div style="display: flex; gap: 12px; align-items: center; margin-bottom: 8px;">
+                        <span class="drag-handle">⋮⋮</span>
+                        <button onclick="removeNextMonth(${newIndex})" style="background: #ef4444; color: white; border: none; border-radius: 4px; padding: 4px 8px; cursor: pointer;">✕</button>
+                        <input type="text" value="" placeholder="Date" style="width: 100px; background: #1e1e1e; border: 1px solid #404040; color: white; padding: 8px; border-radius: 4px;">
+                        <input type="text" value="" placeholder="Project name" style="flex: 1; background: #1e1e1e; border: 1px solid #404040; color: white; padding: 8px; border-radius: 4px;">
+                    </div>
+                    <div style="margin-left: 44px;">
+                        <input type="url" value="" placeholder="Live Link (Optional)" style="width: 100%; background: #1e1e1e; border: 1px solid #404040; color: white; padding: 6px; border-radius: 4px; font-size: 12px;">
+                    </div>
                 </div>
             `;
             container.insertAdjacentHTML('beforeend', newItemHtml);
