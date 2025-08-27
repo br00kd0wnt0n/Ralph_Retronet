@@ -625,15 +625,28 @@ app.get('/api/get-config', (req, res) => {
         else if (fs.existsSync(jsConfigPath)) {
             const vm = require('vm');
             const configContent = fs.readFileSync(jsConfigPath, 'utf8');
-            const configMatch = configContent.match(/const CMS_CONFIG = ({[\s\S]*?});/);
-            if (configMatch) {
-                const sandbox = {};
-                vm.createContext(sandbox);
-                vm.runInContext(`const CMS_CONFIG = ${configMatch[1]}`, sandbox);
-                config = sandbox.CMS_CONFIG;
+            
+            // Try Node.js require first (most reliable)
+            try {
+                delete require.cache[require.resolve(jsConfigPath)]; // Clear cache
+                config = require(jsConfigPath);
                 lastModified = fs.statSync(jsConfigPath).mtime.getTime();
-            } else {
-                throw new Error('Could not parse CMS_CONFIG from file');
+                console.log('📄 Loaded config via require() from:', jsConfigPath);
+            } catch (requireError) {
+                console.log('⚠️ require() failed, trying regex parsing:', requireError.message);
+                
+                // Fallback to regex parsing with improved pattern
+                const configMatch = configContent.match(/const CMS_CONFIG = ({[\s\S]*?})\s*;/);
+                if (configMatch) {
+                    const sandbox = {};
+                    vm.createContext(sandbox);
+                    vm.runInContext(`const CMS_CONFIG = ${configMatch[1]}`, sandbox);
+                    config = sandbox.CMS_CONFIG;
+                    lastModified = fs.statSync(jsConfigPath).mtime.getTime();
+                    console.log('📄 Loaded config via regex parsing from:', jsConfigPath);
+                } else {
+                    throw new Error('Could not parse CMS_CONFIG from file using regex');
+                }
             }
         } else {
             throw new Error('Configuration file not found');
