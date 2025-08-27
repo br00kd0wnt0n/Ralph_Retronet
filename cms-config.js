@@ -528,10 +528,24 @@ const CMS_CONFIG = {
                 "description": "Our intranet combines modern functionality with retro aesthetics:",
                 "items": [
                     "**Frontend:** Pure HTML5, CSS3, and Vanilla JavaScript",
+                    "**Backend:** Node.js with Express server and PostgreSQL database",
                     "**Design:** Windows 95-inspired UI with modern responsive features",
-                    "**Content Management:** Dynamic CMS integration for easy updates",
+                    "**Content Management:** Dynamic CMS with drag & drop functionality",
                     "**Security:** Production-ready authentication and data protection",
                     "**Performance:** Optimized for fast loading and smooth interactions"
+                ]
+            },
+            {
+                "title": "💾 Data & Persistence",
+                "icon": "var(--ralph-green)",
+                "description": "Enterprise-grade data management ensuring your content never gets lost:",
+                "items": [
+                    "**PostgreSQL Database:** Production data stored securely on Railway",
+                    "**Smart Fallbacks:** Database → File System → Default configuration",
+                    "**Deployment Safe:** All CMS changes survive code deployments",
+                    "**Real-time Sync:** Changes appear instantly across all users",
+                    "**Automatic Backups:** Railway handles database backup and recovery",
+                    "**Drag & Drop:** Move pipeline items between stages seamlessly"
                 ]
             },
             {
@@ -561,15 +575,17 @@ const CMS_CONFIG = {
                 ]
             },
             {
-                "title": "🔍 Fun Facts",
+                "title": "🔍 Technical Highlights",
                 "icon": "var(--ralph-brown)",
                 "items": [
-                    "The system uses over 15,000 lines of hand-crafted code",
-                    "Window z-index management ensures perfect layering behavior",
-                    "Dynamic content loading keeps information fresh and relevant",
-                    "Pixel-perfect recreations of classic Windows UI elements",
-                    "Responsive design works seamlessly on desktop, tablet, and mobile",
-                    "Built-in security features protect sensitive company information"
+                    "Over 16,000 lines of production-ready code with comprehensive error handling",
+                    "Advanced window z-index management with perfect layering and focus control",
+                    "PostgreSQL connection pooling with automatic table initialization",
+                    "Drag & drop API with visual feedback and data preservation",
+                    "Smart conflict detection with 1-second timestamp tolerance",
+                    "Railway deployment with zero-downtime database persistence",
+                    "Responsive design that works seamlessly across all device types",
+                    "Google Docs CSP handling with intelligent iframe/tab switching"
                 ]
             }
         ],
