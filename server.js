@@ -373,8 +373,12 @@ app.post('/api/save-config', express.json(), (req, res) => {
             const currentFileStats = fs.statSync(jsonFilePath);
             const currentModified = currentFileStats.mtime.getTime();
             
-            if (currentModified > lastModified) {
-                console.log(`⚠️  Conflict detected: File modified at ${new Date(currentModified)}, user timestamp ${new Date(lastModified)}`);
+            // Add tolerance for filesystem timestamp precision (1 second = 1000ms)
+            const timeDifference = currentModified - lastModified;
+            const TOLERANCE_MS = 1000; // 1 second tolerance
+            
+            if (timeDifference > TOLERANCE_MS) {
+                console.log(`⚠️  Conflict detected: File modified at ${new Date(currentModified)}, user timestamp ${new Date(lastModified)} (difference: ${timeDifference}ms)`);
                 return res.json({
                     success: false,
                     conflict: true,
@@ -382,6 +386,8 @@ app.post('/api/save-config', express.json(), (req, res) => {
                     currentModified: currentModified,
                     userModified: lastModified
                 });
+            } else if (timeDifference > 0) {
+                console.log(`✅ Timestamp difference within tolerance: ${timeDifference}ms (tolerance: ${TOLERANCE_MS}ms)`);
             }
         }
         
