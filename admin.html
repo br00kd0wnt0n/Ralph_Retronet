@@ -1665,10 +1665,11 @@ System ready!</textarea>
                     ${Object.keys(stages).map(stageKey => `
                         <div style="margin-bottom: 24px;">
                             <h5 style="color: var(--ralph-pink); margin-bottom: 12px;">${stageLabels[stageKey]} (${stages[stageKey].length})</h5>
-                            <div id="${stageKey}Items" style="border: 2px dashed #404040; padding: 12px; border-radius: 6px; min-height: 100px;">
+                            <div id="${stageKey}Items" class="pipeline-drop-zone" style="border: 2px dashed #404040; padding: 12px; border-radius: 6px; min-height: 100px;" ondrop="dropPipelineItem(event)" ondragover="allowDrop(event)" ondragenter="dragEnter(event)" ondragleave="dragLeave(event)">
                                 ${stages[stageKey].map((item, index) => `
-                                    <div class="pipeline-item-editor" style="background: #2d2d2d; padding: 12px; margin-bottom: 8px; border-radius: 6px; border-left: 4px solid var(--ralph-pink);">
+                                    <div class="pipeline-item-editor" draggable="true" ondragstart="dragPipelineItem(event)" data-stage="${stageKey}" data-index="${index}" style="background: #2d2d2d; padding: 12px; margin-bottom: 8px; border-radius: 6px; border-left: 4px solid var(--ralph-pink); cursor: grab;">
                                         <div style="display: flex; gap: 8px; align-items: center; margin-bottom: 8px;">
+                                            <span style="color: #666; font-size: 14px; cursor: grab;">⋮⋮</span>
                                             <button onclick="removePipelineItem('${stageKey}', ${index})" style="background: #ef4444; color: white; border: none; border-radius: 4px; padding: 4px 8px; cursor: pointer; font-size: 10px;">✕</button>
                                             <input type="text" value="${item.name || ''}" placeholder="Client/Project Name" style="flex: 2; background: #1e1e1e; border: 1px solid #404040; color: white; padding: 6px; border-radius: 4px; font-size: 12px;">
                                             <select style="background: #1e1e1e; border: 1px solid #404040; color: white; padding: 6px; border-radius: 4px; font-size: 12px;">
@@ -3336,8 +3337,9 @@ System ready!</textarea>
             
             const newIndex = container.children.length;
             const newItemHtml = `
-                <div class="pipeline-item-editor" style="background: #2d2d2d; padding: 12px; margin-bottom: 8px; border-radius: 6px; border-left: 4px solid var(--ralph-pink);">
+                <div class="pipeline-item-editor" draggable="true" ondragstart="dragPipelineItem(event)" data-stage="${stage}" data-index="${newIndex}" style="background: #2d2d2d; padding: 12px; margin-bottom: 8px; border-radius: 6px; border-left: 4px solid var(--ralph-pink); cursor: grab;">
                     <div style="display: flex; gap: 8px; align-items: center; margin-bottom: 8px;">
+                        <span style="color: #666; font-size: 14px; cursor: grab;">⋮⋮</span>
                         <button onclick="removePipelineItem('${stage}', ${newIndex})" style="background: #ef4444; color: white; border: none; border-radius: 4px; padding: 4px 8px; cursor: pointer; font-size: 10px;">✕</button>
                         <input type="text" placeholder="Client/Project Name" style="flex: 2; background: #1e1e1e; border: 1px solid #404040; color: white; padding: 6px; border-radius: 4px; font-size: 12px;">
                         <select style="background: #1e1e1e; border: 1px solid #404040; color: white; padding: 6px; border-radius: 4px; font-size: 12px;">
@@ -3377,6 +3379,132 @@ System ready!</textarea>
                     removeBtn.setAttribute('onclick', `removePipelineItem('${stage}', ${index})`);
                 }
             });
+        }
+
+        // Drag and Drop Functions for Pipeline Items
+        let draggedItem = null;
+        let draggedFromStage = null;
+        let draggedIndex = null;
+
+        function dragPipelineItem(event) {
+            draggedItem = event.target;
+            draggedFromStage = event.target.dataset.stage;
+            draggedIndex = parseInt(event.target.dataset.index);
+            
+            // Visual feedback
+            event.target.style.opacity = '0.5';
+            event.target.style.cursor = 'grabbing';
+            
+            // Set drag data
+            event.dataTransfer.effectAllowed = 'move';
+            event.dataTransfer.setData('text/html', event.target.outerHTML);
+        }
+
+        function allowDrop(event) {
+            event.preventDefault();
+            event.dataTransfer.dropEffect = 'move';
+        }
+
+        function dragEnter(event) {
+            event.preventDefault();
+            if (event.target.classList.contains('pipeline-drop-zone')) {
+                event.target.style.borderColor = 'var(--ralph-pink)';
+                event.target.style.backgroundColor = 'rgba(235, 0, 139, 0.1)';
+            }
+        }
+
+        function dragLeave(event) {
+            if (event.target.classList.contains('pipeline-drop-zone')) {
+                event.target.style.borderColor = '#404040';
+                event.target.style.backgroundColor = 'transparent';
+            }
+        }
+
+        function dropPipelineItem(event) {
+            event.preventDefault();
+            
+            if (!draggedItem || !draggedFromStage) return;
+            
+            // Get target stage from the drop zone ID
+            const targetStage = event.currentTarget.id.replace('Items', '');
+            
+            // Reset drop zone styling
+            event.currentTarget.style.borderColor = '#404040';
+            event.currentTarget.style.backgroundColor = 'transparent';
+            
+            // If dropped in the same stage, just reset styling
+            if (targetStage === draggedFromStage) {
+                draggedItem.style.opacity = '1';
+                draggedItem.style.cursor = 'grab';
+                draggedItem = null;
+                draggedFromStage = null;
+                draggedIndex = null;
+                return;
+            }
+            
+            // Move the item between stages
+            movePipelineItem(draggedFromStage, targetStage, draggedIndex);
+            
+            // Reset drag state
+            draggedItem = null;
+            draggedFromStage = null;
+            draggedIndex = null;
+        }
+
+        function movePipelineItem(fromStage, toStage, itemIndex) {
+            // Get the item data from the source stage
+            const fromContainer = document.getElementById(fromStage + 'Items');
+            const itemElement = fromContainer.children[itemIndex];
+            
+            if (!itemElement) return;
+            
+            // Extract data from the item
+            const inputs = itemElement.querySelectorAll('input, select');
+            const itemData = {
+                name: inputs[0].value || '',
+                office: inputs[1].value || '',
+                dueDate: inputs[2].value || '',
+                deckLink: inputs[3].value || '',
+                briefLink: inputs[4].value || ''
+            };
+            
+            // Remove from source stage
+            itemElement.remove();
+            updatePipelineIndices(fromStage);
+            
+            // Add to target stage
+            addPipelineItemWithData(toStage, itemData);
+            
+            console.log(`Moved item "${itemData.name}" from ${fromStage} to ${toStage}`);
+        }
+
+        function addPipelineItemWithData(stage, data) {
+            const container = document.getElementById(`${stage}Items`);
+            if (!container) return;
+            
+            const newIndex = container.children.length;
+            const newItemHtml = `
+                <div class="pipeline-item-editor" draggable="true" ondragstart="dragPipelineItem(event)" data-stage="${stage}" data-index="${newIndex}" style="background: #2d2d2d; padding: 12px; margin-bottom: 8px; border-radius: 6px; border-left: 4px solid var(--ralph-pink); cursor: grab;">
+                    <div style="display: flex; gap: 8px; align-items: center; margin-bottom: 8px;">
+                        <span style="color: #666; font-size: 14px; cursor: grab;">⋮⋮</span>
+                        <button onclick="removePipelineItem('${stage}', ${newIndex})" style="background: #ef4444; color: white; border: none; border-radius: 4px; padding: 4px 8px; cursor: pointer; font-size: 10px;">✕</button>
+                        <input type="text" value="${data.name}" placeholder="Client/Project Name" style="flex: 2; background: #1e1e1e; border: 1px solid #404040; color: white; padding: 6px; border-radius: 4px; font-size: 12px;">
+                        <select style="background: #1e1e1e; border: 1px solid #404040; color: white; padding: 6px; border-radius: 4px; font-size: 12px;">
+                            <option value="LON" ${data.office === 'LON' ? 'selected' : ''}>LON</option>
+                            <option value="NY" ${data.office === 'NY' ? 'selected' : ''}>NY</option>
+                            <option value="LA" ${data.office === 'LA' ? 'selected' : ''}>LA</option>
+                            <option value="TK" ${data.office === 'TK' ? 'selected' : ''}>TK</option>
+                        </select>
+                        <input type="date" value="${data.dueDate}" style="background: #1e1e1e; border: 1px solid #404040; color: white; padding: 6px; border-radius: 4px; font-size: 12px;">
+                    </div>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+                        <input type="url" value="${data.deckLink}" placeholder="Google Drive Deck Link" style="background: #1e1e1e; border: 1px solid #404040; color: white; padding: 6px; border-radius: 4px; font-size: 11px;">
+                        <input type="url" value="${data.briefLink}" placeholder="Google Drive Brief Link" style="background: #1e1e1e; border: 1px solid #404040; color: white; padding: 6px; border-radius: 4px; font-size: 11px;">
+                    </div>
+                </div>
+            `;
+            container.insertAdjacentHTML('beforeend', newItemHtml);
+            updatePipelineIndices(stage);
         }
 
 
