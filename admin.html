@@ -667,9 +667,9 @@
                                 <span class="module-icon">🎬</span>
                                 <span>Premiere Calendar</span>
                             </div>
-                            <div class="module-submenu-item" onclick="loadSpecificModule('challenge')">
-                                <span class="module-icon">🎨</span>
-                                <span>Challenges</span>
+                            <div class="module-submenu-item" onclick="loadSpecificModule('pitchPlease')">
+                                <span class="module-icon">💡</span>
+                                <span>Pitch, Please!</span>
                             </div>
                             <div class="module-submenu-item" onclick="loadSpecificModule('shoutouts')">
                                 <span class="module-icon">🎉</span>
@@ -795,7 +795,7 @@
 ► Drag windows by their title bars
 ► Minimize, maximize, or close windows
 ► Submit suggestions in the Suggestion Box
-► Accept challenges
+► Submit pitches to quarterly competition
 ► Check project pipelines and deadlines
 ► Send shoutouts to team members</textarea>
                         <div style="margin-top: 8px;">
@@ -934,7 +934,7 @@ System ready!</textarea>
                 enabled: true,
                 title: "RALPH Assistant v1.0",
                 welcomeMessage: "Welcome to RALPH Super-Intranet!",
-                helpText: `Here's what you can do:\n► Click any desktop icon to open modules\n► Drag windows by their title bars\n► Minimize, maximize, or close windows\n► Submit suggestions in the Suggestion Box\n► Accept challenges\n► Check project pipelines and deadlines\n► Send shoutouts to team members`,
+                helpText: `Here's what you can do:\n► Click any desktop icon to open modules\n► Drag windows by their title bars\n► Minimize, maximize, or close windows\n► Submit suggestions in the Suggestion Box\n► Submit pitches to quarterly competition\n► Check project pipelines and deadlines\n► Send shoutouts to team members`,
                 openai: {
                     enabled: false,
                     apiKey: "",
@@ -996,21 +996,18 @@ System ready!</textarea>
                     },
                     apiEndpoint: null
                 },
-                challenge: {
-                    title: "Challenges",
-                    icon: "🎨",
+                pitchPlease: {
+                    title: "Pitch, Please!",
+                    icon: "💡",
                     enabled: true,
                     content: {
-                        currentChallenge: {
-                            month: "DECEMBER",
-                            theme: "Retro Future",
-                            description: "Create a 30-second concept using only 8-bit graphics and chiptune music!",
-                            prize: "🏆 Golden Pixel Award + Extra PTO Day"
-                        },
-                        lastWinner: {
-                            name: "Sarah M.",
-                            concept: "Neon Dreams"
-                        }
+                        subtitle: "A quarterly competition where you can pitch almost anything you think is a winner",
+                        currentQuarter: "Q1 2025",
+                        deadline: "March 31, 2025",
+                        theme: "Innovation & Growth",
+                        prize: "Up to $50K",
+                        currentSubmissions: 12,
+                        daysLeft: 45
                     },
                     apiEndpoint: null
                 },
@@ -1574,8 +1571,8 @@ System ready!</textarea>
                     return getPremieresEditor(content);
                 case 'shoutouts':
                     return getShoutoutsEditor(content);
-                case 'challenge':
-                    return getChallengeEditor(content);
+                case 'pitchPlease':
+                    return getPitchPleaseEditor(content);
                 case 'articles':
                     return getArticlesEditor(content);
                 case 'ralphNews':
@@ -1859,6 +1856,53 @@ System ready!</textarea>
             `;
         }
 
+        // Pitch Please Editor
+        function getPitchPleaseEditor(content) {
+            content = content || {};
+            return `
+                <div style="background: #1e1e1e; padding: 20px; border-radius: 8px; margin: 16px 0;">
+                    <h4 style="color: var(--ralph-pink); margin-bottom: 16px;">💡 Pitch, Please! Settings</h4>
+                    
+                    <div style="margin-bottom: 16px;">
+                        <label style="color: #b0b0b0; margin-bottom: 4px; display: block;">Subtitle</label>
+                        <input type="text" id="pitchSubtitle" value="${content.subtitle || ''}" placeholder="Competition tagline" style="width: 100%; background: #2d2d2d; border: 1px solid #404040; color: white; padding: 8px; border-radius: 4px;">
+                    </div>
+                    
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px;">
+                        <div>
+                            <label style="color: #b0b0b0; margin-bottom: 4px; display: block;">Current Quarter</label>
+                            <input type="text" id="currentQuarter" value="${content.currentQuarter || 'Q1 2025'}" placeholder="Q1 2025" style="width: 100%; background: #2d2d2d; border: 1px solid #404040; color: white; padding: 8px; border-radius: 4px;">
+                        </div>
+                        <div>
+                            <label style="color: #b0b0b0; margin-bottom: 4px; display: block;">Deadline</label>
+                            <input type="text" id="deadline" value="${content.deadline || ''}" placeholder="March 31, 2025" style="width: 100%; background: #2d2d2d; border: 1px solid #404040; color: white; padding: 8px; border-radius: 4px;">
+                        </div>
+                    </div>
+                    
+                    <div style="margin-bottom: 16px;">
+                        <label style="color: #b0b0b0; margin-bottom: 4px; display: block;">Theme</label>
+                        <input type="text" id="pitchTheme" value="${content.theme || ''}" placeholder="Innovation & Growth" style="width: 100%; background: #2d2d2d; border: 1px solid #404040; color: white; padding: 8px; border-radius: 4px;">
+                    </div>
+                    
+                    <div style="margin-bottom: 16px;">
+                        <label style="color: #b0b0b0; margin-bottom: 4px; display: block;">Prize</label>
+                        <input type="text" id="pitchPrize" value="${content.prize || ''}" placeholder="Up to $50K" style="width: 100%; background: #2d2d2d; border: 1px solid #404040; color: white; padding: 8px; border-radius: 4px;">
+                    </div>
+                    
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+                        <div>
+                            <label style="color: #b0b0b0; margin-bottom: 4px; display: block;">Current Submissions</label>
+                            <input type="number" id="currentSubmissions" value="${content.currentSubmissions || 0}" min="0" style="width: 100%; background: #2d2d2d; border: 1px solid #404040; color: white; padding: 8px; border-radius: 4px;">
+                        </div>
+                        <div>
+                            <label style="color: #b0b0b0; margin-bottom: 4px; display: block;">Days Left</label>
+                            <input type="number" id="daysLeft" value="${content.daysLeft || 0}" min="0" style="width: 100%; background: #2d2d2d; border: 1px solid #404040; color: white; padding: 8px; border-radius: 4px;">
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+        
         // RALPH News Editor
         function getRalphNewsEditor(content) {
             const breaking = content.breaking || [];
