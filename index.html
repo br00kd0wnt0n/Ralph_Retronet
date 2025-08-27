@@ -130,7 +130,7 @@
             height: 40px;
             background: var(--gray-light);
             border-top: 2px solid var(--white);
-            display: flex;
+            display: none; /* Hidden initially during login/boot */
             align-items: center;
             padding: 0 4px;
             z-index: 25000; /* Same level as start menu to allow proper layering */
@@ -2634,8 +2634,8 @@
         }
         
         .boot-screen.login-mode .login-prompt.typed-complete,
-        .boot-screen.login-mode .login-input,
-        .boot-screen.login-mode .login-btn {
+        .boot-screen.login-mode .login-input.revealed,
+        .boot-screen.login-mode .login-btn.revealed {
             animation: green-flicker 0.2s infinite;
         }
         
@@ -2748,6 +2748,8 @@
             background: black !important;
             border: 2px solid var(--terminal-green) !important;
             color: var(--terminal-green) !important;
+            opacity: 0 !important; /* Force hidden initially */
+            display: none !important; /* Double protection - completely hidden */
             font-family: 'Courier New', 'Courier', monospace !important;
             font-size: 18px !important;
             padding: 8px 12px !important;
@@ -2792,6 +2794,8 @@
             background: transparent;
             border: 1px solid var(--terminal-green);
             color: var(--terminal-green);
+            opacity: 0 !important; /* Force hidden initially */
+            display: none !important; /* Double protection - completely hidden */
             font-family: 'Courier New', 'Courier', monospace;
             font-size: 16px;
             padding: 8px 20px;
@@ -2803,6 +2807,33 @@
         .login-btn:hover {
             background: var(--terminal-green);
             color: black;
+        }
+
+        /* Show inputs and button only when revealed with fade-in effect */
+        .login-input.revealed {
+            display: block !important;
+            opacity: 1 !important;
+            animation: terminalFadeIn 0.5s ease-in !important;
+        }
+
+        .login-btn.revealed {
+            display: block !important;
+            opacity: 1 !important;
+            animation: terminalFadeIn 0.5s ease-in !important;
+        }
+
+        @keyframes terminalFadeIn {
+            0% { 
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            50% {
+                opacity: 0.3;
+            }
+            100% { 
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
         
         .login-field {
@@ -10613,9 +10644,16 @@ This year's theme is "Creative Connections" and will include virtual rooms for e
         
         // Start typing animation for login text in sequence
         function startLoginTypingAnimation() {
+            console.log('🎬 === LOGIN SEQUENCE STARTING ===');
+            
             const usernameInput = document.getElementById('username');
             const passwordInput = document.getElementById('password');
             const submitBtn = document.querySelector('.login-btn');
+            
+            console.log('🔍 Initial states:');
+            console.log('  Username opacity:', window.getComputedStyle(usernameInput).opacity);
+            console.log('  Password opacity:', window.getComputedStyle(passwordInput).opacity);
+            console.log('  Button opacity:', window.getComputedStyle(submitBtn).opacity);
             
             // Get elements in the order they should appear
             const loginForm = document.querySelector('.login-form');
@@ -10650,26 +10688,42 @@ This year's theme is "Creative Connections" and will include virtual rooms for e
                     item.element.style.opacity = '1';
                     item.element.classList.add('active');
                     
-                    // After typing completes, move to next step
+                    // After typing completes, wait for user to read, then move to next step
                     setTimeout(() => {
                         item.element.classList.add('typed-complete');
                         item.element.style.width = 'auto';
                         item.element.style.opacity = '1';
                         currentStep++;
                         executeNextStep();
-                    }, 500);
+                    }, 1200); // 500ms for typing + 700ms for reading
                     
                 } else if (item.showInput) {
-                    console.log('👁️ Showing input field');
+                    console.log('👁️ === REVEALING INPUT FIELD ===');
+                    console.log('  Input element:', item.showInput.id);
+                    console.log('  Current opacity before:', window.getComputedStyle(item.showInput).opacity);
+                    
                     item.showInput.style.opacity = '1';
                     item.showInput.style.transition = 'opacity 0.2s ease';
+                    item.showInput.classList.add('revealed');
+                    
+                    console.log('  Current opacity after:', window.getComputedStyle(item.showInput).opacity);
+                    console.log('  Has revealed class:', item.showInput.classList.contains('revealed'));
+                    
                     currentStep++;
                     setTimeout(executeNextStep, 200);
                     
                 } else if (item.showButton) {
-                    console.log('🔘 Showing submit button');
+                    console.log('🔘 === REVEALING SUBMIT BUTTON ===');
+                    console.log('  Button element:', item.showButton.className);
+                    console.log('  Current opacity before:', window.getComputedStyle(item.showButton).opacity);
+                    
                     item.showButton.style.opacity = '1';
                     item.showButton.style.transition = 'opacity 0.2s ease';
+                    item.showButton.classList.add('revealed');
+                    
+                    console.log('  Current opacity after:', window.getComputedStyle(item.showButton).opacity);
+                    console.log('  Has revealed class:', item.showButton.classList.contains('revealed'));
+                    
                     currentStep++;
                     setTimeout(executeNextStep, 200);
                 }
@@ -10677,6 +10731,8 @@ This year's theme is "Creative Connections" and will include virtual rooms for e
             
             // Start the sequence
             executeNextStep();
+            
+            console.log('🎬 === LOGIN SEQUENCE INITIALIZED ===');
         }
 
         // Start login ASCII fade-in animation
@@ -11058,6 +11114,12 @@ This year's theme is "Creative Connections" and will include virtual rooms for e
                     setTimeout(() => {
                         bootScreen.classList.add('hide');
                         desktop.style.display = 'block';
+                        
+                        // Show taskbar now that desktop is ready
+                        const taskbar = document.querySelector('.taskbar');
+                        if (taskbar) {
+                            taskbar.style.display = 'flex';
+                        }
                         
                         // Show ASCII intro sequence
                         showAsciiIntro();
