@@ -394,6 +394,22 @@ app.post('/api/save-config', express.json(), (req, res) => {
         // Create backup before saving
         createBackup(jsonFilePath);
         
+        // RAILWAY PERSISTENCE: Create the data directory if it doesn't exist
+        const dataDir = path.join(__dirname, 'data');
+        if (!fs.existsSync(dataDir)) {
+            fs.mkdirSync(dataDir, { recursive: true });
+            console.log('📁 Created data directory for persistence');
+        }
+        
+        // Try saving to a persistent data file 
+        const persistentConfigPath = path.join(dataDir, 'persistent-config.json');
+        try {
+            fs.writeFileSync(persistentConfigPath, JSON.stringify(configData, null, 2));
+            console.log('💾 Config saved to persistent data file:', persistentConfigPath);
+        } catch (persistError) {
+            console.warn('⚠️ Failed to save to persistent data file:', persistError.message);
+        }
+        
         // Create the updated cms-config.js content
         const configFileContent = `/**
  * RALPH Retronet CMS Configuration
@@ -603,15 +619,32 @@ app.get('/api/get-config', (req, res) => {
         let config = null;
         let lastModified = null;
         
-        // Priority 1: Try production JSON config (user's saved content)
-        if (fs.existsSync(productionJsonPath)) {
+        // Priority 0: Check persistent data file first (Railway persistence)
+        const dataDir = path.join(__dirname, 'data');
+        const persistentConfigPath = path.join(dataDir, 'persistent-config.json');
+        
+        if (fs.existsSync(persistentConfigPath)) {
+            try {
+                const persistentConfigData = fs.readFileSync(persistentConfigPath, 'utf8');
+                config = JSON.parse(persistentConfigData);
+                lastModified = fs.statSync(persistentConfigPath).mtime.getTime();
+                console.log('📄 Loaded config from persistent data file (Railway persistence)');
+                console.log('📊 Config modules keys:', config.modules ? Object.keys(config.modules) : 'NO MODULES');
+            } catch (persistError) {
+                console.warn('⚠️ Failed to parse config from persistent data file:', persistError.message);
+                config = null; // Fall back to file-based loading
+            }
+        }
+        
+        // Priority 1: Try production JSON config (user's saved content) - only if env config not found
+        if (!config && fs.existsSync(productionJsonPath)) {
             config = JSON.parse(fs.readFileSync(productionJsonPath, 'utf8'));
             lastModified = fs.statSync(productionJsonPath).mtime.getTime();
             console.log('📄 Loaded config from:', productionJsonPath);
             console.log('📊 Config modules keys:', config.modules ? Object.keys(config.modules) : 'NO MODULES');
         }
         // Priority 2: Try production JS config
-        else if (fs.existsSync(productionJsPath)) {
+        else if (!config && fs.existsSync(productionJsPath)) {
             const vm = require('vm');
             const configContent = fs.readFileSync(productionJsPath, 'utf8');
             const configMatch = configContent.match(/const CMS_CONFIG = ({[\s\S]*?});/);
@@ -623,12 +656,12 @@ app.get('/api/get-config', (req, res) => {
             }
         }
         // Priority 3: Fallback to default JSON config
-        else if (fs.existsSync(jsonConfigPath)) {
+        else if (!config && fs.existsSync(jsonConfigPath)) {
             config = JSON.parse(fs.readFileSync(jsonConfigPath, 'utf8'));
             lastModified = fs.statSync(jsonConfigPath).mtime.getTime();
         } 
         // Priority 4: Fallback to original cms-config.js
-        else if (fs.existsSync(jsConfigPath)) {
+        else if (!config && fs.existsSync(jsConfigPath)) {
             const vm = require('vm');
             const configContent = fs.readFileSync(jsConfigPath, 'utf8');
             
