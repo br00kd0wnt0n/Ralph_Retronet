@@ -716,7 +716,7 @@ app.get('/api/get-config', async (req, res) => {
 
 // Initialize database and start server
 async function startServer() {
-    console.log('🚀 Starting RALPH Retronet Server...');
+    console.log('🚀 Starting RALPH Retronet Server with PostgreSQL persistence...');
     
     // Test database connection
     const dbConnected = await testConnection();
