@@ -1634,6 +1634,36 @@
             margin-left: 8px;
         }
 
+        .badge-active {
+            background: var(--ralph-green);
+            color: white;
+            padding: 2px 6px;
+            border-radius: 8px;
+            font-size: 10px;
+            font-weight: bold;
+            margin-left: 6px;
+        }
+
+        .badge-dev {
+            background: var(--ralph-yellow);
+            color: #333;
+            padding: 2px 6px;
+            border-radius: 8px;
+            font-size: 10px;
+            font-weight: bold;
+            margin-left: 6px;
+        }
+
+        .badge-beta {
+            background: var(--ralph-orange);
+            color: white;
+            padding: 2px 6px;
+            border-radius: 8px;
+            font-size: 10px;
+            font-weight: bold;
+            margin-left: 6px;
+        }
+
         .badge-urgent {
             background: #ff4444;
             color: white;
@@ -2809,30 +2839,51 @@
             color: black;
         }
 
-        /* Show inputs and button only when revealed with fade-in effect */
+        /* Show inputs and button only when revealed with blink effect */
         .login-input.revealed {
             display: block !important;
             opacity: 1 !important;
-            animation: terminalFadeIn 0.5s ease-in !important;
+            animation: terminalBlink 0.6s ease-out !important;
         }
 
         .login-btn.revealed {
             display: block !important;
             opacity: 1 !important;
-            animation: terminalFadeIn 0.5s ease-in !important;
+            animation: terminalBlink 0.6s ease-out !important;
         }
 
-        @keyframes terminalFadeIn {
+        @keyframes terminalBlink {
             0% { 
                 opacity: 0;
-                transform: translateY(10px);
+                filter: brightness(0);
             }
-            50% {
+            15% {
                 opacity: 0.3;
+                filter: brightness(0.5);
+            }
+            30% {
+                opacity: 0;
+                filter: brightness(0);
+            }
+            45% {
+                opacity: 0.7;
+                filter: brightness(1.2);
+            }
+            60% {
+                opacity: 0.2;
+                filter: brightness(0.3);
+            }
+            75% {
+                opacity: 1;
+                filter: brightness(1);
+            }
+            90% {
+                opacity: 0.9;
+                filter: brightness(0.95);
             }
             100% { 
                 opacity: 1;
-                transform: translateY(0);
+                filter: brightness(1);
             }
         }
         
@@ -2880,7 +2931,7 @@
         }
         
         .typing-text.active {
-            animation: typing 0.5s steps(30, end) forwards;
+            animation: typing 0.4s steps(30, end) forwards;
         }
         
         @keyframes typing {
@@ -9464,7 +9515,7 @@ This year's theme is "Creative Connections" and will include virtual rooms for e
                     ${generateAnnouncementsCard()}
                     ${generateNewBizCard()}
                     ${generateWhatsHappeningCard()}
-                    ${generateChallengesCard()}
+                    ${generateInnovationHighlightsCard()}
                     ${generateShoutoutsCard()}
                 </div>
             `;
@@ -9502,16 +9553,16 @@ This year's theme is "Creative Connections" and will include virtual rooms for e
                 }
             }
             
-            // Current Challenge
-            if (AppState.config.modules.challenge?.enabled && AppState.config.modules.challenge.content) {
-                const challenge = AppState.config.modules.challenge.content.currentChallenge;
-                if (challenge) {
+            // Current Pitch Competition
+            if (AppState.config.modules.pitchPlease?.enabled && AppState.config.modules.pitchPlease.content) {
+                const pitchContent = AppState.config.modules.pitchPlease.content;
+                if (pitchContent) {
                     updates.push({
-                        module: 'Creative Challenge',
-                        icon: '🎨',
-                        items: [`${challenge.month} Challenge: ${challenge.theme}`],
+                        module: 'Pitch, Please!',
+                        icon: '💡',
+                        items: [`${pitchContent.currentQuarter} Competition: ${pitchContent.theme}`],
                         badge: 'NEW',
-                        moduleId: 'challenge'
+                        moduleId: 'pitchPlease'
                     });
                 }
             }
@@ -9759,29 +9810,33 @@ This year's theme is "Creative Connections" and will include virtual rooms for e
             `;
         }
 
-        function generateChallengesCard() {
-            const challengeData = AppState.config?.modules?.challenge?.content;
-            const challenge = challengeData?.currentChallenge;
-            const emojis = challengeData?.emojis || {};
-            if (!challenge) return '';
+        function generateInnovationHighlightsCard() {
+            const innovation = AppState.config?.modules?.innovation?.content;
+            if (!innovation) return '';
+            
+            const experiments = innovation.experiments || [];
+            const activeExperiments = experiments.filter(exp => exp.status === 'ACTIVE' || exp.status === 'DEV' || exp.status === 'BETA').slice(0, 3);
+            const completedCount = experiments.filter(exp => exp.status === 'COMPLETE').length;
             
             return `
-                <div class="dashboard-card" onclick="openWindowBeside('challenge', 'whatsNew');">
-                    <h3>CURRENT CHALLENGE</h3>
+                <div class="dashboard-card" onclick="openWindowBeside('innovation', 'whatsNew');">
+                    <h3>INNOVATION HIGHLIGHTS</h3>
                     <div class="dashboard-card-content">
                         <div class="dashboard-item">
-                            <strong>${challenge.month} Challenge</strong>
-                            <span class="badge-new">ACTIVE</span>
+                            <strong>${activeExperiments.length} Active Projects</strong>
+                            <span class="badge-new">LIVE</span>
                         </div>
-                        <div class="dashboard-item">
-                            <strong>${challenge.theme}</strong>
-                        </div>
-                        <div class="dashboard-item">
-                            ${challenge.description}
-                        </div>
-                        <div class="dashboard-item">
-                            Prize: ${emojis.trophy || ''} ${challenge.prize}
-                        </div>
+                        ${activeExperiments.map(exp => `
+                            <div class="dashboard-item">
+                                <strong>${exp.name}</strong> - ${exp.progress || 0}% complete
+                                <span class="badge-${exp.status?.toLowerCase()}">${exp.status}</span>
+                            </div>
+                        `).join('')}
+                        ${completedCount > 0 ? `
+                            <div class="dashboard-item">
+                                🎉 ${completedCount} projects completed this quarter
+                            </div>
+                        ` : ''}
                     </div>
                 </div>
             `;
@@ -10644,22 +10699,13 @@ This year's theme is "Creative Connections" and will include virtual rooms for e
         
         // Start typing animation for login text in sequence
         function startLoginTypingAnimation() {
-            console.log('🎬 === LOGIN SEQUENCE STARTING ===');
-            
             const usernameInput = document.getElementById('username');
             const passwordInput = document.getElementById('password');
             const submitBtn = document.querySelector('.login-btn');
             
-            console.log('🔍 Initial states:');
-            console.log('  Username opacity:', window.getComputedStyle(usernameInput).opacity);
-            console.log('  Password opacity:', window.getComputedStyle(passwordInput).opacity);
-            console.log('  Button opacity:', window.getComputedStyle(submitBtn).opacity);
-            
             // Get elements in the order they should appear
             const loginForm = document.querySelector('.login-form');
             const allTypingElements = loginForm.querySelectorAll('.typing-text');
-            
-            console.log('🎯 Found typing elements:', allTypingElements.length);
             
             // Build sequence in correct order
             const sequence = [
@@ -10672,8 +10718,6 @@ This year's theme is "Creative Connections" and will include virtual rooms for e
                 { showButton: submitBtn }
             ];
             
-            console.log('🎬 Animation sequence:', sequence);
-            
             // Execute sequence step by step
             let currentStep = 0;
             
@@ -10681,48 +10725,32 @@ This year's theme is "Creative Connections" and will include virtual rooms for e
                 if (currentStep >= sequence.length) return;
                 
                 const item = sequence[currentStep];
-                console.log('🎯 Executing step', currentStep, ':', item);
                 
                 if (item.element) {
-                    console.log('⌨️ Starting typing for:', item.element.textContent.substring(0, 20));
                     item.element.style.opacity = '1';
                     item.element.classList.add('active');
                     
-                    // After typing completes, wait for user to read, then move to next step
+                    // After typing completes, move to next step
                     setTimeout(() => {
                         item.element.classList.add('typed-complete');
                         item.element.style.width = 'auto';
                         item.element.style.opacity = '1';
                         currentStep++;
                         executeNextStep();
-                    }, 1200); // 500ms for typing + 700ms for reading
+                    }, 500); // 400ms for typing + 100ms buffer
                     
                 } else if (item.showInput) {
-                    console.log('👁️ === REVEALING INPUT FIELD ===');
-                    console.log('  Input element:', item.showInput.id);
-                    console.log('  Current opacity before:', window.getComputedStyle(item.showInput).opacity);
-                    
+                    item.showInput.style.display = 'block';
                     item.showInput.style.opacity = '1';
-                    item.showInput.style.transition = 'opacity 0.2s ease';
                     item.showInput.classList.add('revealed');
-                    
-                    console.log('  Current opacity after:', window.getComputedStyle(item.showInput).opacity);
-                    console.log('  Has revealed class:', item.showInput.classList.contains('revealed'));
                     
                     currentStep++;
                     setTimeout(executeNextStep, 200);
                     
                 } else if (item.showButton) {
-                    console.log('🔘 === REVEALING SUBMIT BUTTON ===');
-                    console.log('  Button element:', item.showButton.className);
-                    console.log('  Current opacity before:', window.getComputedStyle(item.showButton).opacity);
-                    
+                    item.showButton.style.display = 'block';
                     item.showButton.style.opacity = '1';
-                    item.showButton.style.transition = 'opacity 0.2s ease';
                     item.showButton.classList.add('revealed');
-                    
-                    console.log('  Current opacity after:', window.getComputedStyle(item.showButton).opacity);
-                    console.log('  Has revealed class:', item.showButton.classList.contains('revealed'));
                     
                     currentStep++;
                     setTimeout(executeNextStep, 200);
@@ -10731,8 +10759,6 @@ This year's theme is "Creative Connections" and will include virtual rooms for e
             
             // Start the sequence
             executeNextStep();
-            
-            console.log('🎬 === LOGIN SEQUENCE INITIALIZED ===');
         }
 
         // Start login ASCII fade-in animation
@@ -11387,6 +11413,7 @@ This year's theme is "Creative Connections" and will include virtual rooms for e
             header.style.cursor = 'move';
         }
         
+
         // Initialize application
         async function init() {
             // Detect device type
