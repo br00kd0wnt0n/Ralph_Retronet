@@ -578,11 +578,21 @@ app.post('/api/restore-prompt', express.json(), async (req, res) => {
 // API endpoint to get current configuration with timestamp (simplified - no caching)
 app.get('/api/get-config', (req, res) => {
     try {
+        console.log('🔍 GET /api/get-config called');
+        console.log('🔍 Working directory:', process.cwd());
+        console.log('🔍 __dirname:', __dirname);
+        
         const fs = require('fs');
         const productionJsonPath = path.join(__dirname, 'cms-config-production.json');
         const productionJsPath = path.join(__dirname, 'cms-config-production.js');
         const jsonConfigPath = path.join(__dirname, 'cms-config.json');
         const jsConfigPath = path.join(__dirname, 'cms-config.js');
+        
+        console.log('🔍 Checking files:');
+        console.log('  📄 Production JSON:', fs.existsSync(productionJsonPath) ? '✅' : '❌', productionJsonPath);
+        console.log('  📄 Production JS:', fs.existsSync(productionJsPath) ? '✅' : '❌', productionJsPath);  
+        console.log('  📄 JSON Config:', fs.existsSync(jsonConfigPath) ? '✅' : '❌', jsonConfigPath);
+        console.log('  📄 JS Config:', fs.existsSync(jsConfigPath) ? '✅' : '❌', jsConfigPath);
         
         let config = null;
         let lastModified = null;
@@ -642,8 +652,15 @@ app.get('/api/get-config', (req, res) => {
         res.json(response);
         
     } catch (error) {
-        console.error('Error loading configuration:', error);
-        res.status(500).json({ error: 'Failed to load configuration: ' + error.message });
+        console.error('❌ Error loading configuration:', error);
+        console.error('❌ Error stack:', error.stack);
+        console.error('❌ Current working directory:', process.cwd());
+        console.error('❌ Available files in directory:', require('fs').readdirSync('.').filter(f => f.includes('cms-config')));
+        res.status(500).json({ 
+            error: 'Failed to load configuration: ' + error.message,
+            stack: error.stack,
+            cwd: process.cwd()
+        });
     }
 });
 
