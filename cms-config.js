@@ -515,11 +515,11 @@ const CMS_CONFIG = {
                 "title": "🚀 How It Works",
                 "icon": "var(--ralph-green)",
                 "items": [
-                    "**Desktop Icons:** Click any icon to open modules and tools",
-                    "**Window System:** Drag, minimize, maximize, and organize your workspace",
-                    "**Start Menu:** Access system tools and options",
-                    "**Music Player:** Enjoy background tunes while you work",
-                    "**World Clock:** Stay connected with global team members"
+                    "Desktop Icons: Click any icon to open modules and tools",
+                    "Window System: Drag, minimize, maximize, and organize your workspace",
+                    "Start Menu: Access system tools and options",
+                    "Music Player: Enjoy background tunes while you work",
+                    "World Clock: Stay connected with global team members"
                 ]
             },
             {
@@ -527,12 +527,12 @@ const CMS_CONFIG = {
                 "icon": "var(--ralph-blue)",
                 "description": "Our intranet combines modern functionality with retro aesthetics:",
                 "items": [
-                    "**Frontend:** Pure HTML5, CSS3, and Vanilla JavaScript",
-                    "**Backend:** Node.js with Express server and PostgreSQL database",
-                    "**Design:** Windows 95-inspired UI with modern responsive features",
-                    "**Content Management:** Dynamic CMS with drag & drop functionality",
-                    "**Security:** Production-ready authentication and data protection",
-                    "**Performance:** Optimized for fast loading and smooth interactions"
+                    "Frontend: Pure HTML5, CSS3, and Vanilla JavaScript",
+                    "Backend: Node.js with Express server and PostgreSQL database",
+                    "Design: Windows 95-inspired UI with modern responsive features",
+                    "Content Management: Dynamic CMS with drag & drop functionality",
+                    "Security: Production-ready authentication and data protection",
+                    "Performance: Optimized for fast loading and smooth interactions"
                 ]
             },
             {
@@ -540,12 +540,12 @@ const CMS_CONFIG = {
                 "icon": "var(--ralph-green)",
                 "description": "Enterprise-grade data management ensuring your content never gets lost:",
                 "items": [
-                    "**PostgreSQL Database:** Production data stored securely on Railway",
-                    "**Smart Fallbacks:** Database → File System → Default configuration",
-                    "**Deployment Safe:** All CMS changes survive code deployments",
-                    "**Real-time Sync:** Changes appear instantly across all users",
-                    "**Automatic Backups:** Railway handles database backup and recovery",
-                    "**Drag & Drop:** Move pipeline items between stages seamlessly"
+                    "PostgreSQL Database: Production data stored securely on Railway",
+                    "Smart Fallbacks: Database → File System → Default configuration",
+                    "Deployment Safe: All CMS changes survive code deployments",
+                    "Real-time Sync: Changes appear instantly across all users",
+                    "Automatic Backups: Railway handles database backup and recovery",
+                    "Drag & Drop: Move pipeline items between stages seamlessly"
                 ]
             },
             {
