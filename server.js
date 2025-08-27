@@ -591,6 +591,8 @@ app.get('/api/get-config', (req, res) => {
         if (fs.existsSync(productionJsonPath)) {
             config = JSON.parse(fs.readFileSync(productionJsonPath, 'utf8'));
             lastModified = fs.statSync(productionJsonPath).mtime.getTime();
+            console.log('📄 Loaded config from:', productionJsonPath);
+            console.log('📊 Config modules keys:', config.modules ? Object.keys(config.modules) : 'NO MODULES');
         }
         // Priority 2: Try production JS config
         else if (fs.existsSync(productionJsPath)) {

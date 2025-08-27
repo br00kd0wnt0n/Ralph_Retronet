@@ -9415,8 +9415,8 @@ This year's theme is "Creative Connections" and will include virtual rooms for e
             console.log('📊 AppState.config:', AppState.config ? 'loaded' : 'missing');
             console.log('📋 AppState.config.modules:', AppState.config?.modules ? Object.keys(AppState.config.modules) : 'missing');
             
-            if (!AppState.config || !AppState.config.modules) {
-                console.error('❌ Cannot generate What\'s New: config or modules missing');
+            if (!AppState.config || !AppState.config.modules || typeof AppState.config.modules !== 'object' || Object.keys(AppState.config.modules).length === 0) {
+                console.error('❌ Cannot generate What\'s New: config or modules missing/invalid');
                 return '';
             }
             
@@ -9848,7 +9848,7 @@ This year's theme is "Creative Connections" and will include virtual rooms for e
         // Show What's New window
         function showWhatsNew(retryCount = 0) {
             // Check if config is loaded, if not wait for it
-            if (!AppState.config || !AppState.config.modules) {
+            if (!AppState.config || !AppState.config.modules || typeof AppState.config.modules !== 'object' || Object.keys(AppState.config.modules).length === 0) {
                 if (retryCount < 10) { // Max 5 seconds of retries
                     console.log(`⏳ Config not loaded yet, waiting for config... (attempt ${retryCount + 1}/10)`);
                     setTimeout(() => showWhatsNew(retryCount + 1), 500);
@@ -11522,9 +11522,19 @@ This year's theme is "Creative Connections" and will include virtual rooms for e
                     const newConfig = response_data.config || response_data;
                     const lastModified = response_data.lastModified;
                     
+                    console.log('📥 Raw response_data:', response_data);
+                    console.log('📥 newConfig:', newConfig);
+                    console.log('📥 newConfig.modules type:', typeof newConfig.modules);
+                    console.log('📥 newConfig.modules:', newConfig.modules);
                     console.log('📥 New config received, modules:', Object.keys(newConfig.modules || {}));
                     if (lastModified) {
                         console.log('📅 Config timestamp:', new Date(lastModified));
+                    }
+                    
+                    // Validate the new config before applying
+                    if (!newConfig.modules || typeof newConfig.modules !== 'object' || Object.keys(newConfig.modules).length === 0) {
+                        console.warn('⚠️ Received invalid config from server - modules missing or empty, keeping current config');
+                        return;
                     }
                     
                     // Check if config actually changed
