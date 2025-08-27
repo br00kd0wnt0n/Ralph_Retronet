@@ -3336,24 +3336,22 @@ System ready!</textarea>
             
             const newIndex = container.children.length;
             const newItemHtml = `
-                <div class="pipeline-item" style="background: #2d2d2d; padding: 12px; margin-bottom: 8px; border-radius: 6px;">
+                <div class="pipeline-item-editor" style="background: #2d2d2d; padding: 12px; margin-bottom: 8px; border-radius: 6px; border-left: 4px solid var(--ralph-pink);">
                     <div style="display: flex; gap: 8px; align-items: center; margin-bottom: 8px;">
-                        <button onclick="removePipelineItem('${stage}', ${newIndex})" style="background: #ef4444; color: white; border: none; border-radius: 4px; padding: 4px 8px; cursor: pointer; font-size: 12px;">✕</button>
-                        <input type="text" placeholder="Client/Project Name" style="flex: 1; background: #1e1e1e; border: 1px solid #404040; color: white; padding: 6px; border-radius: 4px; font-size: 12px;">
-                    </div>
-                    <div style="display: grid; grid-template-columns: 1fr auto; gap: 8px; margin-bottom: 8px;">
-                        <input type="date" placeholder="Due Date" style="background: #1e1e1e; border: 1px solid #404040; color: white; padding: 6px; border-radius: 4px; font-size: 12px;">
-                        <select style="background: #1e1e1e; border: 1px solid #404040; color: white; padding: 6px; border-radius: 4px; font-size: 12px; width: 80px;">
+                        <button onclick="removePipelineItem('${stage}', ${newIndex})" style="background: #ef4444; color: white; border: none; border-radius: 4px; padding: 4px 8px; cursor: pointer; font-size: 10px;">✕</button>
+                        <input type="text" placeholder="Client/Project Name" style="flex: 2; background: #1e1e1e; border: 1px solid #404040; color: white; padding: 6px; border-radius: 4px; font-size: 12px;">
+                        <select style="background: #1e1e1e; border: 1px solid #404040; color: white; padding: 6px; border-radius: 4px; font-size: 12px;">
                             <option value="">Office</option>
                             <option value="LON">LON</option>
                             <option value="NY">NY</option>
                             <option value="LA">LA</option>
                             <option value="TK">TK</option>
                         </select>
+                        <input type="date" placeholder="Due Date" style="background: #1e1e1e; border: 1px solid #404040; color: white; padding: 6px; border-radius: 4px; font-size: 12px;">
                     </div>
                     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
-                        <input type="url" placeholder="Deck Link (Google Drive)" style="background: #1e1e1e; border: 1px solid #404040; color: white; padding: 6px; border-radius: 4px; font-size: 12px;">
-                        <input type="url" placeholder="Brief Link (Google Drive)" style="background: #1e1e1e; border: 1px solid #404040; color: white; padding: 6px; border-radius: 4px; font-size: 12px;">
+                        <input type="url" placeholder="Google Drive Deck Link" style="background: #1e1e1e; border: 1px solid #404040; color: white; padding: 6px; border-radius: 4px; font-size: 11px;">
+                        <input type="url" placeholder="Google Drive Brief Link" style="background: #1e1e1e; border: 1px solid #404040; color: white; padding: 6px; border-radius: 4px; font-size: 11px;">
                     </div>
                 </div>
             `;
