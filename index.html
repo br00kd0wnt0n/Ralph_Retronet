@@ -1995,6 +1995,10 @@
             flex: 1;
         }
 
+        .premiere-form input[type="url"] {
+            flex: 0 0 200px;
+        }
+
         .premiere-form input:focus {
             outline: none;
             border-color: var(--ralph-pink);
@@ -5139,6 +5143,7 @@
                         <div class="premiere-form">
                             <input type="date" id="premiereDate" placeholder="Premiere Date">
                             <input type="text" id="premiereTitle" placeholder="Show/Project Title">
+                            <input type="url" id="premiereLiveLink" placeholder="Live Link (Optional)">
                             <button class="premiere-btn" onclick="addNewPremiere()">Add Premiere</button>
                         </div>
                     </div>
@@ -7568,14 +7573,16 @@
         }
 
         // Add new premiere function
-        function addNewPremiere() {
+        async function addNewPremiere() {
             const dateInput = document.getElementById('premiereDate');
             const titleInput = document.getElementById('premiereTitle');
+            const liveLinkInput = document.getElementById('premiereLiveLink');
             
-            if (!dateInput || !titleInput) return;
+            if (!dateInput || !titleInput || !liveLinkInput) return;
             
             const date = dateInput.value;
             const title = titleInput.value.trim();
+            const liveLink = liveLinkInput.value.trim();
             
             if (!date || !title) {
                 showNotification('Please enter both date and title for the premiere.', 'warning');
@@ -7589,19 +7596,79 @@
                 day: 'numeric' 
             });
             
-            // For now, this will show a confirmation and clear the form
-            // In a real implementation, this would update the CMS and save to database
-            showNotification(`Premiere added: "${title}" on ${formattedDate}`, 'success');
+            // Determine if this is "thisMonth" or "nextMonth"
+            const now = new Date();
+            const currentMonth = now.getMonth();
+            const currentYear = now.getFullYear();
+            const premiereMonth = premiereDate.getMonth();
+            const premiereYear = premiereDate.getFullYear();
             
-            // Clear the form
-            dateInput.value = '';
-            titleInput.value = '';
+            let targetSection = 'nextMonth'; // Default to nextMonth
+            if (premiereYear === currentYear && premiereMonth === currentMonth) {
+                targetSection = 'thisMonth';
+            }
+            
+            try {
+                // Get current config
+                const response = await fetch(`/api/get-config?t=${Date.now()}`);
+                const currentConfig = await response.json();
+                
+                // Create new premiere object
+                const newPremiere = {
+                    date: formattedDate,
+                    project: title,
+                    liveLink: liveLink || ""
+                };
+                
+                // Add to appropriate section
+                if (!currentConfig.modules.premieres.content[targetSection]) {
+                    currentConfig.modules.premieres.content[targetSection] = [];
+                }
+                currentConfig.modules.premieres.content[targetSection].push(newPremiere);
+                
+                // Save updated config
+                const saveResponse = await fetch('/api/save-config', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        configData: currentConfig,
+                        lastModified: Date.now()
+                    })
+                });
+                
+                if (saveResponse.ok) {
+                    showNotification(`Premiere added: "${title}" on ${formattedDate}`, 'success');
+                    
+                    // Update the display immediately
+                    if (AppState.config) {
+                        AppState.config = currentConfig;
+                        const premiereWindow = document.getElementById('premieres');
+                        if (premiereWindow) {
+                            updatePremieresContent(premiereWindow, currentConfig.modules.premieres.content);
+                        }
+                    }
+                    
+                    // Clear the form
+                    dateInput.value = '';
+                    titleInput.value = '';
+                    liveLinkInput.value = '';
+                } else {
+                    showNotification('Failed to save premiere. Please try again.', 'error');
+                }
+            } catch (error) {
+                console.error('Error adding premiere:', error);
+                showNotification('Error adding premiere. Please try again.', 'error');
+            }
             
             // Log for debugging
             console.log('🎬 New Premiere Added:', {
                 date: date,
                 formattedDate: formattedDate,
                 title: title,
+                liveLink: liveLink,
+                targetSection: targetSection,
                 timestamp: new Date().toISOString()
             });
         }
