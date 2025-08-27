@@ -1978,11 +1978,11 @@
         }
 
         .premiere-form input {
-            background: #2a2a2a;
-            border: 1px solid #444;
+            background: #2a2a2a !important;
+            border: 1px solid #444 !important;
             border-radius: 6px;
             padding: 8px 12px;
-            color: white;
+            color: white !important;
             font-family: inherit;
             font-size: 13px;
         }
@@ -2002,6 +2002,11 @@
         .premiere-form input:focus {
             outline: none;
             border-color: var(--ralph-pink);
+        }
+
+        .premiere-form input::placeholder {
+            color: #888 !important;
+            opacity: 1;
         }
 
         .premiere-btn {
@@ -7620,6 +7625,29 @@
                     liveLink: liveLink || ""
                 };
                 
+                // Ensure premieres module exists
+                if (!currentConfig.modules.premieres) {
+                    currentConfig.modules.premieres = {
+                        windowTitle: "Premiere Calendar",
+                        headerTitle: "Premiere Calendar", 
+                        icon: "🎬",
+                        enabled: true,
+                        description: "Track project launches and debut dates • Add upcoming premieres",
+                        content: {
+                            thisMonth: [],
+                            nextMonth: []
+                        }
+                    };
+                }
+                
+                // Ensure content section exists
+                if (!currentConfig.modules.premieres.content) {
+                    currentConfig.modules.premieres.content = {
+                        thisMonth: [],
+                        nextMonth: []
+                    };
+                }
+                
                 // Add to appropriate section
                 if (!currentConfig.modules.premieres.content[targetSection]) {
                     currentConfig.modules.premieres.content[targetSection] = [];
@@ -7627,6 +7655,9 @@
                 currentConfig.modules.premieres.content[targetSection].push(newPremiere);
                 
                 // Save updated config
+                console.log('🔄 Saving premiere to config:', newPremiere);
+                console.log('🔄 Full config being saved:', currentConfig);
+                
                 const saveResponse = await fetch('/api/save-config', {
                     method: 'POST',
                     headers: {
@@ -7637,6 +7668,9 @@
                         lastModified: Date.now()
                     })
                 });
+                
+                const responseData = await saveResponse.text();
+                console.log('📤 Save response:', saveResponse.status, responseData);
                 
                 if (saveResponse.ok) {
                     showNotification(`Premiere added: "${title}" on ${formattedDate}`);
@@ -7655,6 +7689,7 @@
                     titleInput.value = '';
                     liveLinkInput.value = '';
                 } else {
+                    console.error('❌ Save failed:', responseData);
                     showNotification('Failed to save premiere. Please try again.');
                 }
             } catch (error) {
