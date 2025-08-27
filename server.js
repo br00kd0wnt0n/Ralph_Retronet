@@ -2,6 +2,7 @@ const express = require('express');
 const path = require('path');
 const fs = require('fs');
 const compression = require('compression');
+const { initDatabase, saveConfig: saveConfigToDB, loadConfig: loadConfigFromDB, testConnection } = require('./database');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -358,7 +359,7 @@ function createBackup(filePath) {
     }
 }
 
-app.post('/api/save-config', express.json(), (req, res) => {
+app.post('/api/save-config', express.json(), async (req, res) => {
     const fs = require('fs');
     const path = require('path');
     
@@ -394,23 +395,17 @@ app.post('/api/save-config', express.json(), (req, res) => {
         // Create backup before saving
         createBackup(jsonFilePath);
         
-        // RAILWAY PERSISTENCE: Try to save to persistent data file
+        // DATABASE PERSISTENCE: Save to PostgreSQL
         try {
-            const dataDir = path.join(__dirname, 'data');
-            
-            // Try to create directory (Railway might not allow this)
-            if (!fs.existsSync(dataDir)) {
-                fs.mkdirSync(dataDir, { recursive: true });
-                console.log('📁 Created data directory for persistence');
+            const dbSaved = await saveConfigToDB(configData);
+            if (dbSaved) {
+                console.log('💾 Config saved to PostgreSQL database');
+            } else {
+                console.warn('⚠️ Failed to save to database - falling back to file system');
             }
-            
-            // Try saving to a persistent data file 
-            const persistentConfigPath = path.join(dataDir, 'persistent-config.json');
-            fs.writeFileSync(persistentConfigPath, JSON.stringify(configData, null, 2));
-            console.log('💾 Config saved to persistent data file:', persistentConfigPath);
-        } catch (persistError) {
-            console.warn('⚠️ Failed to save to persistent data file (Railway filesystem restrictions):', persistError.message);
-            console.log('📝 Falling back to standard cms-config-production.json file');
+        } catch (dbError) {
+            console.warn('⚠️ Database save error:', dbError.message);
+            console.log('📝 Falling back to file-based storage');
         }
         
         // Create the updated cms-config.js content
@@ -601,7 +596,7 @@ app.post('/api/restore-prompt', express.json(), async (req, res) => {
 });
 
 // API endpoint to get current configuration with timestamp (simplified - no caching)
-app.get('/api/get-config', (req, res) => {
+app.get('/api/get-config', async (req, res) => {
     try {
         console.log('🔍 GET /api/get-config called');
         console.log('🔍 Working directory:', process.cwd());
@@ -622,20 +617,17 @@ app.get('/api/get-config', (req, res) => {
         let config = null;
         let lastModified = null;
         
-        // Priority 0: Check persistent data file first (Railway persistence)
+        // Priority 0: Try database first (PostgreSQL persistence)
         try {
-            const dataDir = path.join(__dirname, 'data');
-            const persistentConfigPath = path.join(dataDir, 'persistent-config.json');
-            
-            if (fs.existsSync(persistentConfigPath)) {
-                const persistentConfigData = fs.readFileSync(persistentConfigPath, 'utf8');
-                config = JSON.parse(persistentConfigData);
-                lastModified = fs.statSync(persistentConfigPath).mtime.getTime();
-                console.log('📄 Loaded config from persistent data file (Railway persistence)');
+            const dbResult = await loadConfigFromDB();
+            if (dbResult && dbResult.config) {
+                config = dbResult.config;
+                lastModified = dbResult.lastModified;
+                console.log('📄 Loaded config from database (PostgreSQL persistence)');
                 console.log('📊 Config modules keys:', config.modules ? Object.keys(config.modules) : 'NO MODULES');
             }
-        } catch (persistError) {
-            console.warn('⚠️ Failed to check persistent data file:', persistError.message);
+        } catch (dbError) {
+            console.warn('⚠️ Failed to load config from database:', dbError.message);
             config = null; // Fall back to file-based loading
         }
         
@@ -719,8 +711,27 @@ app.get('/api/get-config', (req, res) => {
     }
 });
 
-// Start server
-app.listen(PORT, () => {
-    console.log(`RALPH Retronet Server running on port ${PORT}`);
-    console.log(`Visit http://localhost:${PORT} to view the dashboard`);
+// Initialize database and start server
+async function startServer() {
+    console.log('🚀 Starting RALPH Retronet Server...');
+    
+    // Test database connection
+    const dbConnected = await testConnection();
+    if (dbConnected) {
+        await initDatabase();
+    } else {
+        console.warn('⚠️ Database not available - falling back to file-based storage');
+    }
+    
+    // Start HTTP server
+    app.listen(PORT, () => {
+        console.log(`✅ RALPH Retronet Server running on port ${PORT}`);
+        console.log(`🌐 Visit http://localhost:${PORT} to view the dashboard`);
+        console.log(`💾 Database: ${dbConnected ? 'Connected' : 'File-based fallback'}`);
+    });
+}
+
+startServer().catch(error => {
+    console.error('❌ Failed to start server:', error);
+    process.exit(1);
 });
