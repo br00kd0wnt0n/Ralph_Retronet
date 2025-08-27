@@ -372,18 +372,27 @@ const CMS_CONFIG = {
                 "experiments": [
                     {
                         "name": "ralph Canvas",
+                        "description": "Revolutionary visual synthesis platform combining AI with creative workflows",
                         "progress": 60,
-                        "url": "https://ralph-visual-canvas-production.up.railway.app/"
+                        "url": "https://ralph-visual-canvas-production.up.railway.app/",
+                        "thumbnail": "https://via.placeholder.com/120x80/00ff00/000000?text=CANVAS",
+                        "status": "ACTIVE"
                     },
                     {
                         "name": "AI-Assisted Editing Tools",
+                        "description": "Next-generation video editing powered by machine learning algorithms",
                         "progress": 40,
-                        "url": ""
+                        "url": "",
+                        "thumbnail": "https://via.placeholder.com/120x80/00ff41/000000?text=AI+EDIT",
+                        "status": "DEV"
                     },
                     {
                         "name": "Real-time Rendering System",
+                        "description": "Ultra-fast rendering engine for live production environments",
                         "progress": 80,
-                        "url": ""
+                        "url": "",
+                        "thumbnail": "https://via.placeholder.com/120x80/00ff82/000000?text=RT+RENDER",
+                        "status": "BETA"
                     }
                 ],
                 "nextSession": {

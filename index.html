@@ -3925,6 +3925,213 @@
                 color: inherit;
             }
         }
+        
+        /* Matrix Animation for Innovation Module */
+        .matrix-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: #000000;
+            z-index: 1000;
+            pointer-events: none;
+            overflow: hidden;
+        }
+        
+        .matrix-column {
+            position: absolute;
+            top: -100%;
+            width: 20px;
+            text-align: center;
+            font-family: 'Space Mono', monospace;
+            font-size: 14px;
+            font-weight: bold;
+            color: #00ff00;
+            text-shadow: 0 0 5px #00ff00;
+            animation: matrix-fall 2s linear forwards;
+        }
+        
+        @keyframes matrix-fall {
+            0% {
+                top: -100%;
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                top: 100%;
+                opacity: 0;
+            }
+        }
+        
+        .matrix-char {
+            display: block;
+            margin-bottom: 5px;
+            animation: matrix-glow 0.1s ease-in-out infinite alternate;
+        }
+        
+        @keyframes matrix-glow {
+            0% { 
+                color: #00ff00;
+                text-shadow: 0 0 5px #00ff00;
+            }
+            100% { 
+                color: #00ff41;
+                text-shadow: 0 0 10px #00ff41, 0 0 15px #00ff00;
+            }
+        }
+        
+        /* Enhanced Innovation Project Cards */
+        .innovation-project {
+            background: linear-gradient(135deg, #001100 0%, #003300 100%);
+            border: 1px solid #00ff00;
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 16px;
+            box-shadow: 0 4px 8px rgba(0, 255, 0, 0.1);
+            transition: all 0.3s ease;
+            display: flex;
+            gap: 16px;
+            align-items: flex-start;
+        }
+        
+        .innovation-project:hover {
+            border-color: #00ff41;
+            box-shadow: 0 6px 20px rgba(0, 255, 0, 0.2);
+            transform: translateY(-2px);
+        }
+        
+        .innovation-thumbnail {
+            width: 120px;
+            height: 80px;
+            border-radius: 6px;
+            border: 1px solid #00ff00;
+            object-fit: cover;
+            flex-shrink: 0;
+            background: #000;
+        }
+        
+        .innovation-content {
+            flex: 1;
+            min-width: 0;
+        }
+        
+        .innovation-project h4 {
+            color: #00ff00;
+            font-size: 18px;
+            font-weight: bold;
+            margin: 0 0 8px 0;
+            text-shadow: 0 0 5px #00ff00;
+        }
+        
+        .innovation-project-description {
+            color: #ffffff;
+            font-size: 14px;
+            line-height: 1.4;
+            margin-bottom: 12px;
+            opacity: 0.9;
+        }
+        
+        .innovation-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+        
+        .innovation-status {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+        
+        .innovation-status.active {
+            background: rgba(0, 255, 0, 0.2);
+            color: #00ff00;
+            border: 1px solid #00ff00;
+        }
+        
+        .innovation-status.dev {
+            background: rgba(255, 255, 0, 0.2);
+            color: #ffff00;
+            border: 1px solid #ffff00;
+        }
+        
+        .innovation-status.beta {
+            background: rgba(0, 255, 255, 0.2);
+            color: #00ffff;
+            border: 1px solid #00ffff;
+        }
+        
+        .innovation-progress-wrapper {
+            flex: 1;
+            min-width: 120px;
+        }
+        
+        .innovation-progress-bar {
+            background: #002200;
+            border: 1px solid #00ff00;
+            border-radius: 10px;
+            height: 20px;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .innovation-progress-fill {
+            background: linear-gradient(90deg, #00ff00 0%, #00ff41 100%);
+            height: 100%;
+            border-radius: 9px;
+            transition: width 0.8s ease-out;
+            box-shadow: 0 0 10px rgba(0, 255, 0, 0.3);
+        }
+        
+        .innovation-progress-text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: #ffffff;
+            font-size: 12px;
+            font-weight: bold;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
+            z-index: 2;
+        }
+        
+        .innovation-project-btn {
+            background: linear-gradient(135deg, #00ff00 0%, #00ff41 100%);
+            color: #000000;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            font-weight: bold;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+        }
+        
+        .innovation-project-btn:hover {
+            background: linear-gradient(135deg, #00ff41 0%, #00ff82 100%);
+            box-shadow: 0 4px 12px rgba(0, 255, 0, 0.4);
+            transform: translateY(-1px);
+        }
+        
+        .innovation-project-btn:disabled {
+            background: #666666;
+            color: #999999;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
     </style>
 </head>
 <body>
@@ -7465,19 +7672,44 @@ This year's theme is "Creative Connections" and will include virtual rooms for e
             if (experimentsContainer && content.experiments) {
                 let experimentsHTML = '';
                 content.experiments.forEach(experiment => {
+                    const isActive = experiment.url && experiment.url !== '#' && experiment.url !== '';
+                    const statusClass = (experiment.status || 'dev').toLowerCase();
+                    
                     experimentsHTML += `
                         <div class="innovation-project">
-                            <div class="project-header">
+                            ${experiment.thumbnail ? `
+                                <img src="${experiment.thumbnail}" alt="${experiment.name}" class="innovation-thumbnail" />
+                            ` : `
+                                <div class="innovation-thumbnail" style="display: flex; align-items: center; justify-content: center; color: #00ff00; font-size: 24px;">
+                                    💡
+                                </div>
+                            `}
+                            <div class="innovation-content">
                                 <h4>${experiment.name || 'Untitled Project'}</h4>
-                                <div class="project-progress">
-                                    <div class="progress-bar">
-                                        <div class="progress-fill" style="width: ${experiment.progress || 0}%"></div>
+                                <div class="innovation-project-description">
+                                    ${experiment.description || 'No description available'}
+                                </div>
+                                <div class="innovation-meta">
+                                    <span class="innovation-status ${statusClass}">
+                                        ${experiment.status || 'DEV'}
+                                    </span>
+                                    <div class="innovation-progress-wrapper">
+                                        <div class="innovation-progress-bar">
+                                            <div class="innovation-progress-fill" style="width: ${experiment.progress || 0}%"></div>
+                                            <div class="innovation-progress-text">${experiment.progress || 0}%</div>
+                                        </div>
                                     </div>
-                                    <span class="progress-text">${experiment.progress || 0}%</span>
+                                    ${isActive ? `
+                                        <button class="innovation-project-btn" onclick="openExternalLink('${experiment.url}')">
+                                            Launch
+                                        </button>
+                                    ` : `
+                                        <button class="innovation-project-btn" disabled>
+                                            Coming Soon
+                                        </button>
+                                    `}
                                 </div>
                             </div>
-                            <p>${experiment.description || 'No description available'}</p>
-                            ${experiment.url ? `<button class="project-btn" onclick="openExternalLink('${experiment.url}')">View Project</button>` : ''}
                         </div>
                     `;
                 });
@@ -7504,6 +7736,76 @@ This year's theme is "Creative Connections" and will include virtual rooms for e
             }
             
             console.log('✅ Innovation content updated successfully');
+        }
+
+        // Matrix Animation Functions for Innovation Module
+        function startMatrixAnimation(windowElement) {
+            const windowContent = windowElement.querySelector('.window-content');
+            if (!windowContent) return;
+            
+            // Create matrix overlay
+            const matrixOverlay = document.createElement('div');
+            matrixOverlay.className = 'matrix-overlay';
+            matrixOverlay.id = 'innovationMatrix';
+            windowContent.appendChild(matrixOverlay);
+            
+            // Matrix characters (mix of tech symbols and Japanese characters)
+            const matrixChars = ['0', '1', 'λ', 'π', '∑', 'Δ', '∞', '≈', '⟨', '⟩', '→', '←', '↑', '↓', 
+                                'ア', 'イ', 'ウ', 'エ', 'オ', 'カ', 'キ', 'ク', 'ケ', 'コ', '数', '字', '符', '号'];
+            
+            // Create multiple columns
+            const columnCount = Math.floor(windowContent.offsetWidth / 25);
+            
+            for (let i = 0; i < columnCount; i++) {
+                setTimeout(() => {
+                    createMatrixColumn(matrixOverlay, i * 25, matrixChars);
+                }, i * 50);
+            }
+            
+            // Remove overlay after animation completes
+            setTimeout(() => {
+                if (matrixOverlay.parentNode) {
+                    matrixOverlay.remove();
+                }
+            }, 2500);
+        }
+        
+        function createMatrixColumn(container, leftPos, chars) {
+            const column = document.createElement('div');
+            column.className = 'matrix-column';
+            column.style.left = leftPos + 'px';
+            
+            // Create random length string of characters
+            const charCount = Math.random() * 10 + 8;
+            for (let i = 0; i < charCount; i++) {
+                const char = document.createElement('span');
+                char.className = 'matrix-char';
+                char.textContent = chars[Math.floor(Math.random() * chars.length)];
+                char.style.animationDelay = (i * 0.05) + 's';
+                column.appendChild(char);
+            }
+            
+            container.appendChild(column);
+            
+            // Remove column after animation
+            setTimeout(() => {
+                if (column.parentNode) {
+                    column.remove();
+                }
+            }, 2000);
+        }
+        
+        // Enhanced Innovation window opening with matrix effect
+        function openInnovationWindow() {
+            const windowElement = document.getElementById('innovation');
+            if (windowElement) {
+                openWindow('innovation');
+                
+                // Start matrix animation after a brief delay
+                setTimeout(() => {
+                    startMatrixAnimation(windowElement);
+                }, 200);
+            }
         }
 
         // Update Resources content dynamically
@@ -8620,8 +8922,12 @@ This year's theme is "Creative Connections" and will include virtual rooms for e
                     const iconElement = document.createElement('div');
                     iconElement.className = 'icon';
                     
-                    // All modules now use the same openWindow function
-                    iconElement.onclick = () => openWindow(moduleId);
+                    // Special handler for Innovation module with matrix animation
+                    if (moduleId === 'innovation') {
+                        iconElement.onclick = () => openInnovationWindow();
+                    } else {
+                        iconElement.onclick = () => openWindow(moduleId);
+                    }
                     
                     // Create a simplified label (remove extra words)
                     let label = moduleConfig.title || moduleId; // Fallback to moduleId if no title
