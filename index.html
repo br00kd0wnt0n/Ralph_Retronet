@@ -7585,7 +7585,7 @@
             const liveLink = liveLinkInput.value.trim();
             
             if (!date || !title) {
-                showNotification('Please enter both date and title for the premiere.', 'warning');
+                showNotification('Please enter both date and title for the premiere.');
                 return;
             }
             
@@ -7639,7 +7639,7 @@
                 });
                 
                 if (saveResponse.ok) {
-                    showNotification(`Premiere added: "${title}" on ${formattedDate}`, 'success');
+                    showNotification(`Premiere added: "${title}" on ${formattedDate}`);
                     
                     // Update the display immediately
                     if (AppState.config) {
@@ -7655,11 +7655,11 @@
                     titleInput.value = '';
                     liveLinkInput.value = '';
                 } else {
-                    showNotification('Failed to save premiere. Please try again.', 'error');
+                    showNotification('Failed to save premiere. Please try again.');
                 }
             } catch (error) {
                 console.error('Error adding premiere:', error);
-                showNotification('Error adding premiere. Please try again.', 'error');
+                showNotification('Error adding premiere. Please try again.');
             }
             
             // Log for debugging
@@ -8147,19 +8147,49 @@
             // Add selection to clicked article
             element.classList.add('selected');
             
-            // Show iframe and hide placeholder
+            if (!url) {
+                showNotification('No URL available for this article.');
+                return;
+            }
+            
+            // Check for domains that typically block iframes due to CSP
+            const blockedDomains = [
+                'adage.com',
+                'campaignlive.com', 
+                'techcrunch.com',
+                'theverge.com',
+                'wired.com',
+                'forbes.com',
+                'bloomberg.com',
+                'reuters.com',
+                'cnn.com',
+                'bbc.com',
+                'guardian.com',
+                'nytimes.com',
+                'washingtonpost.com'
+            ];
+            
+            const urlObj = new URL(url);
+            const isBlocked = blockedDomains.some(domain => urlObj.hostname.includes(domain));
+            
+            if (isBlocked) {
+                // Open in new tab for blocked domains
+                window.open(url, '_blank', 'noopener,noreferrer');
+                showNotification(`Opening "${title}" in new tab (site blocks iframes)`);
+                return;
+            }
+            
+            // Show iframe and hide placeholder for allowed domains
             const iframe = document.getElementById('articleFrame');
             const placeholder = document.getElementById('articlesPlaceholder');
             
-            if (url && iframe && placeholder) {
+            if (iframe && placeholder) {
                 iframe.src = url;
                 iframe.style.display = 'block';
                 placeholder.style.display = 'none';
                 
                 console.log(`📰 Loading article: ${title}`);
-                showNotification(`Loading: ${title}`, 'info');
-            } else if (!url) {
-                showNotification('No URL available for this article', 'warning');
+                showNotification(`Loading: ${title}`);
             }
         }
         
