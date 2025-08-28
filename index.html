@@ -11622,15 +11622,36 @@ This year's theme is "Creative Connections" and will include virtual rooms for e
             if (!ENABLE_BOOT_LOGIN) {
                 // Hide boot screen immediately
                 const bootScreen = document.getElementById('bootScreen');
+                const loginScreen = document.getElementById('loginScreen');
                 if (bootScreen) {
                     bootScreen.style.display = 'none';
+                }
+                if (loginScreen) {
+                    loginScreen.style.display = 'none';
+                }
+                
+                // Show desktop
+                const desktop = document.querySelector('.desktop');
+                if (desktop) {
+                    desktop.style.display = 'block';
+                }
+                
+                // Show taskbar
+                const taskbar = document.querySelector('.taskbar');
+                if (taskbar) {
+                    taskbar.style.display = 'block';
                 }
                 
                 // Load content immediately
                 loadContentFromCMS();
                 
+                // Open What's New window by default
+                setTimeout(() => {
+                    openWindow('whatsNew');
+                }, 100);
+                
                 console.log('🚀 Boot screen disabled for development - content loaded directly');
-                return;
+                return; // Skip the rest of boot sequence
             }
             
             // Setup login screen
