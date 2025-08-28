@@ -10086,14 +10086,12 @@ This year's theme is "Creative Connections" and will include virtual rooms for e
                         iconElement.onclick = () => openWindow(moduleId);
                     }
                     
-                    // Create a simplified label (remove extra words)
-                    let label = moduleConfig.windowTitle || moduleConfig.title || moduleId; // Use new windowTitle field
+                    // Use the new iconLabel field for desktop icon naming
+                    let label = moduleConfig.iconLabel || moduleConfig.windowTitle || moduleConfig.title || moduleId;
                     if (typeof label === 'string') {
                         label = label.replace(/v\d+\.\d+/g, ''); // Remove version numbers
                         label = label.replace(/\s+/g, ' ').trim(); // Clean up spaces
                     }
-                    
-                    // Use the exact title from CMS - no more hardcoded overrides
                     
                     iconElement.innerHTML = `
                         <div class="icon-image" style="position: relative;">

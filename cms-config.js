@@ -52,7 +52,8 @@ const CMS_CONFIG = {
     "modules": {
         "newBiz": {
             "windowTitle": "New Biz Pipe",
-            "headerTitle": "New Business Pipeline", 
+            "headerTitle": "New Business Pipeline",
+            "iconLabel": "New Biz Pipe",
             "icon": "📊",
             "enabled": true,
             "description": "Track our business development pipeline from warm leads to won pitches. See upcoming meetings, proposal deadlines, and conversion progress.",
@@ -116,6 +117,7 @@ const CMS_CONFIG = {
         "premieres": {
             "windowTitle": "Premiere Calendar",
             "headerTitle": "Premiere Calendar",
+            "iconLabel": "Premieres",
             "icon": "🎬",
             "enabled": true,
             "description": "Track project launches and debut dates • Add upcoming premieres",
@@ -309,7 +311,9 @@ const CMS_CONFIG = {
             "submitEndpoint": null
         },
         "announcements": {
-            "title": "Announcements",
+            "windowTitle": "Announcements",
+            "headerTitle": "Announcements",
+            "iconLabel": "Announcements",
             "icon": "📣",
             "enabled": true,
             "description": "Important company updates and system notifications. Check critical announcements and general office information.",
@@ -369,8 +373,10 @@ const CMS_CONFIG = {
             "apiEndpoint": null
         },
         "innovation": {
-            "title": "Innovation Updates",
-            "icon": "💡",
+            "windowTitle": "Innovation @ Ralph",
+            "headerTitle": "Innovation @ Ralph",
+            "iconLabel": "Innovation",
+            "icon": "🚀",
             "enabled": true,
             "description": "Explore cutting-edge projects and experimental tools. Track innovation lab progress and upcoming tech sessions.",
             "content": {
@@ -408,7 +414,9 @@ const CMS_CONFIG = {
             "apiEndpoint": null
         },
         "resources": {
-            "title": "Resources",
+            "windowTitle": "Resource Center",
+            "headerTitle": "Resource Center",
+            "iconLabel": "Resources",
             "icon": "📁",
             "enabled": true,
             "description": "Access brand guidelines, templates, and training materials. Your one-stop shop for company documents and learning resources.",
