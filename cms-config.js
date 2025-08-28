@@ -259,7 +259,8 @@ const CMS_CONFIG = {
         "ralphNews": {
             "windowTitle": "RNN - Ralph News Network",
             "headerTitle": "RALPH News Network",
-            "icon": "📢",
+            "iconLabel": "RNN",
+            "icon": "<span class=\"rnn-logo\">RNN</span>",
             "enabled": true,
             "description": "Breaking news and updates from across the RALPH network. Get the latest company announcements and industry insights.",
             "content": {
