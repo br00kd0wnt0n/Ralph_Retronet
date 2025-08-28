@@ -11555,6 +11555,9 @@ This year's theme is "Creative Connections" and will include virtual rooms for e
         
 
         // Initialize application
+        // DEVELOPMENT FLAG - Set to false to skip boot screen and login
+        const ENABLE_BOOT_LOGIN = false; // Change to true to re-enable
+        
         async function init() {
             // Detect device type
             AppState.isMobile = Utils.isMobileDevice();
@@ -11615,10 +11618,25 @@ This year's theme is "Creative Connections" and will include virtual rooms for e
                 // Auto-popup removed per user request
             }
             
+            // Skip boot screen and login if disabled for development
+            if (!ENABLE_BOOT_LOGIN) {
+                // Hide boot screen immediately
+                const bootScreen = document.getElementById('bootScreen');
+                if (bootScreen) {
+                    bootScreen.style.display = 'none';
+                }
+                
+                // Load content immediately
+                loadContentFromCMS();
+                
+                console.log('🚀 Boot screen disabled for development - content loaded directly');
+                return;
+            }
+            
             // Setup login screen
             setupLoginKeyHandler();
             
-            // Start login ASCII animation with downward typing/wipe effect
+            // Start login ASCII animation with downward typing/wipe effect  
             startBootAsciiAnimation();
             
             // Start clock with tracked interval
