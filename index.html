@@ -7975,7 +7975,14 @@
                     if (title) {
                         // Use new windowTitle field, fallback to old title field for backward compatibility
                         const windowTitleText = moduleConfig.windowTitle || moduleConfig.title || 'Module';
-                        title.textContent = `${moduleConfig.icon} ${windowTitleText}`;
+                        
+                        // Handle special icon types for window titles
+                        let windowIcon = moduleConfig.icon;
+                        if (moduleConfig.iconType === 'rnn-logo') {
+                            title.innerHTML = `📢 <span class="rnn-logo">RNN</span> ${windowTitleText}`;
+                        } else {
+                            title.textContent = `${windowIcon} ${windowTitleText}`;
+                        }
                     }
                     
                     // Update internal header title (h2 elements)
@@ -10093,9 +10100,15 @@ This year's theme is "Creative Connections" and will include virtual rooms for e
                         label = label.replace(/\s+/g, ' ').trim(); // Clean up spaces
                     }
                     
+                    // Handle special icon types (like RNN logo)
+                    let iconDisplay = moduleConfig.icon;
+                    if (moduleConfig.iconType === 'rnn-logo') {
+                        iconDisplay = '<span class="rnn-logo">RNN</span>';
+                    }
+                    
                     iconElement.innerHTML = `
                         <div class="icon-image" style="position: relative;">
-                            ${moduleConfig.icon}
+                            ${iconDisplay}
                             ${hasNewContent(moduleId) ? '<div class="icon-new-indicator">!</div>' : ''}
                         </div>
                         <div class="icon-label">${label}</div>

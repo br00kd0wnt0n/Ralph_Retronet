@@ -162,6 +162,7 @@ const CMS_CONFIG = {
         "pitchPlease": {
             "windowTitle": "Pitch, Please!",
             "headerTitle": "Pitch, Please!",
+            "iconLabel": "Pitch Please",
             "icon": "💡",
             "enabled": true,
             "description": "Submit your innovative ideas to our quarterly pitch competition! Share your vision and compete for funding and development support.",
@@ -179,6 +180,7 @@ const CMS_CONFIG = {
         "shoutouts": {
             "windowTitle": "Shoutouts & Celebrations",
             "headerTitle": "Shoutouts & Celebrations",
+            "iconLabel": "Shoutouts",
             "icon": "🎉",
             "enabled": true,
             "description": "Celebrate team milestones and achievements • Share appreciation for great work",
@@ -230,6 +232,7 @@ const CMS_CONFIG = {
         "articles": {
             "windowTitle": "Industry Articles",
             "headerTitle": "Industry Articles",
+            "iconLabel": "Articles",
             "icon": "📰",
             "enabled": true,
             "description": "Stay informed with curated industry news and trends. Read must-have articles from top publications and trending topics.",
@@ -260,7 +263,8 @@ const CMS_CONFIG = {
             "windowTitle": "RNN - Ralph News Network",
             "headerTitle": "RALPH News Network",
             "iconLabel": "RNN",
-            "icon": "<span class=\"rnn-logo\">RNN</span>",
+            "icon": "📢",
+            "iconType": "rnn-logo",
             "enabled": true,
             "description": "Breaking news and updates from across the RALPH network. Get the latest company announcements and industry insights.",
             "content": {
@@ -289,6 +293,7 @@ const CMS_CONFIG = {
         "suggestions": {
             "windowTitle": "Suggestions",
             "headerTitle": "Suggestions",
+            "iconLabel": "Suggestions",
             "icon": "💭",
             "enabled": true,
             "description": "Share your ideas to improve our workplace and processes. See which suggestions are approved, under review, or being considered.",
@@ -334,6 +339,7 @@ const CMS_CONFIG = {
         "links": {
             "windowTitle": "Quick Links",
             "headerTitle": "Quick Links",
+            "iconLabel": "Quick Links",
             "icon": "🔗",
             "enabled": true,
             "description": "Fast access to essential tools and resources. Find internal systems, client portals, and external platforms you use daily.",
