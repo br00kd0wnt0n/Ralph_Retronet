@@ -6641,8 +6641,10 @@
                 makeDraggable(windowEl);
             }
             
-            // Load content for this specific module from CMS
-            loadModuleContentFromCMS(windowId);
+            // Load content for this specific module from CMS (skip for whatsNew)
+            if (windowId !== 'whatsNew') {
+                loadModuleContentFromCMS(windowId);
+            }
             
             // Special initialization for Ralph News Network
             if (windowId === 'ralphNews') {
@@ -11645,8 +11647,13 @@ This year's theme is "Creative Connections" and will include virtual rooms for e
                 // Load content immediately
                 loadContentFromCMS();
                 
-                // Open What's New window by default
+                // Open What's New window by default and populate it
                 setTimeout(() => {
+                    // Generate and populate What's New content
+                    const whatsNewContent = document.getElementById('whatsNewContent');
+                    if (whatsNewContent) {
+                        whatsNewContent.innerHTML = generateWhatsNewContent();
+                    }
                     openWindow('whatsNew');
                 }, 100);
                 
