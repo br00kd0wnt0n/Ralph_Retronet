@@ -524,6 +524,195 @@ const CMS_CONFIG = {
                 ]
             },
             "apiEndpoint": null
+        },
+        "trendspotting": {
+            "windowTitle": "Trendspotting",
+            "headerTitle": "Trendspotting",
+            "iconLabel": "Trendspotting",
+            "icon": "TS",
+            "iconType": "text",
+            "iconColor": "#F16524",
+            "enabled": true,
+            "content": {
+                "offices": {
+                    "ny": {
+                        "name": "NEW YORK",
+                        "playlist": [
+                            {
+                                "title": "Blinding Lights",
+                                "artist": "The Weeknd"
+                            },
+                            {
+                                "title": "flowers",
+                                "artist": "Miley Cyrus"
+                            },
+                            {
+                                "title": "Anti-Hero",
+                                "artist": "Taylor Swift"
+                            },
+                            {
+                                "title": "Unholy",
+                                "artist": "Sam Smith & Kim Petras"
+                            }
+                        ],
+                        "trends": [
+                            {
+                                "category": "TECH",
+                                "description": "AI-powered creative tools taking over Slack conversations"
+                            },
+                            {
+                                "category": "FOOD",
+                                "description": "Matcha everything - from lattes to cookies"
+                            },
+                            {
+                                "category": "CULTURE",
+                                "description": "90s nostalgia hitting peak levels"
+                            }
+                        ]
+                    },
+                    "lon": {
+                        "name": "LONDON",
+                        "playlist": [
+                            {
+                                "title": "Escapism",
+                                "artist": "RAYE ft. 070 Shake"
+                            },
+                            {
+                                "title": "Boy's a Liar Pt. 2",
+                                "artist": "PinkPantheress & Ice Spice"
+                            },
+                            {
+                                "title": "Miracle",
+                                "artist": "Calvin Harris & Ellie Goulding"
+                            },
+                            {
+                                "title": "Flowers (UK Garage Remix)",
+                                "artist": "Miley Cyrus"
+                            }
+                        ],
+                        "trends": [
+                            {
+                                "category": "FASHION",
+                                "description": "Gorpcore infiltrating the creative department"
+                            },
+                            {
+                                "category": "DRINK",
+                                "description": "Natural wine Wednesdays becoming a thing"
+                            },
+                            {
+                                "category": "HOBBY",
+                                "description": "Office pottery club gaining momentum"
+                            }
+                        ]
+                    },
+                    "la": {
+                        "name": "LOS ANGELES",
+                        "playlist": [
+                            {
+                                "title": "Kill Bill",
+                                "artist": "SZA"
+                            },
+                            {
+                                "title": "Creepin'",
+                                "artist": "Metro Boomin, The Weeknd, 21 Savage"
+                            },
+                            {
+                                "title": "Ella Baila Sola",
+                                "artist": "Eslabon Armado & Peso Pluma"
+                            },
+                            {
+                                "title": "Calm Down",
+                                "artist": "Rema & Selena Gomez"
+                            }
+                        ],
+                        "trends": [
+                            {
+                                "category": "WELLNESS",
+                                "description": "Cold plunge challenges every Friday morning"
+                            },
+                            {
+                                "category": "FOOD",
+                                "description": "Korean corn dogs from the truck outside"
+                            },
+                            {
+                                "category": "TRANSPORT",
+                                "description": "E-bike gang growing exponentially"
+                            }
+                        ]
+                    },
+                    "tok": {
+                        "name": "TOKYO",
+                        "playlist": [
+                            {
+                                "title": "IDOL",
+                                "artist": "YOASOBI"
+                            },
+                            {
+                                "title": "Subtitle",
+                                "artist": "Official HIGE DANdism"
+                            },
+                            {
+                                "title": "New Genesis",
+                                "artist": "Ado"
+                            },
+                            {
+                                "title": "Souvenir",
+                                "artist": "BUMP OF CHICKEN"
+                            }
+                        ],
+                        "trends": [
+                            {
+                                "category": "TECH",
+                                "description": "Mechanical keyboards reaching critical mass"
+                            },
+                            {
+                                "category": "LUNCH",
+                                "description": "Convenience store gourmet competitions"
+                            },
+                            {
+                                "category": "CULTURE",
+                                "description": "After-work karaoke sessions mandatory"
+                            }
+                        ]
+                    },
+                    "syd": {
+                        "name": "SYDNEY",
+                        "playlist": [
+                            {
+                                "title": "Rushing Back",
+                                "artist": "Flume ft. Vera Blue"
+                            },
+                            {
+                                "title": "Green Light",
+                                "artist": "Spacey Jane"
+                            },
+                            {
+                                "title": "Stumblin'",
+                                "artist": "CYRIL ft. Emily Warren"
+                            },
+                            {
+                                "title": "Dumb Things",
+                                "artist": "Paul Kelly"
+                            }
+                        ],
+                        "trends": [
+                            {
+                                "category": "LIFESTYLE",
+                                "description": "5am surf club before work growing"
+                            },
+                            {
+                                "category": "COFFEE",
+                                "description": "Flat white art competitions getting intense"
+                            },
+                            {
+                                "category": "FRIDAY",
+                                "description": "Knock-off drinks at the harbor standard"
+                            }
+                        ]
+                    }
+                }
+            },
+            "apiEndpoint": null
         }
     },
     "infoPanel": {
