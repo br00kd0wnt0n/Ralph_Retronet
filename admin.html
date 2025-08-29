@@ -410,6 +410,16 @@
             background: var(--border-color);
         }
 
+        .btn-info {
+            background: #3b82f6;
+            color: white;
+            border: 1px solid #2563eb;
+        }
+
+        .btn-info:hover {
+            background: #2563eb;
+        }
+
         .btn-success {
             background: var(--success);
             color: white;
@@ -909,8 +919,11 @@ System ready!</textarea>
     </div>
 
     <script>
-        // Inline CMS Config as fallback
-        const CMS_CONFIG = {
+        // CMS Config will be loaded from server - no hardcoded fallback
+        let CMS_CONFIG = null;
+        
+        // Temporary empty config structure until server loads
+        const EMPTY_CONFIG = {
             system: {
                 version: "1.0",
                 companyName: "RALPH",
@@ -1239,7 +1252,7 @@ System ready!</textarea>
             }
         };
         
-        // Make available globally
+        // Config will be populated after server load
         window.CMS_CONFIG = CMS_CONFIG;
     </script>
     <script>
@@ -1414,6 +1427,9 @@ System ready!</textarea>
                     if (result.config) {
                         currentConfig = result.config;
                         configLastModified = result.lastModified;
+                        // Update global config
+                        CMS_CONFIG = currentConfig;
+                        window.CMS_CONFIG = currentConfig;
                         console.log('Config loaded from server with timestamp:', new Date(configLastModified));
                     } else {
                         // Fallback for old API structure
@@ -1549,7 +1565,8 @@ System ready!</textarea>
             const moduleTitleEl = document.getElementById('moduleTitleHeader');
             const moduleDescEl = document.getElementById('moduleDescription');
             if (moduleTitleEl) {
-                moduleTitleEl.textContent = `${module.icon} ${module.title}`;
+                const displayTitle = module.windowTitle || module.title || module.headerTitle || 'Untitled Module';
+                moduleTitleEl.textContent = `${module.icon} ${displayTitle}`;
             }
             if (moduleDescEl) {
                 moduleDescEl.textContent = 'Configure module settings and content';
@@ -1558,8 +1575,19 @@ System ready!</textarea>
             let editorHtml = `
                 <div class="form-row">
                     <div class="form-field">
-                        <label>Module Title</label>
-                        <input type="text" id="moduleTitle" value="${module.title || ''}">
+                        <label>Window Title</label>
+                        <input type="text" id="moduleWindowTitle" value="${module.windowTitle || module.title || ''}" placeholder="Text shown in window title bar">
+                    </div>
+                    <div class="form-field">
+                        <label>Header Title</label>
+                        <input type="text" id="moduleHeaderTitle" value="${module.headerTitle || module.title || ''}" placeholder="Text shown in window header (can be longer)">
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-field">
+                        <label>Icon Label</label>
+                        <input type="text" id="moduleIconLabel" value="${module.iconLabel || module.title || ''}" placeholder="Text shown under desktop icon">
                     </div>
                     <div class="form-field">
                         <label>Module Icon</label>
@@ -1570,12 +1598,6 @@ System ready!</textarea>
                 <div class="form-field">
                     <label>Module Description</label>
                     <textarea id="moduleDescription" rows="3" placeholder="Brief description of what this module contains...">${module.description || ''}</textarea>
-                </div>
-
-                <div class="form-field">
-                    <label>API Endpoint (optional)</label>
-                    <input type="url" id="moduleApiEndpoint" value="${module.apiEndpoint || ''}" 
-                           placeholder="https://api.yourcompany.com/${moduleId}">
                 </div>
 
                 <div class="module-toggle">
@@ -1594,6 +1616,7 @@ System ready!</textarea>
                 <div class="action-bar">
                     <button class="btn btn-primary" id="updateBtn-${moduleId}" onclick="updateModule('${moduleId}')">💾 Update Module</button>
                     <button class="btn btn-secondary" onclick="resetModule('${moduleId}')">🔄 Reset to Default</button>
+                    <button class="btn btn-info" onclick="refreshFrontend()" title="Force frontend to refresh immediately">⚡ Push to Frontend</button>
                     <div class="module-status" id="status-${moduleId}"></div>
                 </div>
             `;
@@ -2185,13 +2208,14 @@ System ready!</textarea>
             console.log('🔄 UPDATE MODULE STARTED:', moduleId);
             console.log('📋 Current module config before update:', currentConfig.modules[moduleId]);
             
-            const title = document.getElementById('moduleTitle').value;
+            const windowTitle = document.getElementById('moduleWindowTitle').value;
+            const headerTitle = document.getElementById('moduleHeaderTitle').value;
+            const iconLabel = document.getElementById('moduleIconLabel').value;
             const icon = document.getElementById('moduleIcon').value;
             const description = document.getElementById('moduleDescription').value;
-            const apiEndpoint = document.getElementById('moduleApiEndpoint').value;
             const enabled = document.getElementById('moduleEnabled').checked;
             
-            console.log('📝 Form values collected:', { title, icon, description, apiEndpoint, enabled });
+            console.log('📝 Form values collected:', { windowTitle, headerTitle, iconLabel, icon, description, enabled });
             
             let content = {};
             
@@ -2239,10 +2263,11 @@ System ready!</textarea>
 
             const updatedModule = {
                 ...currentConfig.modules[moduleId],
-                title,
+                windowTitle,
+                headerTitle, 
+                iconLabel,
                 icon,
                 description,
-                apiEndpoint: apiEndpoint || null,
                 enabled,
                 content
             };
@@ -4149,6 +4174,60 @@ System ready!</textarea>
                 giftCardAmount,
                 items
             };
+        }
+
+        // Force frontend refresh function
+        async function refreshFrontend() {
+            try {
+                // Show immediate feedback
+                showAlert('⚡ Pushing updates to frontend...', 'info');
+                
+                // Trigger frontend refresh by broadcasting to all open frontend windows
+                // This uses postMessage to communicate with the frontend
+                const message = {
+                    type: 'CMS_FORCE_REFRESH',
+                    timestamp: Date.now(),
+                    source: 'admin'
+                };
+                
+                // Send message to parent window (if opened from frontend)
+                if (window.opener && !window.opener.closed) {
+                    window.opener.postMessage(message, '*');
+                }
+                
+                // Send message to all windows in the same origin
+                if (window.parent && window.parent !== window) {
+                    window.parent.postMessage(message, '*');
+                }
+                
+                // Also send to localStorage for persistent notification
+                localStorage.setItem('cms_force_refresh', JSON.stringify(message));
+                
+                // Make a cache-busting request to ensure server has latest data
+                const response = await fetch(`/api/get-config?t=${Date.now()}&force=true`, {
+                    method: 'GET',
+                    headers: {
+                        'Cache-Control': 'no-cache, no-store, must-revalidate',
+                        'Pragma': 'no-cache'
+                    }
+                });
+                
+                if (response.ok) {
+                    showAlert('✅ Frontend refresh signal sent! Open frontend windows should update immediately.', 'success');
+                    console.log('✅ Frontend refresh triggered successfully');
+                } else {
+                    showAlert('⚠️ Frontend refresh triggered, changes may take a moment to appear.', 'info');
+                }
+                
+                // Clean up localStorage after a brief delay
+                setTimeout(() => {
+                    localStorage.removeItem('cms_force_refresh');
+                }, 5000);
+                
+            } catch (error) {
+                console.error('Error refreshing frontend:', error);
+                showAlert('⚠️ Frontend refresh triggered, changes may take a moment to appear.', 'info');
+            }
         }
 
         // Initialize
