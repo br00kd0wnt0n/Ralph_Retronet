@@ -8,9 +8,9 @@
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self';">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' *; frame-src *;">
     <meta http-equiv="X-Content-Type-Options" content="nosniff">
-    <meta http-equiv="X-Frame-Options" content="DENY">
+    <!-- X-Frame-Options should be set via HTTP header, not meta tag -->
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -22,7 +22,7 @@
             // Fallback CMS config loaded
         }
     </script>
-    <script src="./cms-config.js" onerror="console.error('Failed to load cms-config.js')"></script>
+    <script src="./cms-config-production.js?v=2" onerror="console.warn('⚠️ Failed to load cms-config-production.js, falling back to cms-config.js'); var fallbackScript = document.createElement('script'); fallbackScript.src = './cms-config.js?v=2'; fallbackScript.onerror = function() { console.error('❌ Failed to load cms-config.js fallback'); }; document.head.appendChild(fallbackScript);"></script>
     <script src="./api-integration.js" onerror="console.error('Failed to load api-integration.js')"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Courier+Prime:ital,wght@0,400;0,700;1,400&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap');
@@ -611,12 +611,12 @@
         
         .desktop-icons {
             position: absolute;
-            right: 20px;
+            right: 16px;
             top: 20px;
             display: grid;
-            grid-template-columns: repeat(2, 100px);
+            grid-template-columns: repeat(2, 120px);
             grid-auto-rows: 100px;
-            gap: 20px;
+            gap: 16px;
             height: calc(100vh - 80px);
             overflow-y: auto;
             overflow-x: hidden;
@@ -631,6 +631,7 @@
             padding: 8px;
             border: 2px solid transparent;
             touch-action: manipulation;
+            width: 120px;
         }
         
         .icon:hover, .icon:active {
@@ -658,9 +659,12 @@
             font-weight: 400;
             color: var(--white);
             text-shadow: 1px 1px 2px var(--black);
-            word-break: break-word;
+            white-space: nowrap;
             line-height: 1.3;
             text-align: center;
+            width: 120px;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
         
         /* New content indicator */
@@ -696,7 +700,7 @@
             transform: translate(-50%, -50%);
             width: 20vw;
             height: auto;
-            z-index: -1;
+            z-index: 10;
             background: transparent;
             color: #ffffff;
             font-family: 'Courier New', monospace;
@@ -4870,6 +4874,256 @@
             background: linear-gradient(135deg, #ff1493 0%, #e6007a 100%);
             transform: translateY(-1px);
         }
+        
+        /* Trendspotting Styles */
+        .trendspotting-dashboard .window-content {
+            background: #000000 !important;
+            color: #ffffff !important;
+            font-family: 'Space Mono', monospace !important;
+            padding: 0 !important;
+            overflow: hidden;
+        }
+        
+        .trendspotting-dashboard .window-content::before {
+            display: none !important;
+        }
+        
+        .trendspotting-container {
+            width: 100%;
+            height: 100%;
+            background: #000;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .trendspotting-main-layout {
+            display: flex;
+            height: calc(100% - 100px);
+            position: relative;
+        }
+        
+        .trendspotting-office-section {
+            flex: 1;
+            position: relative;
+            overflow: hidden;
+            border-right: 2px solid var(--ralph-orange);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .trendspotting-office-section:last-child {
+            border-right: none;
+        }
+        
+        .trendspotting-office-section:hover {
+            flex: 1.2;
+            background: rgba(241, 101, 36, 0.1);
+        }
+        
+        .trendspotting-office-label {
+            position: absolute;
+            writing-mode: vertical-rl;
+            text-orientation: mixed;
+            left: 10px;
+            top: 10px;
+            font-size: 18px;
+            font-weight: bold;
+            color: var(--ralph-orange);
+            letter-spacing: 8px;
+            text-transform: uppercase;
+            z-index: 10;
+        }
+        
+        .trendspotting-office-content {
+            padding: 20px;
+            padding-left: 50px;
+            height: 100%;
+            overflow-y: auto;
+            overflow-x: hidden;
+            scrollbar-width: thin;
+            scrollbar-color: var(--ralph-orange) transparent;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .trendspotting-office-content::-webkit-scrollbar {
+            width: 6px;
+        }
+        
+        .trendspotting-office-content::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        
+        .trendspotting-office-content::-webkit-scrollbar-thumb {
+            background: var(--ralph-orange);
+            border-radius: 3px;
+        }
+        
+        .trendspotting-playlist-section {
+            margin-bottom: 30px;
+            flex-shrink: 0;
+        }
+        
+        .trendspotting-playlist-title {
+            font-size: 14px;
+            color: var(--ralph-pink);
+            margin-bottom: 10px;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+        
+        .trendspotting-playlist-item {
+            margin-bottom: 8px;
+            padding: 8px;
+            background: rgba(255, 255, 255, 0.05);
+            border-left: 3px solid var(--ralph-blue);
+            transition: all 0.2s ease;
+            font-size: 12px;
+        }
+        
+        .trendspotting-playlist-item:hover {
+            background: rgba(49, 189, 191, 0.2);
+            border-left-color: var(--ralph-pink);
+            padding-left: 15px;
+        }
+        
+        .trendspotting-song-title {
+            color: #fff;
+            margin-bottom: 2px;
+        }
+        
+        .trendspotting-song-artist {
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 11px;
+        }
+        
+        .trendspotting-trends-section {
+            margin-top: 0;
+            flex-shrink: 0;
+        }
+        
+        .trendspotting-trends-title {
+            font-size: 14px;
+            color: var(--ralph-green);
+            margin-bottom: 10px;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+        
+        .trendspotting-trend-item {
+            margin-bottom: 10px;
+            padding: 10px;
+            background: rgba(68, 182, 88, 0.1);
+            border: 1px solid var(--ralph-green);
+            font-size: 12px;
+            line-height: 1.4;
+            transition: all 0.2s ease;
+        }
+        
+        .trendspotting-trend-item:hover {
+            background: rgba(68, 182, 88, 0.2);
+            transform: translateX(5px);
+        }
+        
+        .trendspotting-trend-category {
+            color: var(--ralph-yellow);
+            font-weight: bold;
+            display: inline-block;
+            margin-right: 5px;
+        }
+        
+        .trendspotting-trend-description {
+            color: rgba(255, 255, 255, 0.8);
+        }
+        
+        .trendspotting-title-bar {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 100px;
+            background: var(--ralph-orange);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 40px;
+        }
+        
+        .trendspotting-main-title {
+            font-size: 72px;
+            font-weight: bold;
+            color: #fff;
+            letter-spacing: 2px;
+            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+        }
+        
+        .trendspotting-description-box {
+            background: var(--ralph-orange);
+            color: #000;
+            padding: 10px 15px;
+            border: 1px solid #000;
+            border-radius: 0;
+            font-size: 12px;
+            line-height: 1.4;
+            max-width: 200px;
+            font-family: 'Space Mono', monospace;
+            font-weight: 500;
+        }
+        
+        .trendspotting-last-updated {
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.8);
+            margin-left: auto;
+            margin-right: 20px;
+        }
+        
+        /* Windows 95 style button effects */
+        .win95-button:active {
+            border-color: #808080 #ffffff #ffffff #808080 !important;
+        }
+        
+        .win95-button:hover {
+            background: var(--ralph-pink) !important;
+            color: white !important;
+        }
+        
+        /* Profile panel specific styles */
+        #userProfile {
+            /* z-index managed by JavaScript */
+        }
+        
+        #userProfile .window-content {
+            background: #c0c0c0 !important;
+            padding: 15px !important;
+            overflow: visible !important;
+            height: calc(100% - 30px);
+        }
+        
+        #userProfile .profile-section {
+            height: 100%;
+            overflow: visible;
+        }
+        
+        #userProfile input[type="checkbox"] {
+            width: 13px;
+            height: 13px;
+            cursor: pointer;
+        }
+        
+        #userProfile .win95-checkbox-label {
+            margin-bottom: 8px !important;
+        }
+        
+        #userProfile .win95-checkbox-label:hover {
+            background: rgba(0, 0, 128, 0.1);
+        }
+        
+        .win95-select:focus {
+            outline: 1px dotted #000;
+            outline-offset: -1px;
+        }
     </style>
 </head>
 <body>
@@ -5323,7 +5577,7 @@
                         <!-- Main Headline -->
                         <div class="main-headline" id="mainHeadline">
                             <div class="headline-story" onclick="expandStory('main', 'main-1')">
-                                <img src="https://via.placeholder.com/600x300/EB008B/FFFFFF?text=RALPH+Tokyo+Expansion" alt="RALPH Tokyo Expansion" class="headline-image">
+                                <div class="placeholder-image headline-image" style="background: #EB008B; color: white; display: flex; align-items: center; justify-content: center; font-weight: bold; width: 600px; height: 300px;">RALPH Tokyo Expansion</div>
                                 <div class="headline-content">
                                     <h1 class="headline-title">RALPH Announces Major Expansion with New Tokyo Office</h1>
                                     <p class="headline-excerpt">The creative powerhouse reveals plans for a significant expansion of their Tokyo operations, adding 50 new positions across creative, strategy, and production teams as they prepare for increased Asian market focus.</p>
@@ -5337,7 +5591,7 @@
                         <!-- Secondary Stories Grid -->
                         <div class="secondary-stories" id="secondaryStories">
                             <div class="story-card" onclick="expandStory('secondary', 'secondary-1')">
-                                <img src="https://via.placeholder.com/400x200/31BDBF/FFFFFF?text=Award+Win" alt="Award Win" class="story-image">
+                                <div class="placeholder-image story-image" style="background: #31BDBF; color: white; display: flex; align-items: center; justify-content: center; font-weight: bold; width: 400px; height: 200px;">Award Win</div>
                                 <div class="story-content">
                                     <h3 class="story-title">Award Win: Best Digital Campaign</h3>
                                     <p class="story-excerpt">RALPH's groundbreaking campaign for BeReal takes home top honors at the Digital Marketing Excellence Awards.</p>
@@ -5346,7 +5600,7 @@
                             </div>
                             
                             <div class="story-card" onclick="expandStory('secondary', 'secondary-2')">
-                                <img src="https://via.placeholder.com/400x200/F16524/FFFFFF?text=Streaming+Partnership" alt="Streaming Partnership" class="story-image">
+                                <div class="placeholder-image story-image" style="background: #F16524; color: white; display: flex; align-items: center; justify-content: center; font-weight: bold; width: 400px; height: 200px;">Streaming Partnership</div>
                                 <div class="story-content">
                                     <h3 class="story-title">New Partnership with Streaming Giant</h3>
                                     <p class="story-excerpt">RALPH secures major deal to create original content series for leading streaming platform, marking entry into entertainment production.</p>
@@ -5355,7 +5609,7 @@
                             </div>
                             
                             <div class="story-card" onclick="expandStory('secondary', 'secondary-3')">
-                                <img src="https://via.placeholder.com/400x200/44B658/FFFFFF?text=Record+Q4" alt="Record Q4" class="story-image">
+                                <div class="placeholder-image story-image" style="background: #44B658; color: white; display: flex; align-items: center; justify-content: center; font-weight: bold; width: 400px; height: 200px;">Record Q4</div>
                                 <div class="story-content">
                                     <h3 class="story-title">Q4 Client Acquisition Breaks Records</h3>
                                     <p class="story-excerpt">RALPH closes 2024 with the highest quarterly client acquisition in company history, adding 15 new accounts globally.</p>
@@ -5364,7 +5618,7 @@
                             </div>
                             
                             <div class="story-card" onclick="expandStory('secondary', 'secondary-4')">
-                                <img src="https://via.placeholder.com/400x200/FBC000/FFFFFF?text=AI+Tools" alt="AI Tools" class="story-image">
+                                <div class="placeholder-image story-image" style="background: #FBC000; color: white; display: flex; align-items: center; justify-content: center; font-weight: bold; width: 400px; height: 200px;">AI Tools</div>
                                 <div class="story-content">
                                     <h3 class="story-title">Innovation Lab Launches AI-Powered Tools</h3>
                                     <p class="story-excerpt">RALPH's innovation team unveils new AI-assisted creative workflow tools designed to enhance, not replace, human creativity.</p>
@@ -6006,6 +6260,10 @@
                         <span>RALPH Assistant</span>
                     </div>
                     <div class="start-menu-separator"></div>
+                    <div class="start-menu-item" onclick="openUserProfile(); toggleStartMenu();">
+                        <span class="start-menu-icon">👤</span>
+                        <span>User Profile</span>
+                    </div>
                     <div class="start-menu-item" onclick="openAdminLogin(); toggleStartMenu();">
                         <span class="start-menu-icon">⚙️</span>
                         <span>Admin Panel</span>
@@ -6089,6 +6347,264 @@
             <div class="volume-section">
                 <span class="volume-label">VOL</span>
                 <input type="range" class="volume-slider" min="0" max="100" value="70" oninput="setVolume(this.value)" id="volumeSlider">
+            </div>
+        </div>
+        
+        <!-- Trendspotting Window -->
+        <div id="trendspotting" class="window trendspotting-dashboard" style="top: 70px; left: 150px; width: 1000px; height: 700px;">
+            <div class="window-header">
+                <div class="window-title">🎵 Trendspotting</div>
+                <div class="window-controls">
+                    <button class="window-button" onclick="minimizeWindow('trendspotting')">_</button>
+                    <button class="window-button" onclick="maximizeWindow('trendspotting')">□</button>
+                    <button class="window-button" onclick="closeWindow('trendspotting')">X</button>
+                </div>
+            </div>
+            <div class="window-content">
+                <div class="trendspotting-container">
+                    <div class="trendspotting-main-layout">
+                        <!-- Los Angeles Office -->
+                        <div class="trendspotting-office-section" data-office="la">
+                            <div class="trendspotting-office-label">LOS ANGELES</div>
+                            <div class="trendspotting-office-content">
+                                <div class="trendspotting-playlist-section">
+                                    <div class="trendspotting-playlist-title">Now Playing</div>
+                                    <div id="trendspotting-la-playlist">
+                                        <!-- Playlist items will be loaded from CMS -->
+                                    </div>
+                                </div>
+                                
+                                <div class="trendspotting-trends-section">
+                                    <div class="trendspotting-trends-title">Office Trends</div>
+                                    <div id="trendspotting-la-trends">
+                                        <!-- Trend items will be loaded from CMS -->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- New York Office -->
+                        <div class="trendspotting-office-section" data-office="ny">
+                            <div class="trendspotting-office-label">NEW YORK</div>
+                            <div class="trendspotting-office-content">
+                                <div class="trendspotting-playlist-section">
+                                    <div class="trendspotting-playlist-title">Now Playing</div>
+                                    <div id="trendspotting-ny-playlist">
+                                        <!-- Playlist items will be loaded from CMS -->
+                                    </div>
+                                </div>
+                                
+                                <div class="trendspotting-trends-section">
+                                    <div class="trendspotting-trends-title">Office Trends</div>
+                                    <div id="trendspotting-ny-trends">
+                                        <!-- Trend items will be loaded from CMS -->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- London Office -->
+                        <div class="trendspotting-office-section" data-office="lon">
+                            <div class="trendspotting-office-label">LONDON</div>
+                            <div class="trendspotting-office-content">
+                                <div class="trendspotting-playlist-section">
+                                    <div class="trendspotting-playlist-title">Now Playing</div>
+                                    <div id="trendspotting-lon-playlist">
+                                        <!-- Playlist items will be loaded from CMS -->
+                                    </div>
+                                </div>
+                                
+                                <div class="trendspotting-trends-section">
+                                    <div class="trendspotting-trends-title">Office Trends</div>
+                                    <div id="trendspotting-lon-trends">
+                                        <!-- Trend items will be loaded from CMS -->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Mumbai Office -->
+                        <div class="trendspotting-office-section" data-office="mum">
+                            <div class="trendspotting-office-label">MUMBAI</div>
+                            <div class="trendspotting-office-content">
+                                <div class="trendspotting-playlist-section">
+                                    <div class="trendspotting-playlist-title">Now Playing</div>
+                                    <div id="trendspotting-mum-playlist">
+                                        <!-- Playlist items will be loaded from CMS -->
+                                    </div>
+                                </div>
+                                
+                                <div class="trendspotting-trends-section">
+                                    <div class="trendspotting-trends-title">Office Trends</div>
+                                    <div id="trendspotting-mum-trends">
+                                        <!-- Trend items will be loaded from CMS -->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Tokyo Office -->
+                        <div class="trendspotting-office-section" data-office="tok">
+                            <div class="trendspotting-office-label">TOKYO</div>
+                            <div class="trendspotting-office-content">
+                                <div class="trendspotting-playlist-section">
+                                    <div class="trendspotting-playlist-title">Now Playing</div>
+                                    <div id="trendspotting-tok-playlist">
+                                        <!-- Playlist items will be loaded from CMS -->
+                                    </div>
+                                </div>
+                                
+                                <div class="trendspotting-trends-section">
+                                    <div class="trendspotting-trends-title">Office Trends</div>
+                                    <div id="trendspotting-tok-trends">
+                                        <!-- Trend items will be loaded from CMS -->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="trendspotting-title-bar">
+                        <div class="trendspotting-main-title">Trendspotting</div>
+                        <div class="trendspotting-description-box">What Ralphies<br>worldwide<br>love this week</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- User Profile Panel -->
+        <div id="userProfile" class="window" style="top: 80px; left: 50%; transform: translateX(-50%); width: 500px; height: 680px;">
+            <div class="window-header">
+                <div class="window-title">👤 User Profile Settings</div>
+                <div class="window-controls">
+                    <button class="window-button" onclick="minimizeWindow('userProfile')">_</button>
+                    <button class="window-button" onclick="maximizeWindow('userProfile')">□</button>
+                    <button class="window-button" onclick="closeWindow('userProfile')">X</button>
+                </div>
+            </div>
+            <div class="window-content" style="padding: 20px; background: #c0c0c0;">
+                <div class="profile-section">
+                    <h3 style="font-family: 'Space Mono', monospace; font-size: 16px; margin-bottom: 15px; border-bottom: 2px solid #808080; padding-bottom: 8px;">
+                        PROFILE PREFERENCES
+                    </h3>
+                    
+                    <!-- User Info Display -->
+                    <div class="profile-field-group" style="margin-bottom: 20px; padding: 10px; background: #ffffff; border: 2px solid; border-color: #808080 #ffffff #ffffff #808080; position: relative;">
+                        <div style="font-size: 13px; font-weight: bold; margin-bottom: 10px;">USER INFO:</div>
+                        <div id="officeFlag" style="position: absolute; top: 10px; right: 10px; font-size: 24px; display: none;"></div>
+                        <div style="margin-bottom: 8px;">
+                            <span style="font-size: 12px; color: #808080;">Email:</span>
+                            <span style="font-size: 12px; margin-left: 10px;">brook@ralph.world</span>
+                        </div>
+                        <div style="margin-bottom: 8px;">
+                            <span style="font-size: 12px; color: #808080;">Full Name:</span>
+                            <span style="font-size: 12px; margin-left: 10px;">Brook Downton</span>
+                        </div>
+                        <div style="display: flex; align-items: center;">
+                            <span style="font-size: 12px; color: #808080; margin-right: 10px;">Preferred Name:</span>
+                            <input type="text" id="preferredName" value="Brook" style="
+                                flex: 1;
+                                padding: 4px;
+                                background: white;
+                                border: 1px solid #808080;
+                                font-family: 'Space Mono', monospace;
+                                font-size: 12px;
+                            " placeholder="Enter preferred name">
+                        </div>
+                    </div>
+                    
+                    <!-- Office Selection -->
+                    <div class="profile-field-group" style="margin-bottom: 25px;">
+                        <label style="display: block; font-weight: bold; margin-bottom: 10px; font-size: 14px;">
+                            SELECT YOUR OFFICE:
+                        </label>
+                        <div class="win95-select-wrapper" style="position: relative; display: inline-block;">
+                            <select id="userOffice" class="win95-select" style="
+                                padding: 6px 30px 6px 8px;
+                                background: white;
+                                border: 2px solid;
+                                border-color: #808080 #ffffff #ffffff #808080;
+                                font-family: 'Space Mono', monospace;
+                                font-size: 13px;
+                                min-width: 200px;
+                                appearance: none;
+                                cursor: pointer;
+                            ">
+                                <option value="">-- Select Office --</option>
+                                <option value="la">Los Angeles</option>
+                                <option value="ny">New York</option>
+                                <option value="lon">London</option>
+                                <option value="mum">Mumbai</option>
+                                <option value="tok">Tokyo</option>
+                            </select>
+                            <div class="win95-select-arrow" style="
+                                position: absolute;
+                                right: 4px;
+                                top: 50%;
+                                transform: translateY(-50%);
+                                width: 16px;
+                                height: 16px;
+                                background: #c0c0c0;
+                                border: 2px solid;
+                                border-color: #ffffff #808080 #808080 #ffffff;
+                                pointer-events: none;
+                                display: flex;
+                                align-items: center;
+                                justify-content: center;
+                                font-size: 10px;
+                            ">▼</div>
+                        </div>
+                    </div>
+                    
+                    <!-- Content Priorities -->
+                    <div class="profile-field-group" style="margin-bottom: 25px;">
+                        <label style="display: block; font-weight: bold; margin-bottom: 10px; font-size: 14px;">
+                            CONTENT PRIORITIES:
+                        </label>
+                        <div style="background: white; border: 2px solid; border-color: #808080 #ffffff #ffffff #808080; padding: 10px;">
+                            <div class="win95-checkbox-group">
+                                <label class="win95-checkbox-label" style="display: flex; align-items: center; margin-bottom: 8px; cursor: pointer;">
+                                    <input type="checkbox" id="priority-studio" value="studio" style="margin-right: 8px;">
+                                    <span style="font-size: 13px;">Studio/Design</span>
+                                </label>
+                                <label class="win95-checkbox-label" style="display: flex; align-items: center; margin-bottom: 8px; cursor: pointer;">
+                                    <input type="checkbox" id="priority-strategy" value="strategy" style="margin-right: 8px;">
+                                    <span style="font-size: 13px;">Strategy</span>
+                                </label>
+                                <label class="win95-checkbox-label" style="display: flex; align-items: center; margin-bottom: 8px; cursor: pointer;">
+                                    <input type="checkbox" id="priority-creative" value="creative" style="margin-right: 8px;">
+                                    <span style="font-size: 13px;">Creative</span>
+                                </label>
+                                <label class="win95-checkbox-label" style="display: flex; align-items: center; margin-bottom: 8px; cursor: pointer;">
+                                    <input type="checkbox" id="priority-tech" value="tech" style="margin-right: 8px;">
+                                    <span style="font-size: 13px;">Tech/Innovation</span>
+                                </label>
+                                <label class="win95-checkbox-label" style="display: flex; align-items: center; margin-bottom: 8px; cursor: pointer;">
+                                    <input type="checkbox" id="priority-data" value="data" style="margin-right: 8px;">
+                                    <span style="font-size: 13px;">Data</span>
+                                </label>
+                                <label class="win95-checkbox-label" style="display: flex; align-items: center; margin-bottom: 0; cursor: pointer;">
+                                    <input type="checkbox" id="priority-social" value="social" style="margin-right: 8px;">
+                                    <span style="font-size: 13px;">Social</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Action Button -->
+                    <div style="display: flex; justify-content: center; margin-top: 25px;">
+                        <button class="win95-button" onclick="saveUserProfile()" style="
+                            padding: 10px 40px;
+                            background: #c0c0c0;
+                            border: 2px solid;
+                            border-color: #ffffff #808080 #808080 #ffffff;
+                            font-family: 'Space Mono', monospace;
+                            font-size: 14px;
+                            font-weight: bold;
+                            cursor: pointer;
+                        ">SAVE PREFERENCES</button>
+                    </div>
+                </div>
             </div>
         </div>
         
@@ -6780,12 +7296,13 @@
                 const newTop = element.offsetTop - pos2;
                 const newLeft = element.offsetLeft - pos1;
                 
-                // Boundary checking
-                const maxTop = window.innerHeight - element.offsetHeight;
-                const maxLeft = window.innerWidth - element.offsetWidth;
+                // Boundary checking - keep window within viewport
+                const maxTop = window.innerHeight - element.offsetHeight - 40; // Leave space at bottom
+                const maxLeft = window.innerWidth - element.offsetWidth - 20; // Leave space at right
+                const minLeft = 20; // Minimum left position to prevent going off-screen
                 
                 element.style.top = Math.max(0, Math.min(newTop, maxTop)) + "px";
-                element.style.left = Math.max(0, Math.min(newLeft, maxLeft)) + "px";
+                element.style.left = Math.max(minLeft, Math.min(newLeft, maxLeft)) + "px";
             };
             
             const closeDragElement = () => {
@@ -7980,6 +8497,9 @@
                         let windowIcon = moduleConfig.icon;
                         if (moduleConfig.iconType === 'rnn-logo') {
                             title.innerHTML = `📢 <span class="rnn-logo">RNN</span> ${windowTitleText}`;
+                        } else if (moduleConfig.iconType === 'text') {
+                            const color = moduleConfig.iconColor || '#000';
+                            title.innerHTML = `<span style="color: ${color}; font-weight: bold;">${moduleConfig.icon}</span> ${windowTitleText}`;
                         } else {
                             title.textContent = `${windowIcon} ${windowTitleText}`;
                         }
@@ -8022,6 +8542,8 @@
                         updateLinksContent(windowElement, moduleConfig.content);
                     } else if (moduleId === 'pitchPlease' && moduleConfig.content) {
                         updatePitchPleaseContent(windowElement, moduleConfig.content);
+                    } else if (moduleId === 'trendspotting' && moduleConfig.content) {
+                        updateTrendspottingContent(windowElement, moduleConfig.content);
                     }
                 }
             });
@@ -8457,7 +8979,7 @@ The Tokyo office, currently located in Level 11, Aoyama Palacio Tower, will be r
                 author: 'RALPH Communications Team',
                 date: 'December 24, 2024',
                 category: 'Company News',
-                image: 'https://via.placeholder.com/600x300/EB008B/FFFFFF?text=RALPH+Tokyo+Expansion'
+                image: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAwIiBoZWlnaHQ9IjMwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iNjAwIiBoZWlnaHQ9IjMwMCIgZmlsbD0iI0VCMDAzQiIvPjx0ZXh0IHg9IjUwJSIgeT0iNTAlIiBkb21pbmFudC1iYXNlbGluZT0ibWlkZGxlIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0ibW9ub3NwYWNlIiBmb250LXNpemU9IjI0IiBmaWxsPSJ3aGl0ZSI+UkFMUEggVG9reW8gRXhwYW5zaW9uPC90ZXh0Pjwvc3ZnPg=='
             },
             'secondary-1': {
                 id: 'secondary-1',
@@ -8469,7 +8991,7 @@ The winning campaign featured user-generated content, interactive experiences, a
 The campaign included a series of unfiltered moments from real users, celebrity partnerships that felt genuine, and interactive installations in major cities worldwide. The strategy focused on celebrating imperfection and real moments over polished content.`,
                 author: 'Awards Team',
                 date: 'December 22, 2024',
-                image: 'https://via.placeholder.com/400x200/31BDBF/FFFFFF?text=Award+Win'
+                image: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iNDAwIiBoZWlnaHQ9IjIwMCIgZmlsbD0iIzMxQkRCRiIvPjx0ZXh0IHg9IjUwJSIgeT0iNTAlIiBkb21pbmFudC1iYXNlbGluZT0ibWlkZGxlIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0ibW9ub3NwYWNlIiBmb250LXNpemU9IjI0IiBmaWxsPSJ3aGl0ZSI+QXdhcmQgV2luPC90ZXh0Pjwvc3ZnPg=='
             },
             'secondary-2': {
                 id: 'secondary-2', 
@@ -8481,7 +9003,7 @@ The campaign included a series of unfiltered moments from real users, celebrity 
 The first series will launch in early 2025 and will feature documentaries about creative processes, behind-the-scenes content from major campaigns, and original series that showcase innovative brand partnerships.`,
                 author: 'Business Development',
                 date: 'December 20, 2024',
-                image: 'https://via.placeholder.com/400x200/F16524/FFFFFF?text=Streaming+Partnership'
+                image: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iNDAwIiBoZWlnaHQ9IjIwMCIgZmlsbD0iI0YxNjUyNCIvPjx0ZXh0IHg9IjUwJSIgeT0iNTAlIiBkb21pbmFudC1iYXNlbGluZT0ibWlkZGxlIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0ibW9ub3NwYWNlIiBmb250LXNpemU9IjE4IiBmaWxsPSJ3aGl0ZSI+U3RyZWFtaW5nIFBhcnRuZXJzaGlwPC90ZXh0Pjwvc3ZnPg=='
             },
             'sidebar-1': {
                 id: 'sidebar-1',
@@ -9288,6 +9810,71 @@ This year's theme is "Creative Connections" and will include virtual rooms for e
             }
         }
 
+        function updateTrendspottingContent(windowElement, content) {
+            console.log('🔄 Updating Trendspotting content:', content);
+            
+            if (!content || !content.offices) {
+                console.log('⚠️ No Trendspotting content provided');
+                return;
+            }
+            
+            // Update timestamp
+            const updateTime = windowElement.querySelector('#trendspottingUpdateTime');
+            if (updateTime) {
+                const now = new Date();
+                const options = { 
+                    month: 'short', 
+                    day: 'numeric', 
+                    hour: '2-digit', 
+                    minute: '2-digit' 
+                };
+                updateTime.textContent = now.toLocaleString('en-US', options);
+            }
+            
+            // Update each office's content
+            Object.entries(content.offices).forEach(([officeKey, officeData]) => {
+                // Update playlist
+                const playlistContainer = document.getElementById(`trendspotting-${officeKey}-playlist`);
+                if (playlistContainer && officeData.playlist) {
+                    playlistContainer.innerHTML = '';
+                    officeData.playlist.forEach(song => {
+                        const songEl = document.createElement('div');
+                        songEl.className = 'trendspotting-playlist-item';
+                        songEl.innerHTML = `
+                            <div class="trendspotting-song-title">${song.title}</div>
+                            <div class="trendspotting-song-artist">${song.artist}</div>
+                        `;
+                        playlistContainer.appendChild(songEl);
+                    });
+                }
+                
+                // Update trends
+                const trendsContainer = document.getElementById(`trendspotting-${officeKey}-trends`);
+                if (trendsContainer && officeData.trends) {
+                    trendsContainer.innerHTML = '';
+                    officeData.trends.forEach(trend => {
+                        const trendEl = document.createElement('div');
+                        trendEl.className = 'trendspotting-trend-item';
+                        trendEl.innerHTML = `
+                            <span class="trendspotting-trend-category">${trend.category}:</span>
+                            <span class="trendspotting-trend-description">${trend.description}</span>
+                        `;
+                        trendsContainer.appendChild(trendEl);
+                    });
+                }
+            });
+            
+            // Add interactive hover effects
+            windowElement.querySelectorAll('.trendspotting-office-section').forEach(section => {
+                section.addEventListener('mouseenter', function() {
+                    this.style.filter = 'brightness(1.1)';
+                });
+                
+                section.addEventListener('mouseleave', function() {
+                    this.style.filter = 'brightness(1)';
+                });
+            });
+        }
 
         function updateSuggestionsContent(windowElement, content) {
             console.log('🔄 Updating redesigned Suggestions module with CMS content');
@@ -10078,6 +10665,7 @@ This year's theme is "Creative Connections" and will include virtual rooms for e
             
             // Keep Ralph.World icon but clear other icons
             const ralphWorldIcon = container.querySelector('[onclick="openRalphWorld()"]');
+            const clonedRalphWorldIcon = ralphWorldIcon ? ralphWorldIcon.cloneNode(true) : null;
             container.innerHTML = '';
             
             // Add module icons from configuration
@@ -10100,10 +10688,13 @@ This year's theme is "Creative Connections" and will include virtual rooms for e
                         label = label.replace(/\s+/g, ' ').trim(); // Clean up spaces
                     }
                     
-                    // Handle special icon types (like RNN logo)
+                    // Handle special icon types (like RNN logo and text icons)
                     let iconDisplay = moduleConfig.icon;
                     if (moduleConfig.iconType === 'rnn-logo') {
                         iconDisplay = '<span class="rnn-logo">RNN</span>';
+                    } else if (moduleConfig.iconType === 'text') {
+                        const color = moduleConfig.iconColor || '#000';
+                        iconDisplay = `<span style="color: ${color}; font-weight: bold; font-size: 24px;">${moduleConfig.icon}</span>`;
                     }
                     
                     iconElement.innerHTML = `
@@ -10121,9 +10712,24 @@ This year's theme is "Creative Connections" and will include virtual rooms for e
                 }
             });
             
-            // Re-add Ralph.World icon at the end
-            if (ralphWorldIcon) {
-                container.appendChild(ralphWorldIcon);
+            // Always ensure Ralph.World icon exists at the end
+            if (clonedRalphWorldIcon) {
+                // Ensure the onclick event is properly attached after cloning
+                clonedRalphWorldIcon.onclick = openRalphWorld;
+                container.appendChild(clonedRalphWorldIcon);
+                console.log('✅ Ralph.World icon re-added with click handler');
+            } else {
+                // Create Ralph.World icon if it didn't exist before
+                console.log('🔧 Creating fresh Ralph.World icon (no existing icon found)');
+                const freshRalphWorldIcon = document.createElement('div');
+                freshRalphWorldIcon.className = 'icon';
+                freshRalphWorldIcon.onclick = openRalphWorld;
+                freshRalphWorldIcon.innerHTML = `
+                    <div class="icon-image">🌍</div>
+                    <div class="icon-label">Ralph.World</div>
+                `;
+                container.appendChild(freshRalphWorldIcon);
+                console.log('✅ Fresh Ralph.World icon created with click handler');
             }
             
             console.log(`✅ Loaded ${Object.keys(AppState.config.modules).filter(id => AppState.config.modules[id].enabled).length} desktop icons`);
@@ -10131,6 +10737,7 @@ This year's theme is "Creative Connections" and will include virtual rooms for e
 
         // ASCII Art Animation
         function showAsciiIntro() {
+            console.log('🎨 Starting RALPH ASCII animation');
             const frames = [
                 `                                                                                                    
                                                                                                     
@@ -10516,12 +11123,14 @@ This year's theme is "Creative Connections" and will include virtual rooms for e
             asciiElement.className = 'ascii-intro';
             asciiElement.textContent = frames[0];
             document.body.appendChild(asciiElement);
+            console.log('🎨 ASCII element created and added to DOM', asciiElement);
 
             let currentFrame = 0;
             
             // Show first frame
             setTimeout(() => {
                 asciiElement.classList.add('show');
+                console.log('🎨 ASCII element should now be visible with opacity 1');
             }, 500);
 
             // Animate through frames (four times as fast as original)
@@ -10530,11 +11139,12 @@ This year's theme is "Creative Connections" and will include virtual rooms for e
                 if (currentFrame < frames.length) {
                     asciiElement.textContent = frames[currentFrame];
                 } else {
-                    // Animation complete, keep final frame static with no fade out
+                    // Animation complete, keep final frame permanently on desktop
                     clearInterval(frameInterval);
                     
                     // Show What's New window after animation completes
                     setTimeout(() => {
+                        console.log('🎨 ASCII animation complete, showing What\'s New');
                         showWhatsNew();
                     }, 1000);
                 }
@@ -10556,6 +11166,12 @@ This year's theme is "Creative Connections" and will include virtual rooms for e
             // Bring clicked window to front
             AppState.zIndex = Math.max(AppState.zIndex + 1, 15001);
             windowElement.style.zIndex = AppState.zIndex;
+        }
+
+        // Get next available z-index for new windows
+        function getNextWindowZIndex() {
+            AppState.zIndex = Math.max(AppState.zIndex + 1, 15001);
+            return AppState.zIndex;
         }
 
         // Create iframe window within desktop
@@ -10614,7 +11230,13 @@ This year's theme is "Creative Connections" and will include virtual rooms for e
                         style="width: 100%; height: 100%; border: none; background: white;"
                         frameborder="0"
                         allowfullscreen
-                        onerror="console.error('Iframe failed to load:', '${url}')">
+                        onload="console.log('✅ Iframe loaded successfully:', '${url}');"
+                        onerror="console.error('❌ Iframe failed to load:', '${url}');"
+                        onabort="console.warn('⚠️ Iframe loading aborted:', '${url}');">
+                        <p style="padding: 20px; text-align: center; font-family: 'Space Mono', monospace;">
+                            Loading ${title}...<br>
+                            <small>If content doesn't appear, the site may not support iframe embedding.</small>
+                        </p>
                     </iframe>
                 </div>
             `;
@@ -10632,6 +11254,65 @@ This year's theme is "Creative Connections" and will include virtual rooms for e
                 computedStyle: window.getComputedStyle(windowElement).display,
                 boundingRect: windowElement.getBoundingClientRect()
             });
+            
+            // Add iframe loading timeout and fallback option
+            const iframe = windowElement.querySelector('iframe');
+            let hasLoaded = false;
+            
+            console.log('🔍 Created iframe element:', {
+                exists: !!iframe,
+                src: iframe?.src,
+                srcAttribute: iframe?.getAttribute('src'),
+                currentUrl: url
+            });
+            
+            iframe.onload = () => {
+                hasLoaded = true;
+                console.log('✅ Iframe content loaded successfully');
+                console.log('🔍 Iframe details:', {
+                    src: iframe.src,
+                    readyState: iframe.readyState,
+                    contentWindow: !!iframe.contentWindow,
+                    width: iframe.offsetWidth,
+                    height: iframe.offsetHeight
+                });
+                
+                // Try to access iframe content (will fail if cross-origin)
+                try {
+                    const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
+                    console.log('🔍 Iframe document loaded:', !!iframeDoc);
+                    console.log('🔍 Iframe document title:', iframeDoc.title);
+                    console.log('🔍 Iframe document readyState:', iframeDoc.readyState);
+                } catch (e) {
+                    console.log('🔒 Cannot access iframe content (cross-origin):', e.message);
+                }
+            };
+            
+            iframe.onerror = (error) => {
+                console.error('❌ Iframe error event triggered:', error);
+                console.log('🔍 Error iframe details:', {
+                    src: iframe.src,
+                    readyState: iframe.readyState
+                });
+            };
+            
+            // If iframe doesn't load within 10 seconds, offer alternative
+            setTimeout(() => {
+                if (!hasLoaded) {
+                    console.warn('⚠️ Iframe took too long to load, adding fallback option');
+                    const fallbackButton = document.createElement('div');
+                    fallbackButton.innerHTML = `
+                        <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); text-align: center; background: rgba(255,255,255,0.95); padding: 20px; border-radius: 8px; font-family: 'Space Mono', monospace; box-shadow: 0 4px 12px rgba(0,0,0,0.3);">
+                            <p style="margin: 0 0 15px 0; color: #333;">Content not loading in iframe</p>
+                            <button onclick="window.open('${url}', '_blank'); closeIframeWindow('${windowId}');" 
+                                    style="background: #EB008B; color: white; border: none; padding: 10px 20px; border-radius: 4px; cursor: pointer; font-family: 'Space Mono', monospace; font-size: 14px;">
+                                Open in New Tab
+                            </button>
+                        </div>
+                    `;
+                    windowElement.querySelector('.window-content').appendChild(fallbackButton);
+                }
+            }, 10000);
             
             // Make draggable
             makeDraggable(windowElement);
@@ -10660,12 +11341,24 @@ This year's theme is "Creative Connections" and will include virtual rooms for e
         // Admin login functionality
         function openRalphWorld() {
             console.log('🌍 Opening Ralph.World...');
-            // Configuration loaded successfully
+            console.log('🔧 AppState.config available:', !!AppState.config);
+            console.log('🔧 AppState.config.system available:', !!AppState.config?.system);
             
             const url = AppState.config?.system?.ralphWorldUrl || 'https://ralph.world';
             console.log('🔗 Using URL:', url);
+            console.log('🔗 URL type:', typeof url);
+            console.log('🔗 URL length:', url.length);
+            console.log('🔗 URL starts with https:', url.startsWith('https://'));
+            console.log('🎯 About to call openIframeWindow with:', { url, title: 'Ralph.World - Company Website', width: 1000, height: 700 });
+            
+            // Test the URL directly first
+            console.log('🧪 Testing URL accessibility...');
+            fetch(url, { mode: 'no-cors' })
+                .then(() => console.log('✅ URL is accessible'))
+                .catch(err => console.error('❌ URL access failed:', err));
             
             openIframeWindow(url, 'Ralph.World - Company Website', 1000, 700);
+            console.log('✅ openIframeWindow call completed');
         }
         
         function openAdminLogin() {
@@ -10674,6 +11367,137 @@ This year's theme is "Creative Connections" and will include virtual rooms for e
             setTimeout(() => {
                 document.getElementById('adminUsername').focus();
             }, 100);
+        }
+        
+        // User Profile Functions
+        function openUserProfile() {
+            // Use the standard window opening pattern
+            openWindow('userProfile');
+            
+            // Center it horizontally, position near top  
+            const profileWindow = document.getElementById('userProfile');
+            if (profileWindow) {
+                const windowWidth = 500; // Match the width in the HTML
+                const centerLeft = (window.innerWidth - windowWidth) / 2;
+                profileWindow.style.left = centerLeft + 'px';
+                profileWindow.style.top = '80px';
+                profileWindow.style.transform = 'none';
+                
+                // Load existing profile data and set up event listeners
+                loadUserProfile();
+                
+                // Add office selection change handler
+                const officeSelect = document.getElementById('userOffice');
+                if (officeSelect) {
+                    officeSelect.addEventListener('change', updateOfficeFlag);
+                }
+            }
+        }
+        
+        function loadUserProfile() {
+            // Load saved profile from localStorage
+            const savedProfile = localStorage.getItem('userProfile');
+            if (savedProfile) {
+                const profile = JSON.parse(savedProfile);
+                
+                // Set office
+                const officeSelect = document.getElementById('userOffice');
+                if (officeSelect && profile.office) {
+                    officeSelect.value = profile.office;
+                    // Update flag display
+                    updateOfficeFlag();
+                }
+                
+                // Set content priorities
+                if (profile.priorities) {
+                    profile.priorities.forEach(priority => {
+                        const checkbox = document.getElementById(`priority-${priority}`);
+                        if (checkbox) {
+                            checkbox.checked = true;
+                        }
+                    });
+                }
+                
+                // Set preferred name
+                if (profile.preferredName) {
+                    const preferredNameElement = document.getElementById('preferredName');
+                    if (preferredNameElement) {
+                        preferredNameElement.value = profile.preferredName;
+                    }
+                }
+            }
+        }
+        
+        function updateOfficeFlag() {
+            const officeSelect = document.getElementById('userOffice');
+            const flagElement = document.getElementById('officeFlag');
+            
+            if (!officeSelect || !flagElement) return;
+            
+            const officeFlags = {
+                'la': '🇺🇸',
+                'ny': '🇺🇸', 
+                'lon': '🇬🇧',
+                'mum': '🇮🇳',
+                'tok': '🇯🇵'
+            };
+            
+            const selectedOffice = officeSelect.value;
+            if (selectedOffice && officeFlags[selectedOffice]) {
+                flagElement.textContent = officeFlags[selectedOffice];
+                flagElement.style.display = 'block';
+            } else {
+                flagElement.style.display = 'none';
+            }
+        }
+        
+        function saveUserProfile() {
+            const profile = {
+                office: document.getElementById('userOffice').value,
+                priorities: [],
+                preferredName: document.getElementById('preferredName').value,
+                savedAt: new Date().toISOString()
+            };
+            
+            // Get checked priorities
+            const priorityCheckboxes = document.querySelectorAll('#userProfile input[type="checkbox"]:checked');
+            priorityCheckboxes.forEach(checkbox => {
+                profile.priorities.push(checkbox.value);
+            });
+            
+            // Save to localStorage
+            localStorage.setItem('userProfile', JSON.stringify(profile));
+            
+            // Show confirmation
+            showNotification('✅ Profile preferences saved!');
+            
+            // Apply preferences (future implementation)
+            applyUserPreferences(profile);
+            
+            // Close window
+            setTimeout(() => {
+                closeWindow('userProfile');
+            }, 1000);
+        }
+        
+        function applyUserPreferences(profile) {
+            // This function can be expanded to:
+            // - Filter content based on priorities
+            // - Show office-specific content first
+            // - Customize dashboard layout
+            // - Update timezone display
+            console.log('User preferences applied:', profile);
+            
+            // Update What's New content based on preferences (placeholder)
+            if (profile.office) {
+                // Could filter news by office location
+                console.log(`Filtering content for ${profile.office} office`);
+            }
+            
+            if (profile.priorities && profile.priorities.length > 0) {
+                // Could prioritize content modules
+                console.log(`Content priorities: ${profile.priorities.join(', ')}`);
+            }
         }
 
         // SECURITY: Admin credentials removed for production
@@ -11613,7 +12437,7 @@ This year's theme is "Creative Connections" and will include virtual rooms for e
                 AppState.windows = {};
                 const allWindows = ['suggestions', 'announcements', 'links', 'innovation', 'resources', 
                                    'newBiz', 'premieres', 'shoutouts', 'articles', 
-                                   'whatsNew', 'ralphNews', 'chatbot', 'info'];
+                                   'whatsNew', 'ralphNews', 'chatbot', 'info', 'trendspotting', 'userProfile'];
                 allWindows.forEach(windowId => {
                     const windowEl = document.getElementById(windowId);
                     if (windowEl) {
@@ -11658,15 +12482,15 @@ This year's theme is "Creative Connections" and will include virtual rooms for e
                 // Load content immediately
                 loadContentFromCMS();
                 
-                // Open What's New window by default and populate it
-                setTimeout(() => {
-                    // Generate and populate What's New content
-                    const whatsNewContent = document.getElementById('whatsNewContent');
-                    if (whatsNewContent) {
-                        whatsNewContent.innerHTML = generateWhatsNewContent();
-                    }
-                    openWindow('whatsNew');
-                }, 100);
+                // Show ASCII intro sequence (since boot sequence is bypassed)
+                // What's New will be shown automatically after ASCII completes
+                showAsciiIntro();
+                
+                // Setup essential event handlers even in development mode
+                setupEssentialEventHandlers();
+                
+                // Initialize system components
+                initializeSystem();
                 
                 console.log('🚀 Boot screen disabled for development - content loaded directly');
                 return; // Skip the rest of boot sequence
@@ -11683,10 +12507,19 @@ This year's theme is "Creative Connections" and will include virtual rooms for e
             AppState.intervals.push(clockInterval);
             updateClock();
             
+            // Setup essential event handlers
+            setupEssentialEventHandlers();
+            
+            // Initialize system components
+            initializeSystem();
+        }
+        
+        // Essential event handlers that work in both development and production modes
+        function setupEssentialEventHandlers() {
             // Handle responsive design
             window.addEventListener('resize', Utils.debounce(handleResize, 250));
             
-            // Keyboard shortcuts
+            // Keyboard shortcuts - ESC key to close all windows
             document.addEventListener('keydown', (e) => {
                 if (e.key === 'Escape') {
                     document.querySelectorAll('.window.active').forEach(w => {
@@ -11716,17 +12549,32 @@ This year's theme is "Creative Connections" and will include virtual rooms for e
                     lastTouchEnd = now;
                 }, false);
             }
+        }
+
+        // Initialize the system when page loads
+        function initializeSystem() {
+            // Detect environment - use server config in production, local config in development
+            const isProduction = window.location.hostname !== 'localhost' && 
+                                !window.location.hostname.includes('127.0.0.1') &&
+                                !window.location.hostname.includes('192.168.') &&
+                                window.location.protocol === 'https:';
             
-            // Start auto-refresh for modules with API endpoints
             setTimeout(() => {
-                // Initial config refresh after page load
-                refreshConfigFromServer();
+                if (isProduction) {
+                    // Production: use server config with database updates
+                    console.log('🚀 Production environment detected - using server config with database');
+                    refreshConfigFromServer();
+                } else {
+                    // Development: use local config files to avoid placeholder URL errors
+                    console.log('🔧 Development environment detected - using local config files');
+                }
             }, 2000); // Delay to ensure all elements are loaded
         }
         
         // Refresh configuration from server
         async function refreshConfigFromServer() {
             console.log('🔄 CHECKING FOR CONFIG UPDATES FROM SERVER');
+            console.log('🕐 Current AppState.configLastModified:', AppState.configLastModified);
             try {
                 const response = await fetch(`/api/get-config?t=${Date.now()}`);
                 console.log('📡 Config fetch response status:', response.status);
@@ -11753,9 +12601,11 @@ This year's theme is "Creative Connections" and will include virtual rooms for e
                         return;
                     }
                     
-                    // Check if config actually changed
-                    const configChanged = JSON.stringify(newConfig) !== JSON.stringify(AppState.config);
-                    console.log('🔍 Config changed?', configChanged);
+                    // Check if config actually changed using timestamp comparison (more reliable than JSON.stringify)
+                    const isFirstLoad = !AppState.configLastModified;
+                    const configChanged = isFirstLoad || lastModified > AppState.configLastModified;
+                    console.log('🔍 Config changed?', configChanged, isFirstLoad ? '(first load)' : '(update)');
+                    console.log('📅 Timestamps - Current:', AppState.configLastModified, 'New:', lastModified);
                     
                     if (configChanged) {
                         console.log('🚀 APPLYING CONFIG CHANGES TO FRONTEND');
@@ -11768,6 +12618,7 @@ This year's theme is "Creative Connections" and will include virtual rooms for e
                         // Reload content with new configuration
                         console.log('🔄 Reloading content from CMS...');
                         loadDesktopIcons();
+                        loadContentFromCMS(); // Update all open windows with new config
                         
                         console.log('✅ Configuration refreshed and applied successfully!');
                         showNotification('✨ Content updated from CMS!');
@@ -11782,9 +12633,59 @@ This year's theme is "Creative Connections" and will include virtual rooms for e
             }
         }
         
-        // Periodically check for config updates (every 30 seconds for production)
-        const configInterval = setInterval(refreshConfigFromServer, 30000);
-        AppState.intervals.push(configInterval);
+        // Environment detection for config refresh
+        const isProduction = window.location.hostname !== 'localhost' && 
+                            !window.location.hostname.includes('127.0.0.1') &&
+                            !window.location.hostname.includes('192.168.') &&
+                            window.location.protocol === 'https:';
+        
+        if (isProduction) {
+            // Periodically check for config updates in production only
+            console.log('🔄 Enabling periodic config refresh for production environment');
+            const configInterval = setInterval(refreshConfigFromServer, 30000);
+            AppState.intervals.push(configInterval);
+        } else {
+            console.log('🔧 Skipping periodic config refresh in development environment');
+        }
+        
+        if (isProduction) {
+            // Listen for force refresh messages from CMS admin in production only
+            window.addEventListener('message', (event) => {
+                if (event.data && event.data.type === 'CMS_FORCE_REFRESH') {
+                    console.log('🔥 Received force refresh signal from CMS admin');
+                    showNotification('⚡ CMS update detected! Refreshing content...');
+                    refreshConfigFromServer();
+                }
+            });
+        }
+        
+        if (isProduction) {
+            // Check localStorage for force refresh signals in production only
+            const checkForceRefresh = () => {
+                const refreshSignal = localStorage.getItem('cms_force_refresh');
+                if (refreshSignal) {
+                    try {
+                        const message = JSON.parse(refreshSignal);
+                        const timeDiff = Date.now() - message.timestamp;
+                        
+                        // Only act on recent signals (within 10 seconds)
+                        if (timeDiff < 10000) {
+                            console.log('🔥 Detected force refresh from localStorage');
+                            showNotification('⚡ CMS update detected! Refreshing content...');
+                            refreshConfigFromServer();
+                            localStorage.removeItem('cms_force_refresh'); // Clean up
+                        }
+                    } catch (e) {
+                        console.warn('Failed to parse refresh signal:', e);
+                        localStorage.removeItem('cms_force_refresh');
+                    }
+                }
+            };
+            
+            // Check for force refresh signals every 2 seconds in production
+            const forceRefreshCheck = setInterval(checkForceRefresh, 2000);
+            AppState.intervals.push(forceRefreshCheck);
+        }
         
         // Cleanup function for when page unloads
         window.addEventListener('beforeunload', () => {

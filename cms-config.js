@@ -393,7 +393,7 @@ const CMS_CONFIG = {
                         "description": "Revolutionary visual synthesis platform combining AI with creative workflows",
                         "progress": 60,
                         "url": "https://ralph-visual-canvas-production.up.railway.app/",
-                        "thumbnail": "https://via.placeholder.com/120x80/00ff00/000000?text=CANVAS",
+                        "thumbnail": "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTIwIiBoZWlnaHQ9IjgwIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxyZWN0IHdpZHRoPSIxMjAiIGhlaWdodD0iODAiIGZpbGw9IiMwMGZmMDAiLz48dGV4dCB4PSI1MCUiIHk9IjUwJSIgZG9taW5hbnQtYmFzZWxpbmU9Im1pZGRsZSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1mYW1pbHk9Im1vbm9zcGFjZSIgZm9udC1zaXplPSIxNCIgZmlsbD0iYmxhY2siPkNBTlZBUzwvdGV4dD48L3N2Zz4=",
                         "status": "ACTIVE"
                     },
                     {
@@ -401,7 +401,7 @@ const CMS_CONFIG = {
                         "description": "Next-generation video editing powered by machine learning algorithms",
                         "progress": 40,
                         "url": "",
-                        "thumbnail": "https://via.placeholder.com/120x80/00ff41/000000?text=AI+EDIT",
+                        "thumbnail": "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTIwIiBoZWlnaHQ9IjgwIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxyZWN0IHdpZHRoPSIxMjAiIGhlaWdodD0iODAiIGZpbGw9IiMwMGZmNDEiLz48dGV4dCB4PSI1MCUiIHk9IjUwJSIgZG9taW5hbnQtYmFzZWxpbmU9Im1pZGRsZSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1mYW1pbHk9Im1vbm9zcGFjZSIgZm9udC1zaXplPSIxMiIgZmlsbD0iYmxhY2siPkFJIEVESVQ8L3RleHQ+PC9zdmc+",
                         "status": "DEV"
                     },
                     {
@@ -409,7 +409,7 @@ const CMS_CONFIG = {
                         "description": "Ultra-fast rendering engine for live production environments",
                         "progress": 80,
                         "url": "",
-                        "thumbnail": "https://via.placeholder.com/120x80/00ff82/000000?text=RT+RENDER",
+                        "thumbnail": "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTIwIiBoZWlnaHQ9IjgwIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxyZWN0IHdpZHRoPSIxMjAiIGhlaWdodD0iODAiIGZpbGw9IiMwMGZmODIiLz48dGV4dCB4PSI1MCUiIHk9IjUwJSIgZG9taW5hbnQtYmFzZWxpbmU9Im1pZGRsZSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1mYW1pbHk9Im1vbm9zcGFjZSIgZm9udC1zaXplPSIxMCIgZmlsbD0iYmxhY2siPlJUIFJFTkRFUjwvdGV4dD48L3N2Zz4=",
                         "status": "BETA"
                     }
                 ],
@@ -500,7 +500,7 @@ const CMS_CONFIG = {
                         "platform": "Instagram",
                         "title": "Behind the Scenes at RALPH Studio",
                         "description": "Check out our creative process in action!",
-                        "thumbnail": "https://via.placeholder.com/300x200/EB008B/FFFFFF?text=RALPH+BTS",
+                        "thumbnail": "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzAwIiBoZWlnaHQ9IjIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMzAwIiBoZWlnaHQ9IjIwMCIgZmlsbD0iI0VCMDAzQiIvPjx0ZXh0IHg9IjUwJSIgeT0iNTAlIiBkb21pbmFudC1iYXNlbGluZT0ibWlkZGxlIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0ibW9ub3NwYWNlIiBmb250LXNpemU9IjE4IiBmaWxsPSJ3aGl0ZSI+UkFMUEggQlRTPC90ZXh0Pjwvc3ZnPg==",
                         "shareUrl": "https://instagram.com/p/example1"
                     },
                     {
@@ -509,7 +509,7 @@ const CMS_CONFIG = {
                         "platform": "TikTok",
                         "title": "Quick Design Tips from Our Team",
                         "description": "30-second design hack that will blow your mind",
-                        "thumbnail": "https://via.placeholder.com/300x200/31BDBF/FFFFFF?text=Design+Tips",
+                        "thumbnail": "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzAwIiBoZWlnaHQ9IjIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMzAwIiBoZWlnaHQ9IjIwMCIgZmlsbD0iIzMxQkRCRiIvPjx0ZXh0IHg9IjUwJSIgeT0iNTAlIiBkb21pbmFudC1iYXNlbGluZT0ibWlkZGxlIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0ibW9ub3NwYWNlIiBmb250LXNpemU9IjE4IiBmaWxsPSJ3aGl0ZSI+RGVzaWduIFRpcHM8L3RleHQ+PC9zdmc+",
                         "shareUrl": "https://tiktok.com/@ralph/video/example2"
                     },
                     {
@@ -518,7 +518,7 @@ const CMS_CONFIG = {
                         "platform": "Substack",
                         "title": "The Future of Creative Agencies",
                         "description": "Our latest thoughts on industry trends and innovation",
-                        "thumbnail": "https://via.placeholder.com/300x200/F16524/FFFFFF?text=Future+Agency",
+                        "thumbnail": "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzAwIiBoZWlnaHQ9IjIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMzAwIiBoZWlnaHQ9IjIwMCIgZmlsbD0iI0YxNjUyNCIvPjx0ZXh0IHg9IjUwJSIgeT0iNTAlIiBkb21pbmFudC1iYXNlbGluZT0ibWlkZGxlIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0ibW9ub3NwYWNlIiBmb250LXNpemU9IjE2IiBmaWxsPSJ3aGl0ZSI+RnV0dXJlIEFnZW5jeTwvdGV4dD48L3N2Zz4=",
                         "shareUrl": "https://ralph.substack.com/p/future-creative-agencies"
                     }
                 ]
