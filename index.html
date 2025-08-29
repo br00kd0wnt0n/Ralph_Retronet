@@ -5273,7 +5273,7 @@
         
         <!-- Windows -->
         <!-- What's New Window -->
-        <div id="whatsNew" class="window whats-new-dashboard" style="width: calc(100vw - 300px); height: calc(100vh - 40px); top: 0px; left: 40px;">
+        <div id="whatsNew" class="window whats-new-dashboard" style="width: calc(100vw - 300px); height: calc(100vh - 40px); top: 20px; left: 20px;">
             <div class="window-header">
                 <div class="window-title">Hey Brook! Here's what's new at RALPH</div>
                 <div class="window-controls">
@@ -10670,9 +10670,25 @@ This year's theme is "Creative Connections" and will include virtual rooms for e
             const clonedRalphWorldIcon = ralphWorldIcon ? ralphWorldIcon.cloneNode(true) : null;
             container.innerHTML = '';
             
-            // Add module icons from configuration
-            Object.entries(AppState.config.modules).forEach(([moduleId, moduleConfig]) => {
-                if (moduleConfig.enabled && moduleId !== 'music' && moduleId !== 'sharing') {
+            // Add module icons in specific order as defined in CMS
+            const moduleOrder = [
+                'newBiz',        // Row 1, Left (New Biz Pipe)
+                'premieres',     // Row 1, Right (Premiere Calendar) 
+                'pitchPlease',   // Row 2, Left (Pitch Please)
+                'shoutouts',     // Row 2, Right (Shoutouts)
+                'articles',      // Row 3, Left (Industry Articles)
+                'ralphNews',     // Row 3, Right (Ralph News Network)
+                'suggestions',   // Row 4, Left (Suggestions)
+                'announcements', // Row 4, Right (Announcements)
+                'links',         // Row 5, Left (Quick Links)
+                'innovation',    // Row 5, Right (Innovation)
+                'resources',     // Row 6, Left (Resources)
+                'trendspotting'  // Row 6, Right (Trendspotting)
+            ];
+            
+            moduleOrder.forEach(moduleId => {
+                const moduleConfig = AppState.config.modules[moduleId];
+                if (moduleConfig && moduleConfig.enabled && moduleId !== 'music' && moduleId !== 'sharing') {
                     const iconElement = document.createElement('div');
                     iconElement.className = 'icon';
                     
