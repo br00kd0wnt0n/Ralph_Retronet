@@ -7046,8 +7046,8 @@
             if (!windowElement) return;
             
             const rect = windowElement.getBoundingClientRect();
-            const viewportWidth = window.innerWidth;
-            const viewportHeight = window.innerHeight;
+            const viewportWidth = document.documentElement.clientWidth || document.body.clientWidth;
+            const viewportHeight = document.documentElement.clientHeight || document.body.clientHeight;
             const taskbarHeight = 40;
             const availableHeight = viewportHeight - taskbarHeight;
             
@@ -7065,8 +7065,8 @@
                 if (left < 0 || top < 60 || left + width > viewportWidth || top + height > availableHeight) {
                     // Remove transform and position normally
                     windowElement.style.transform = 'none';
-                    windowElement.style.left = Math.max(20, Math.min(viewportWidth - width - 20, 100)) + 'px';
-                    windowElement.style.top = Math.max(60, Math.min(availableHeight - height - 20, 100)) + 'px';
+                    windowElement.style.left = Math.max(0, Math.min(viewportWidth - width, 100)) + 'px';
+                    windowElement.style.top = Math.max(60, Math.min(availableHeight - height, 100)) + 'px';
                 }
             } else {
                 // Normal positioning for windows without transforms
@@ -7077,12 +7077,12 @@
                 
                 // Ensure window doesn't go outside right edge
                 if (left + width > viewportWidth) {
-                    left = Math.max(0, viewportWidth - width - 20);
+                    left = Math.max(0, viewportWidth - width);
                 }
                 
                 // Ensure window doesn't go outside left edge
                 if (left < 0) {
-                    left = 20;
+                    left = 0;
                 }
                 
                 // Ensure window doesn't go outside bottom edge (account for taskbar)
@@ -7296,10 +7296,12 @@
                 const newTop = element.offsetTop - pos2;
                 const newLeft = element.offsetLeft - pos1;
                 
-                // Boundary checking - keep window within viewport
-                const maxTop = window.innerHeight - element.offsetHeight - 40; // Leave space at bottom
-                const maxLeft = window.innerWidth - element.offsetWidth - 20; // Leave space at right
-                const minLeft = 20; // Minimum left position to prevent going off-screen
+                // Boundary checking - keep window within viewport (absolute edges)
+                const containerWidth = document.documentElement.clientWidth || document.body.clientWidth;
+                const containerHeight = document.documentElement.clientHeight || document.body.clientHeight;
+                const maxTop = containerHeight - element.offsetHeight - 40; // Leave space for taskbar
+                const maxLeft = containerWidth - element.offsetWidth; // Allow to absolute right edge
+                const minLeft = 0; // Allow to absolute left edge
                 
                 element.style.top = Math.max(0, Math.min(newTop, maxTop)) + "px";
                 element.style.left = Math.max(minLeft, Math.min(newLeft, maxLeft)) + "px";
