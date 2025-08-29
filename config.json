@@ -1,0 +1,812 @@
+{
+    "system": {
+        "version": "1.0",
+        "companyName": "RALPH",
+        "primaryColor": "#eb008b",
+        "ralphWorldUrl": "https://ralph-world-frontend.vercel.app/",
+        "bootMessages": [
+            "Loading system kernel...",
+            "Initializing RALPH protocols...",
+            "Checking security clearance...",
+            "Loading user preferences...",
+            "Shutting up Hassell...",
+            "Starting creative services...",
+            "Loading project database...",
+            "Initializing communication modules...",
+            "Checking for updates...",
+            "Loading desktop environment...",
+            "Starting RALPH SUPER-INTRANET...",
+            "System ready!"
+        ]
+    },
+    "chatbot": {
+        "enabled": true,
+        "title": "RALPH Assistant v1.0",
+        "welcomeMessage": "Welcome to RALPH's Super-Intranet!",
+        "helpText": "Here's what you can do:\n► Click any desktop icon to open modules\n► Drag windows by their title bars\n► Minimize, maximize, or close windows\n► Submit suggestions in the Suggestion Box\n► Submit pitches to quarterly competition\n► Check project pipelines and deadlines\n► Send shoutouts to team members",
+        "introText": "I'm here to help with questions about RALPH, projects, or anything else you need assistance with.",
+        "promptText": "Type your message below or ask me anything!",
+        "openai": {
+            "enabled": false,
+            "apiKey": "",
+            "model": "gpt-4",
+            "temperature": 0.7,
+            "maxTokens": 150,
+            "systemPrompt": "You are the RALPH company assistant. You help employees with:\n- Company policies and procedures\n- Project information and deadlines\n- Technical support\n- Creative inspiration\n- Team collaboration\nAlways maintain a friendly, professional tone and embody RALPH's creative spirit.",
+            "fallbackResponses": [
+                "Processing request...",
+                "That's interesting! Tell me more.",
+                "System acknowledged.",
+                "Roger that!",
+                "Command received.",
+                "Affirmative!"
+            ]
+        }
+    },
+    "modules": {
+        "newBiz": {
+            "windowTitle": "New Biz Pipe",
+            "headerTitle": "New Business Pipeline",
+            "iconLabel": "New Biz Pipe",
+            "icon": "📊",
+            "enabled": true,
+            "description": "Track our business development pipeline from warm leads to won pitches. See upcoming meetings, proposal deadlines, and conversion progress.",
+            "content": {
+                "header": "RALPH PIPELINE TRACKER 1.0",
+                "warmLeads": [
+                    {
+                        "name": "BeReal",
+                        "office": "NY",
+                        "dueDate": "2024-12-30",
+                        "deckLink": "https://docs.google.com/presentation/d/1VHzjDvXklQQbiWdrBr7W_6A0xSrV9Sr0jsNZKt7hgsc/edit?slide=id.g36e66b67ba9_0_222#slide=id.g36e66b67ba9_0_222",
+                        "briefLink": ""
+                    }
+                ],
+                "pitchesHappening": [
+                    {
+                        "name": "Global Tech Corp - Video Campaign",
+                        "office": "LON",
+                        "dueDate": "2024-12-20",
+                        "deckLink": "",
+                        "briefLink": ""
+                    },
+                    {
+                        "name": "Fashion Brand X - Social Strategy",
+                        "office": "LA",
+                        "dueDate": "2024-12-22",
+                        "deckLink": "",
+                        "briefLink": ""
+                    }
+                ],
+                "pitchSubmitted": [
+                    {
+                        "name": "Auto Company Z - Launch Film",
+                        "office": "NY",
+                        "dueDate": "2024-12-25",
+                        "deckLink": "",
+                        "briefLink": ""
+                    }
+                ],
+                "pitchPresented": [
+                    {
+                        "name": "Beauty Brand Presentation",
+                        "office": "LA",
+                        "dueDate": "2024-12-18",
+                        "deckLink": "",
+                        "briefLink": ""
+                    }
+                ],
+                "pitchWon": [
+                    {
+                        "name": "Entertainment Client RFP",
+                        "office": "TK",
+                        "dueDate": "2024-12-15",
+                        "deckLink": "",
+                        "briefLink": ""
+                    }
+                ]
+            },
+            "apiEndpoint": null
+        },
+        "premieres": {
+            "windowTitle": "Premiere Calendar",
+            "headerTitle": "Premiere Calendar",
+            "iconLabel": "Premieres",
+            "icon": "🎬",
+            "enabled": true,
+            "description": "Track project launches and debut dates • Add upcoming premieres",
+            "content": {
+                "thisMonth": [
+                    {
+                        "date": "Dec 15",
+                        "project": "Urban Dreams Documentary",
+                        "liveLink": ""
+                    },
+                    {
+                        "date": "Dec 20",
+                        "project": "Holiday Campaign Launch",
+                        "liveLink": ""
+                    },
+                    {
+                        "date": "Dec 28",
+                        "project": "Year-End Showcase",
+                        "liveLink": ""
+                    }
+                ],
+                "nextMonth": [
+                    {
+                        "date": "Jan 10",
+                        "project": "New Product Launch Film",
+                        "liveLink": ""
+                    },
+                    {
+                        "date": "Jan 15",
+                        "project": "Brand Refresh Campaign",
+                        "liveLink": ""
+                    },
+                    {
+                        "date": "Jan 25",
+                        "project": "Super Bowl Teaser",
+                        "liveLink": ""
+                    }
+                ]
+            },
+            "apiEndpoint": null
+        },
+        "pitchPlease": {
+            "windowTitle": "Pitch, Please!",
+            "headerTitle": "Pitch, Please!",
+            "iconLabel": "Pitch Please",
+            "icon": "💡",
+            "enabled": true,
+            "description": "Submit your innovative ideas to our quarterly pitch competition! Share your vision and compete for funding and development support.",
+            "content": {
+                "subtitle": "A quarterly competition where you can pitch almost anything you think is a winner",
+                "currentQuarter": "Q1 2025",
+                "deadline": "March 31, 2025",
+                "theme": "Innovation & Growth",
+                "prize": "Up to $50K",
+                "currentSubmissions": 12,
+                "daysLeft": 45
+            },
+            "apiEndpoint": null
+        },
+        "shoutouts": {
+            "windowTitle": "Shoutouts & Celebrations",
+            "headerTitle": "Shoutouts & Celebrations",
+            "iconLabel": "Shoutouts",
+            "icon": "🎉",
+            "enabled": true,
+            "description": "Celebrate team milestones and achievements • Share appreciation for great work",
+            "content": {
+                "birthdays": [
+                    {
+                        "date": "Today",
+                        "person": "Mike R. from Production",
+                        "highlight": true
+                    },
+                    {
+                        "date": "Dec 18",
+                        "person": "Jennifer L. from Creative",
+                        "highlight": false
+                    },
+                    {
+                        "date": "Dec 22",
+                        "person": "Alex T. from Strategy",
+                        "highlight": false
+                    }
+                ],
+                "anniversaries": [
+                    {
+                        "years": 5,
+                        "person": "David K."
+                    },
+                    {
+                        "years": 3,
+                        "person": "Lisa M."
+                    },
+                    {
+                        "years": 1,
+                        "person": "Team Expansion Crew!"
+                    }
+                ],
+                "shoutouts": [
+                    {
+                        "message": "Huge thanks to the edit team for crushing it on the Tech Corp project!",
+                        "from": "Management"
+                    },
+                    {
+                        "message": "Props to IT for the smooth system upgrade!",
+                        "from": "Everyone"
+                    }
+                ]
+            },
+            "apiEndpoint": null
+        },
+        "articles": {
+            "windowTitle": "Industry Articles",
+            "headerTitle": "Industry Articles",
+            "iconLabel": "Articles",
+            "icon": "📰",
+            "enabled": true,
+            "description": "Stay informed with curated industry news and trends. Read must-have articles from top publications and trending topics.",
+            "content": {
+                "trending": [
+                    "The Rise of AI in Creative Production",
+                    "2025 Design Trends to Watch",
+                    "Sustainable Filmmaking Practices"
+                ],
+                "mustReads": [
+                    {
+                        "source": "AdWeek",
+                        "title": "Agencies of the Future"
+                    },
+                    {
+                        "source": "Campaign",
+                        "title": "Digital First Strategies"
+                    },
+                    {
+                        "source": "Creative Review",
+                        "title": "Best Campaigns 2024"
+                    }
+                ]
+            },
+            "apiEndpoint": null
+        },
+        "ralphNews": {
+            "windowTitle": "RNN - Ralph News Network",
+            "headerTitle": "RALPH News Network",
+            "iconLabel": "RNN",
+            "icon": "📢",
+            "iconType": "rnn-logo",
+            "enabled": true,
+            "description": "Breaking news and updates from across the RALPH network. Get the latest company announcements and industry insights.",
+            "content": {
+                "breaking": [
+                    {
+                        "headline": "New Office Space Opening Q1 2025!",
+                        "live": true
+                    },
+                    {
+                        "headline": "Award Win: Best Campaign at Industry Awards",
+                        "live": false
+                    },
+                    {
+                        "headline": "Client Win: Major Automotive Account",
+                        "live": false
+                    }
+                ],
+                "updates": [
+                    "New Equipment in Studio B",
+                    "Holiday Party December 20th",
+                    "Q4 Numbers Looking Strong!"
+                ]
+            },
+            "apiEndpoint": null
+        },
+        "suggestions": {
+            "windowTitle": "Suggestions",
+            "headerTitle": "Suggestions",
+            "iconLabel": "Suggestions",
+            "icon": "💭",
+            "enabled": true,
+            "description": "Share your ideas to improve our workplace and processes. See which suggestions are approved, under review, or being considered.",
+            "content": {
+                "recentSuggestions": [
+                    {
+                        "idea": "Coffee machine upgrade",
+                        "status": "APPROVED"
+                    },
+                    {
+                        "idea": "Flexible Friday hours",
+                        "status": "IN REVIEW"
+                    },
+                    {
+                        "idea": "Pet-friendly office days",
+                        "status": "CONSIDERING"
+                    }
+                ]
+            },
+            "apiEndpoint": null,
+            "submitEndpoint": null
+        },
+        "announcements": {
+            "windowTitle": "Announcements",
+            "headerTitle": "Announcements",
+            "iconLabel": "Announcements",
+            "icon": "📣",
+            "enabled": true,
+            "description": "Important company updates and system notifications. Check critical announcements and general office information.",
+            "content": {
+                "important": [
+                    "System maintenance scheduled for Saturday 2:00 AM",
+                    "Please save all work before Friday EOD"
+                ],
+                "general": [
+                    "Parking lot B closed for repairs this week",
+                    "New health benefits info session Thursday",
+                    "Kitchen renovation complete - enjoy!"
+                ]
+            },
+            "apiEndpoint": null
+        },
+        "links": {
+            "windowTitle": "Quick Links",
+            "headerTitle": "Quick Links",
+            "iconLabel": "Quick Links",
+            "icon": "🔗",
+            "enabled": true,
+            "description": "Fast access to essential tools and resources. Find internal systems, client portals, and external platforms you use daily.",
+            "content": {
+                "internal": [
+                    {
+                        "name": "TIMESHEET SYSTEM",
+                        "url": "#"
+                    },
+                    {
+                        "name": "PROJECT TRACKER",
+                        "url": "#"
+                    },
+                    {
+                        "name": "EXPENSE REPORTS",
+                        "url": "#"
+                    },
+                    {
+                        "name": "IT HELPDESK",
+                        "url": "#"
+                    }
+                ],
+                "external": [
+                    {
+                        "name": "CLIENT PORTAL",
+                        "url": "#"
+                    },
+                    {
+                        "name": "VENDOR DATABASE",
+                        "url": "#"
+                    },
+                    {
+                        "name": "STOCK FOOTAGE",
+                        "url": "#"
+                    }
+                ]
+            },
+            "apiEndpoint": null
+        },
+        "innovation": {
+            "windowTitle": "Innovation @ Ralph",
+            "headerTitle": "Innovation @ Ralph",
+            "iconLabel": "Innovation",
+            "icon": "🚀",
+            "enabled": true,
+            "description": "Explore cutting-edge projects and experimental tools. Track innovation lab progress and upcoming tech sessions.",
+            "content": {
+                "experiments": [
+                    {
+                        "name": "ralph Canvas",
+                        "description": "Revolutionary visual synthesis platform combining AI with creative workflows",
+                        "progress": 60,
+                        "url": "https://ralph-visual-canvas-production.up.railway.app/",
+                        "thumbnail": "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTIwIiBoZWlnaHQ9IjgwIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxyZWN0IHdpZHRoPSIxMjAiIGhlaWdodD0iODAiIGZpbGw9IiMwMGZmMDAiLz48dGV4dCB4PSI1MCUiIHk9IjUwJSIgZG9taW5hbnQtYmFzZWxpbmU9Im1pZGRsZSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1mYW1pbHk9Im1vbm9zcGFjZSIgZm9udC1zaXplPSIxNCIgZmlsbD0iYmxhY2siPkNBTlZBUzwvdGV4dD48L3N2Zz4=",
+                        "status": "ACTIVE"
+                    },
+                    {
+                        "name": "AI-Assisted Editing Tools",
+                        "description": "Next-generation video editing powered by machine learning algorithms",
+                        "progress": 40,
+                        "url": "",
+                        "thumbnail": "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTIwIiBoZWlnaHQ9IjgwIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxyZWN0IHdpZHRoPSIxMjAiIGhlaWdodD0iODAiIGZpbGw9IiMwMGZmNDEiLz48dGV4dCB4PSI1MCUiIHk9IjUwJSIgZG9taW5hbnQtYmFzZWxpbmU9Im1pZGRsZSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1mYW1pbHk9Im1vbm9zcGFjZSIgZm9udC1zaXplPSIxMiIgZmlsbD0iYmxhY2siPkFJIEVESVQ8L3RleHQ+PC9zdmc+",
+                        "status": "DEV"
+                    },
+                    {
+                        "name": "Real-time Rendering System",
+                        "description": "Ultra-fast rendering engine for live production environments",
+                        "progress": 80,
+                        "url": "",
+                        "thumbnail": "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTIwIiBoZWlnaHQ9IjgwIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxyZWN0IHdpZHRoPSIxMjAiIGhlaWdodD0iODAiIGZpbGw9IiMwMGZmODIiLz48dGV4dCB4PSI1MCUiIHk9IjUwJSIgZG9taW5hbnQtYmFzZWxpbmU9Im1pZGRsZSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1mYW1pbHk9Im1vbm9zcGFjZSIgZm9udC1zaXplPSIxMCIgZmlsbD0iYmxhY2siPlJUIFJFTkRFUjwvdGV4dD48L3N2Zz4=",
+                        "status": "BETA"
+                    }
+                ],
+                "nextSession": {
+                    "topic": "Future of Motion Graphics",
+                    "speaker": "Guest from Pixar"
+                }
+            },
+            "apiEndpoint": null
+        },
+        "resources": {
+            "windowTitle": "Resource Center",
+            "headerTitle": "Resource Center",
+            "iconLabel": "Resources",
+            "icon": "📁",
+            "enabled": true,
+            "description": "Access brand guidelines, templates, and training materials. Your one-stop shop for company documents and learning resources.",
+            "content": {
+                "documents": [
+                    {
+                        "name": "Brand Guidelines v3.2",
+                        "url": ""
+                    },
+                    {
+                        "name": "Employee Handbook 2024",
+                        "url": ""
+                    },
+                    {
+                        "name": "Creative Best Practices",
+                        "url": ""
+                    },
+                    {
+                        "name": "Client Onboarding Guide",
+                        "url": ""
+                    }
+                ],
+                "templates": [
+                    {
+                        "name": "Presentation Template",
+                        "url": ""
+                    },
+                    {
+                        "name": "Project Brief Template",
+                        "url": ""
+                    },
+                    {
+                        "name": "Invoice Template",
+                        "url": ""
+                    }
+                ],
+                "training": [
+                    {
+                        "name": "New Software Tutorials",
+                        "url": ""
+                    },
+                    {
+                        "name": "Client Communication 101",
+                        "url": ""
+                    },
+                    {
+                        "name": "Project Management Basics",
+                        "url": ""
+                    }
+                ]
+            },
+            "apiEndpoint": null
+        },
+        "music": {
+            "icon": "🎵",
+            "enabled": false,
+            "content": {
+                "tracks": [],
+                "totalTracks": 0,
+                "totalDuration": "0:00"
+            },
+            "apiEndpoint": null
+        },
+        "sharing": {
+            "icon": "📲",
+            "enabled": true,
+            "content": {
+                "weekOf": "December 23, 2024",
+                "giftCardAmount": "$25",
+                "items": [
+                    {
+                        "id": 1,
+                        "type": "Instagram Post",
+                        "platform": "Instagram",
+                        "title": "Behind the Scenes at RALPH Studio",
+                        "description": "Check out our creative process in action!",
+                        "thumbnail": "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzAwIiBoZWlnaHQ9IjIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMzAwIiBoZWlnaHQ9IjIwMCIgZmlsbD0iI0VCMDAzQiIvPjx0ZXh0IHg9IjUwJSIgeT0iNTAlIiBkb21pbmFudC1iYXNlbGluZT0ibWlkZGxlIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0ibW9ub3NwYWNlIiBmb250LXNpemU9IjE4IiBmaWxsPSJ3aGl0ZSI+UkFMUEggQlRTPC90ZXh0Pjwvc3ZnPg==",
+                        "shareUrl": "https://instagram.com/p/example1"
+                    },
+                    {
+                        "id": 2,
+                        "type": "TikTok Video",
+                        "platform": "TikTok",
+                        "title": "Quick Design Tips from Our Team",
+                        "description": "30-second design hack that will blow your mind",
+                        "thumbnail": "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzAwIiBoZWlnaHQ9IjIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMzAwIiBoZWlnaHQ9IjIwMCIgZmlsbD0iIzMxQkRCRiIvPjx0ZXh0IHg9IjUwJSIgeT0iNTAlIiBkb21pbmFudC1iYXNlbGluZT0ibWlkZGxlIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0ibW9ub3NwYWNlIiBmb250LXNpemU9IjE4IiBmaWxsPSJ3aGl0ZSI+RGVzaWduIFRpcHM8L3RleHQ+PC9zdmc+",
+                        "shareUrl": "https://tiktok.com/@ralph/video/example2"
+                    },
+                    {
+                        "id": 3,
+                        "type": "Substack Article",
+                        "platform": "Substack",
+                        "title": "The Future of Creative Agencies",
+                        "description": "Our latest thoughts on industry trends and innovation",
+                        "thumbnail": "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzAwIiBoZWlnaHQ9IjIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMzAwIiBoZWlnaHQ9IjIwMCIgZmlsbD0iI0YxNjUyNCIvPjx0ZXh0IHg9IjUwJSIgeT0iNTAlIiBkb21pbmFudC1iYXNlbGluZT0ibWlkZGxlIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0ibW9ub3NwYWNlIiBmb250LXNpemU9IjE2IiBmaWxsPSJ3aGl0ZSI+RnV0dXJlIEFnZW5jeTwvdGV4dD48L3N2Zz4=",
+                        "shareUrl": "https://ralph.substack.com/p/future-creative-agencies"
+                    }
+                ]
+            },
+            "apiEndpoint": null
+        },
+        "trendspotting": {
+            "windowTitle": "Trendspotting",
+            "headerTitle": "Trendspotting",
+            "iconLabel": "Trendspotting",
+            "icon": "TS",
+            "iconType": "text",
+            "iconColor": "#F16524",
+            "enabled": true,
+            "content": {
+                "offices": {
+                    "ny": {
+                        "name": "NEW YORK",
+                        "playlist": [
+                            {
+                                "title": "Blinding Lights",
+                                "artist": "The Weeknd"
+                            },
+                            {
+                                "title": "flowers",
+                                "artist": "Miley Cyrus"
+                            },
+                            {
+                                "title": "Anti-Hero",
+                                "artist": "Taylor Swift"
+                            },
+                            {
+                                "title": "Unholy",
+                                "artist": "Sam Smith & Kim Petras"
+                            }
+                        ],
+                        "trends": [
+                            {
+                                "category": "TECH",
+                                "description": "AI-powered creative tools taking over Slack conversations"
+                            },
+                            {
+                                "category": "FOOD",
+                                "description": "Matcha everything - from lattes to cookies"
+                            },
+                            {
+                                "category": "CULTURE",
+                                "description": "90s nostalgia hitting peak levels"
+                            }
+                        ]
+                    },
+                    "lon": {
+                        "name": "LONDON",
+                        "playlist": [
+                            {
+                                "title": "Escapism",
+                                "artist": "RAYE ft. 070 Shake"
+                            },
+                            {
+                                "title": "Boy's a Liar Pt. 2",
+                                "artist": "PinkPantheress & Ice Spice"
+                            },
+                            {
+                                "title": "Miracle",
+                                "artist": "Calvin Harris & Ellie Goulding"
+                            },
+                            {
+                                "title": "Flowers (UK Garage Remix)",
+                                "artist": "Miley Cyrus"
+                            }
+                        ],
+                        "trends": [
+                            {
+                                "category": "FASHION",
+                                "description": "Gorpcore infiltrating the creative department"
+                            },
+                            {
+                                "category": "DRINK",
+                                "description": "Natural wine Wednesdays becoming a thing"
+                            },
+                            {
+                                "category": "HOBBY",
+                                "description": "Office pottery club gaining momentum"
+                            }
+                        ]
+                    },
+                    "la": {
+                        "name": "LOS ANGELES",
+                        "playlist": [
+                            {
+                                "title": "Kill Bill",
+                                "artist": "SZA"
+                            },
+                            {
+                                "title": "Creepin'",
+                                "artist": "Metro Boomin, The Weeknd, 21 Savage"
+                            },
+                            {
+                                "title": "Ella Baila Sola",
+                                "artist": "Eslabon Armado & Peso Pluma"
+                            },
+                            {
+                                "title": "Calm Down",
+                                "artist": "Rema & Selena Gomez"
+                            }
+                        ],
+                        "trends": [
+                            {
+                                "category": "WELLNESS",
+                                "description": "Cold plunge challenges every Friday morning"
+                            },
+                            {
+                                "category": "FOOD",
+                                "description": "Korean corn dogs from the truck outside"
+                            },
+                            {
+                                "category": "TRANSPORT",
+                                "description": "E-bike gang growing exponentially"
+                            }
+                        ]
+                    },
+                    "tok": {
+                        "name": "TOKYO",
+                        "playlist": [
+                            {
+                                "title": "IDOL",
+                                "artist": "YOASOBI"
+                            },
+                            {
+                                "title": "Subtitle",
+                                "artist": "Official HIGE DANdism"
+                            },
+                            {
+                                "title": "New Genesis",
+                                "artist": "Ado"
+                            },
+                            {
+                                "title": "Souvenir",
+                                "artist": "BUMP OF CHICKEN"
+                            }
+                        ],
+                        "trends": [
+                            {
+                                "category": "TECH",
+                                "description": "Mechanical keyboards reaching critical mass"
+                            },
+                            {
+                                "category": "LUNCH",
+                                "description": "Convenience store gourmet competitions"
+                            },
+                            {
+                                "category": "CULTURE",
+                                "description": "After-work karaoke sessions mandatory"
+                            }
+                        ]
+                    },
+                    "syd": {
+                        "name": "SYDNEY",
+                        "playlist": [
+                            {
+                                "title": "Rushing Back",
+                                "artist": "Flume ft. Vera Blue"
+                            },
+                            {
+                                "title": "Green Light",
+                                "artist": "Spacey Jane"
+                            },
+                            {
+                                "title": "Stumblin'",
+                                "artist": "CYRIL ft. Emily Warren"
+                            },
+                            {
+                                "title": "Dumb Things",
+                                "artist": "Paul Kelly"
+                            }
+                        ],
+                        "trends": [
+                            {
+                                "category": "LIFESTYLE",
+                                "description": "5am surf club before work growing"
+                            },
+                            {
+                                "category": "COFFEE",
+                                "description": "Flat white art competitions getting intense"
+                            },
+                            {
+                                "category": "FRIDAY",
+                                "description": "Knock-off drinks at the harbor standard"
+                            }
+                        ]
+                    }
+                }
+            },
+            "apiEndpoint": null
+        }
+    },
+    "infoPanel": {
+        "title": "📊 RALPH Intranet Info",
+        "subtitle": "Version 2.0 | Built with ♥️ by the RALPH team",
+        "welcome": {
+            "title": "🏢 WELCOME TO RALPH'S RETRO INTRANET SYSTEM",
+            "description": "This retro-inspired intranet brings together all your RALPH tools, updates, and team connections in one nostalgic interface. Navigate using desktop icons, drag windows around, and interact with content just like the good old days!"
+        },
+        "sections": [
+            {
+                "title": "🚀 How It Works",
+                "icon": "var(--ralph-green)",
+                "items": [
+                    "Desktop Icons: Click any icon to open modules and tools",
+                    "Window System: Drag, minimize, maximize, and organize your workspace",
+                    "Start Menu: Access system tools and options",
+                    "Music Player: Enjoy background tunes while you work",
+                    "World Clock: Stay connected with global team members"
+                ]
+            },
+            {
+                "title": "🛠️ Built With",
+                "icon": "var(--ralph-blue)",
+                "description": "Our intranet combines modern functionality with retro aesthetics:",
+                "items": [
+                    "Frontend: Pure HTML5, CSS3, and Vanilla JavaScript",
+                    "Backend: Node.js with Express server and PostgreSQL database",
+                    "Design: Windows 95-inspired UI with modern responsive features",
+                    "Content Management: Dynamic CMS with drag & drop functionality",
+                    "Security: Production-ready authentication and data protection",
+                    "Performance: Optimized for fast loading and smooth interactions"
+                ]
+            },
+            {
+                "title": "💾 Data & Persistence",
+                "icon": "var(--ralph-green)",
+                "description": "Enterprise-grade data management ensuring your content never gets lost:",
+                "items": [
+                    "PostgreSQL Database: Production data stored securely on Railway",
+                    "Smart Fallbacks: Database → File System → Default configuration",
+                    "Deployment Safe: All CMS changes survive code deployments",
+                    "Real-time Sync: Changes appear instantly across all users",
+                    "Automatic Backups: Railway handles database backup and recovery",
+                    "Drag & Drop: Move pipeline items between stages seamlessly"
+                ]
+            },
+            {
+                "title": "📊 Key Features",
+                "icon": "var(--ralph-orange)",
+                "features": [
+                    {
+                        "title": "💼 Business Pipeline",
+                        "color": "var(--ralph-pink)",
+                        "description": "Track projects from leads to completion"
+                    },
+                    {
+                        "title": "💡 Innovation Hub",
+                        "color": "var(--ralph-green)",
+                        "description": "Collaborate on cutting-edge projects"
+                    },
+                    {
+                        "title": "📣 Announcements",
+                        "color": "var(--ralph-blue)",
+                        "description": "Stay updated with company news"
+                    },
+                    {
+                        "title": "📝 Resources",
+                        "color": "var(--ralph-yellow)",
+                        "description": "Access documents and training materials"
+                    }
+                ]
+            },
+            {
+                "title": "🔍 Technical Highlights",
+                "icon": "var(--ralph-brown)",
+                "items": [
+                    "Over 16,000 lines of production-ready code with comprehensive error handling",
+                    "Advanced window z-index management with perfect layering and focus control",
+                    "PostgreSQL connection pooling with automatic table initialization",
+                    "Drag & drop API with visual feedback and data preservation",
+                    "Smart conflict detection with 1-second timestamp tolerance",
+                    "Railway deployment with zero-downtime database persistence",
+                    "Responsive design that works seamlessly across all device types",
+                    "Google Docs CSP handling with intelligent iframe/tab switching"
+                ]
+            }
+        ],
+        "footer": {
+            "title": "🌟 Have ideas for new features?",
+            "message": "Use the Suggestion Box to share your thoughts and help make the intranet even better!"
+        }
+    },
+    "api": {
+        "baseUrl": "",
+        "headers": {
+            "Content-Type": "application/json"
+        },
+        "refreshInterval": 60000,
+        "retryAttempts": 3,
+        "timeout": 5000
+    }
+}

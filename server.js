@@ -369,11 +369,11 @@ app.post('/api/save-config', express.json(), async (req, res) => {
         const { configData, lastModified } = req.body;
         console.log('Config update requested for modules:', Object.keys(configData.modules || {}));
         
-        const jsonFilePath = path.join(__dirname, 'cms-config-production.json');
+        const configPath = path.join(__dirname, 'config.json');
         
         // Check for conflicts if lastModified timestamp provided
-        if (lastModified && fs.existsSync(jsonFilePath)) {
-            const currentFileStats = fs.statSync(jsonFilePath);
+        if (lastModified && fs.existsSync(configPath)) {
+            const currentFileStats = fs.statSync(configPath);
             const currentModified = currentFileStats.mtime.getTime();
             
             // Add tolerance for filesystem timestamp precision (1 second = 1000ms)
@@ -395,7 +395,7 @@ app.post('/api/save-config', express.json(), async (req, res) => {
         }
         
         // Create backup before saving
-        createBackup(jsonFilePath);
+        createBackup(configPath);
         
         // DATABASE PERSISTENCE: Save to PostgreSQL
         try {
@@ -410,34 +410,10 @@ app.post('/api/save-config', express.json(), async (req, res) => {
             console.log('📝 Falling back to file-based storage');
         }
         
-        // Create the updated cms-config.js content
-        const configFileContent = `/**
- * RALPH Retronet CMS Configuration
- * This file contains all configurable content for the intranet dashboard
- * Can be easily modified or connected to a backend CMS/API
- */
-
-const CMS_CONFIG = ${JSON.stringify(configData, null, 4)};
-
-// Make available globally for browser
-if (typeof window !== 'undefined') {
-    window.CMS_CONFIG = CMS_CONFIG;
-}
-
-// Export for Node.js if needed
-if (typeof module !== 'undefined' && module.exports) {
-    module.exports = CMS_CONFIG;
-}
-`;
+        // Write to single config.json file (SIMPLIFIED)
+        fs.writeFileSync(configPath, JSON.stringify(configData, null, 2), 'utf8');
         
-        // Write to production config files (not tracked by git)
-        const configFilePath = path.join(__dirname, 'cms-config-production.js');
-        fs.writeFileSync(configFilePath, configFileContent, 'utf8');
-        
-        // Also write a clean JSON file for easy loading
-        fs.writeFileSync(jsonFilePath, JSON.stringify(configData, null, 2), 'utf8');
-        
-        console.log('Configuration saved successfully to cms-config-production.js and cms-config-production.json');
+        console.log('✅ Configuration saved successfully to config.json');
         res.json({ success: true, message: 'Configuration saved successfully' });
         
     } catch (error) {
@@ -597,117 +573,56 @@ app.post('/api/restore-prompt', express.json(), async (req, res) => {
     }
 });
 
-// API endpoint to get current configuration with timestamp (simplified - no caching)
+// API endpoint to get current configuration with timestamp (SIMPLIFIED - SINGLE CONFIG FILE)
 app.get('/api/get-config', async (req, res) => {
     try {
         console.log('🔍 GET /api/get-config called');
         console.log('🔍 Working directory:', process.cwd());
         console.log('🔍 __dirname:', __dirname);
         
-        const fs = require('fs');
-        const productionJsonPath = path.join(__dirname, 'cms-config-production.json');
-        const productionJsPath = path.join(__dirname, 'cms-config-production.js');
-        const jsonConfigPath = path.join(__dirname, 'cms-config.json');
-        const jsConfigPath = path.join(__dirname, 'cms-config.js');
-        
-        console.log('🔍 Checking files:');
-        console.log('  📄 Production JSON:', fs.existsSync(productionJsonPath) ? '✅' : '❌', productionJsonPath);
-        console.log('  📄 Production JS:', fs.existsSync(productionJsPath) ? '✅' : '❌', productionJsPath);  
-        console.log('  📄 JSON Config:', fs.existsSync(jsonConfigPath) ? '✅' : '❌', jsonConfigPath);
-        console.log('  📄 JS Config:', fs.existsSync(jsConfigPath) ? '✅' : '❌', jsConfigPath);
+        const configPath = path.join(__dirname, 'config.json');
+        console.log('📄 Loading from single config file:', configPath);
         
         let config = null;
         let lastModified = null;
         
-        // Priority 0: Try database first (PostgreSQL persistence)
+        // Try database first (PostgreSQL persistence)
         try {
             const dbResult = await loadConfigFromDB();
             if (dbResult && dbResult.config) {
                 config = dbResult.config;
                 lastModified = dbResult.lastModified;
-                console.log('📄 Loaded config from database (PostgreSQL persistence)');
+                console.log('✅ Loaded config from database (PostgreSQL persistence)');
                 console.log('📊 Config modules keys:', config.modules ? Object.keys(config.modules) : 'NO MODULES');
             }
         } catch (dbError) {
             console.warn('⚠️ Failed to load config from database:', dbError.message);
-            config = null; // Fall back to file-based loading
         }
         
-        // Priority 1: Try production JSON config (user's saved content) - only if env config not found
-        if (!config && fs.existsSync(productionJsonPath)) {
-            config = JSON.parse(fs.readFileSync(productionJsonPath, 'utf8'));
-            lastModified = fs.statSync(productionJsonPath).mtime.getTime();
-            console.log('📄 Loaded config from:', productionJsonPath);
-            console.log('📊 Config modules keys:', config.modules ? Object.keys(config.modules) : 'NO MODULES');
-        }
-        // Priority 2: Try production JS config
-        if (!config && fs.existsSync(productionJsPath)) {
-            const vm = require('vm');
-            const configContent = fs.readFileSync(productionJsPath, 'utf8');
-            const configMatch = configContent.match(/const CMS_CONFIG = ({[\s\S]*?});/);
-            if (configMatch) {
-                const sandbox = {};
-                vm.createContext(sandbox);
-                config = vm.runInContext(`(${configMatch[1]})`, sandbox);
-                lastModified = fs.statSync(productionJsPath).mtime.getTime();
-            }
-        }
-        // Priority 3: Fallback to default JSON config
-        if (!config && fs.existsSync(jsonConfigPath)) {
-            config = JSON.parse(fs.readFileSync(jsonConfigPath, 'utf8'));
-            lastModified = fs.statSync(jsonConfigPath).mtime.getTime();
-        } 
-        // Priority 4: Fallback to original cms-config.js
-        if (!config && fs.existsSync(jsConfigPath)) {
-            const vm = require('vm');
-            const configContent = fs.readFileSync(jsConfigPath, 'utf8');
-            
-            // Try Node.js require first (most reliable)
-            try {
-                delete require.cache[require.resolve(jsConfigPath)]; // Clear cache
-                config = require(jsConfigPath);
-                lastModified = fs.statSync(jsConfigPath).mtime.getTime();
-                console.log('📄 Loaded config via require() from:', jsConfigPath);
-            } catch (requireError) {
-                console.log('⚠️ require() failed, trying regex parsing:', requireError.message);
-                
-                // Fallback to regex parsing with improved pattern
-                const configMatch = configContent.match(/const CMS_CONFIG = ({[\s\S]*?})\s*;/);
-                if (configMatch) {
-                    const sandbox = {};
-                    vm.createContext(sandbox);
-                    vm.runInContext(`const CMS_CONFIG = ${configMatch[1]}`, sandbox);
-                    config = sandbox.CMS_CONFIG;
-                    lastModified = fs.statSync(jsConfigPath).mtime.getTime();
-                    console.log('📄 Loaded config via regex parsing from:', jsConfigPath);
-                } else {
-                    throw new Error('Could not parse CMS_CONFIG from file using regex');
-                }
-            }
-        }
-        
-        // Final check - if still no config, throw error
+        // Fallback to single config.json file
         if (!config) {
-            throw new Error('Configuration file not found');
+            if (fs.existsSync(configPath)) {
+                const configContent = fs.readFileSync(configPath, 'utf8');
+                config = JSON.parse(configContent);
+                lastModified = fs.statSync(configPath).mtime.getTime();
+                console.log('✅ Loaded config from config.json');
+                console.log('📊 Config modules keys:', config.modules ? Object.keys(config.modules) : 'NO MODULES');
+            } else {
+                throw new Error('config.json file not found');
+            }
         }
         
-        // Debug: Check what we're actually sending
+        // Return config with metadata
         const response = {
             config: config,
             lastModified: lastModified
         };
         
-        console.log('📤 Sending response with config.modules keys:', config.modules ? Object.keys(config.modules) : 'NO MODULES');
-        console.log('📤 Response.config.modules keys:', response.config.modules ? Object.keys(response.config.modules) : 'NO MODULES');
-        
-        // Return config with metadata for conflict detection
+        console.log('📤 Sending response with modules:', config.modules ? Object.keys(config.modules) : 'NO MODULES');
         res.json(response);
         
     } catch (error) {
         console.error('❌ Error loading configuration:', error);
-        console.error('❌ Error stack:', error.stack);
-        console.error('❌ Current working directory:', process.cwd());
-        console.error('❌ Available files in directory:', require('fs').readdirSync('.').filter(f => f.includes('cms-config')));
         res.status(500).json({ 
             error: 'Failed to load configuration: ' + error.message,
             stack: error.stack,
