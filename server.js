@@ -586,17 +586,25 @@ app.get('/api/get-config', async (req, res) => {
         let config = null;
         let lastModified = null;
         
-        // Try database first (PostgreSQL persistence)
-        try {
-            const dbResult = await loadConfigFromDB();
-            if (dbResult && dbResult.config) {
-                config = dbResult.config;
-                lastModified = dbResult.lastModified;
-                console.log('✅ Loaded config from database (PostgreSQL persistence)');
-                console.log('📊 Config modules keys:', config.modules ? Object.keys(config.modules) : 'NO MODULES');
+        // TEMPORARILY SKIP DATABASE - Force use of config.json to get Trendspotting
+        // Database has old data without Trendspotting module
+        const SKIP_DATABASE = true;
+        
+        if (!SKIP_DATABASE) {
+            // Try database first (PostgreSQL persistence)
+            try {
+                const dbResult = await loadConfigFromDB();
+                if (dbResult && dbResult.config) {
+                    config = dbResult.config;
+                    lastModified = dbResult.lastModified;
+                    console.log('✅ Loaded config from database (PostgreSQL persistence)');
+                    console.log('📊 Config modules keys:', config.modules ? Object.keys(config.modules) : 'NO MODULES');
+                }
+            } catch (dbError) {
+                console.warn('⚠️ Failed to load config from database:', dbError.message);
             }
-        } catch (dbError) {
-            console.warn('⚠️ Failed to load config from database:', dbError.message);
+        } else {
+            console.log('⚠️ Database loading temporarily disabled - using config.json');
         }
         
         // Fallback to single config.json file
