@@ -4,6 +4,8 @@ const fs = require('fs');
 const compression = require('compression');
 const { initDatabase, saveConfig: saveConfigToDB, loadConfig: loadConfigFromDB, testConnection } = require('./database');
 
+// Force deployment refresh - 2025-08-29
+
 const app = express();
 const PORT = process.env.PORT || 3000;
 
